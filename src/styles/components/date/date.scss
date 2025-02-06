@@ -1,0 +1,37 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../variable" as variable;
+
+@mixin color($theme) {
+	$color-config: mat.get-color-config($theme);
+	$primary-palette: map.get($color-config, "primary");
+	$primary: mat.get-color-from-palette($primary-palette);
+
+	.form-input {
+		z-datepicker {
+			.mat-datepicker-toggle-default-icon {
+				color: $primary;
+			}
+		}
+	}
+}
+
+.date-input {
+	input {
+		padding-left: 5px;
+		top: variable.$input-top;
+		z-index: 1;
+		border-radius: 5px;
+		width: 100%;
+		transition: border-color variable.$placeholder-transition;
+		outline: none;
+		margin: 0;
+		height: variable.$input-height;
+		line-height: 30px;
+		border: 1px solid #b4b4b4;
+	}
+
+	label {
+		margin-bottom: 5px;
+	}
+}

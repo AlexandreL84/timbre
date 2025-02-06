@@ -1,0 +1,18 @@
+<div class="dialogImage" fxFlexFill fxLayout="column" fxLayoutAlign="start end">
+    <z-icon class="closeDialogImage click" [ngClass]="colorClose ? colorClose : 'colorWhite'" [icone]="FontAwesomeEnum.XMARK" [mat-dialog-close]="true"></z-icon>
+
+    <ng-template [ngIf]="lien" [ngIfElse]="noLien">
+        <div fxFlex fxLayout="column" fxLayoutAlign="center center" class="click" (click)="navigationService.navigateInNewTab(lien, lienExterne, false); close()">
+            <img [ngClass]="{imageWidthContent: content}" [src]="datas ? datas : ftp ? (url | ftpUrl) : url" />
+        </div>
+    </ng-template>
+    <ng-template #noLien>
+        <div fxFlex fxLayout="column" fxLayoutAlign="center center">
+            <img [ngClass]="{imageWidthContent: content}" [src]="datas ? datas : ftp ? (url | ftpUrl) : url" />
+        </div>
+    </ng-template>
+
+    <ng-container *ngIf="content">
+        <div class="width100" [ngClass]="{click: clickContent}" fxFlex="100" fxLayout="column" fxLayoutAlign="center center" [innerHTML]="content" (click)="outputContent.emit(true)"></div>
+    </ng-container>
+</div>

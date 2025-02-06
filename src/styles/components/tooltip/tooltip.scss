@@ -1,0 +1,51 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+
+@mixin color($theme) {
+	$color-config: mat.get-color-config($theme);
+	$primary-palette: map.get($color-config, "primary");
+	$primary: mat.get-color-from-palette($primary-palette);
+
+	.tooltiptextDescription {
+		color: $primary !important;
+		background-color: white;
+	}
+}
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+	&:hover {
+		.tooltiptext {
+			visibility: visible;
+		}
+	}
+
+	.contentTooltip {
+		padding: 10px !important;
+	}
+}
+
+.tooltiptextDescription {
+	width: auto;
+	height: auto;
+	left: 5px;
+	z-index: 1;
+
+	padding: 3px 10px !important;
+	border-radius: 6px !important;
+	border: 0.5px solid darkgray !important;
+
+	ul {
+		margin-block-start: 0px !important;
+		margin-block-end: 0px !important;
+		padding-inline-start: 20px !important;
+		margin-bottom: 7px !important;
+	}
+}
+
+.mat-tooltip {
+	white-space: break-spaces;
+}
+
+

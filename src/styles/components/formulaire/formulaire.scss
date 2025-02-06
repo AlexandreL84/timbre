@@ -1,0 +1,368 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../variable" as variable;
+
+$min-height-form: 75;
+$min-height-form-double-label: 90;
+$button-height: 30;
+$colorNoValid: #a94442;
+$colorBgNoValid: #ffe8e9;
+//$min-height-form: 85px; //Pour 2 messages d'erreurs
+
+.formulaire {
+	/*
+	@media screen and (max-width: 959px) {
+		font-size: 1.25em;
+	}
+	@media screen and (max-width: 599px) {
+		font-size: 1em;
+	}
+	*/
+
+	.titreFormulaire {
+		font-size: 22px;
+		font-weight: bold;
+		@media screen and (max-width: 959px) {
+			font-size: 33px;
+		}
+		@media screen and (max-width: 599px) {
+			font-size: 22px;
+		}
+	}
+}
+
+.verticalShrinker {
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+
+/*
+.formulaire-action {
+	@media screen and (max-width: 959px) {
+		font-size: 0.7em;
+	}
+}
+
+ */
+
+mat-error {
+	font-size: 0.75em;
+}
+
+@mixin color($theme) {
+	//@import "~@libs-z-tools/styles/formulaire.scss";
+
+	$color-config: mat.get-color-config($theme);
+	$primary-palette: map.get($color-config, "primary");
+	$primary: mat.get-color-from-palette($primary-palette);
+
+	.formulaire-box-elevation {
+		mat-form-field.ng-invalid,
+		mat-form-field.ng-valid,
+		z-datepicker.ng-invalid,
+		z-datepicker.ng-valid,
+		z-datetimepicker.ng-invalid,
+		z-datetimepicker.ng-valid,
+		&.blue-color {
+			z-datepicker.ng-valid,
+			z-datetimepicker.ng-valid {
+				border-left: 0px solid !important;
+			}
+
+			z-datepicker.ng-valid input.ng-invalid,
+			z-datetimepicker.ng-valid input.ng-invalid {
+				border-left: 1px solid !important;
+			}
+
+			/*.ng-invalid:not(section):not(div):not(form):not(input),
+			.mat-radio-outer-circle,
+			z-input.ng-valid,
+			z-input.ng-invalid,
+			z-datepicker.ng-valid,
+			z-datepicker.ng-invalid,
+			z-datetimepicker.ng-valid,
+			z-datetimepicker.ng-invalid, {
+				background-color: transparent !important;
+			}*/
+
+			z-datepicker.ng-valid input,
+			z-datepicker.ng-invalid input,
+			z-datetimepicker.ng-valid input,
+			z-datetimepicker.ng-invalid input {
+				background-color: variable.$color-valid !important;
+			}
+
+			.ng-invalid:not(section):not(form):not(div):not(z-datepicker):not(z-input):not(z-datetimepicker):not(mat-checkbox):not(mat-form-field):not(mat-radio-group):not(.mat-input-element),
+			z-datepicker.ng-invalid input,
+			z-datetimepicker.ng-invalid input,
+			input.ng-invalid:not(.mat-input-element),
+			input[type="number"].ng-invalid,
+			.mat-form-autocomplete:has(input.ng-invalid) {
+				border-left-width: 5px !important;
+				border-left-style: solid !important;
+			}
+
+			.ng-invalid:not(section):not(form):not(div):not(z-datepicker):not(z-input):not(z-datetimepicker):not(mat-form-field):not(mat-radio-group),
+			z-datepicker.ng-invalid input,
+			z-datetimepicker.ng-invalid input,
+			input.ng-invalid,
+			input[type="text"].ng-invalid {
+				border-left-width: 5px !important;
+			}
+
+			.ng-invalid:not(form):not(div) .mat-radio-outer-circle {
+				border-left-color: $primary;
+			}
+
+			input.ng-invalid,
+			input[type="number"].ng-invalid,
+			z-datepicker.ng-invalid input,
+			z-datetimepicker.ng-invalid input,
+			z-datetimepicker.ng-invalid input:not(.cdk-text-field-autofill-monitored),
+			.mat-form-autocomplete:has(input.ng-invalid),
+			.ng-invalid:not(form):not(div):not(z-datepicker) {
+				border-left-color: $primary !important;
+			}
+		}
+
+		mat-radio-group.ng-invalid,
+		mat-radio-group.ng-valid {
+			border-left: 0px solid !important;
+		}
+
+		.ng-valid[required],
+		.ng-valid.required {
+			&:not(mat-checkbox) {
+				border-left: 1px solid #b4b4b4;
+			}
+		}
+
+		z-datetimepicker.ng-invalid,
+		z-datepicker.ng-invalid,
+		form.ng-invalid,
+		div.ng-invalid:not(.mat-form-autocomplete),
+		.mat-form-autocomplete input {
+			border-left: 0px solid !important;
+			background-color: transparent;
+
+			/*input:not(.cdk-text-field-autofill-monitored) {
+				border-left: 1px solid !important;
+				background-color: variable.$color-valid !important;
+			}*/
+		}
+
+		z-datepicker.ng-valid {
+			border-left: 0px solid !important;
+
+			input {
+				border-left: 1px solid !important;
+			}
+		}
+
+		&.red-color {
+			z-input.ng-valid,
+			z-datepicker.ng-valid,
+			z-datetimepicker.ng-valid {
+				border-left: 0px solid !important;
+
+				input {
+					border-left: 1px solid !important;
+				}
+			}
+
+			.ng-invalid:not(section):not(div):not(form):not(mat-form-field):not(mat-radio-group):not(mat-checkbox):not(z-datepicker):not(z-input):not(z-datetimepicker):not(.mat-input-element) {
+				border-left: 5px solid $colorNoValid !important;
+				background-color: $colorBgNoValid !important;
+			}
+
+			mat-checkbox.ng-invalid {
+				.mat-checkbox-inner-container {
+					background-color: $colorBgNoValid !important;
+				}
+
+				.mat-checkbox-label {
+					color: $colorNoValid !important;
+				}
+			}
+
+			mat-radio-group.ng-invalid {
+				.mat-radio-outer-circle {
+					border-color: $colorNoValid !important;
+					background-color: $colorBgNoValid !important;
+				}
+
+				.mat-radio-label-content {
+					color: $colorNoValid !important;
+				}
+			}
+
+			input.ng-invalid:not(.mat-input-element),
+			input[type="number"].ng-invalid,
+			z-datetimepicker.ng-invalid input,
+			z-datepicker.ng-invalid input,
+			z-input.ng-invalid input:not(.noVerif),
+			input.ng-invalid:not(.noVerif),
+			input[type="text"].ng-invalid:not(.noVerif),
+			.mat-form-autocomplete:has(input.ng-invalid) {
+				border-left: 5px solid $colorNoValid !important;
+				background-color: $colorBgNoValid !important;
+
+				input {
+					background-color: $colorBgNoValid !important;
+				}
+
+				z-icon {
+					color: $colorNoValid !important;
+				}
+			}
+
+			.ng-invalid + .trigger .material-icons,
+			z-datetimepicker.ng-invalid svg,
+			z-datepicker.ng-invalid svg {
+				color: $colorNoValid !important;
+			}
+		}
+
+		.mat-form-field-appearance-outline {
+			.mat-form-field-wrapper {
+				padding-bottom: 0px !important;
+			}
+		}
+
+		h2 {
+			margin-left: 0px !important;
+			margin-bottom: 10px !important;
+			font-size: 1.55em;
+		}
+
+		h3,
+		h4 {
+			margin-left: 0px !important;
+			margin-bottom: 2%;
+		}
+
+		mat-divider {
+			margin-bottom: 20px;
+			max-width: 94%;
+
+			&.matDivider100 {
+				max-width: 100% !important;
+			}
+		}
+
+		label {
+			&:not([class*="width100"]) {
+				max-width: 90%;
+			}
+
+			margin-bottom: 5px;
+			margin-left: 0px !important;
+		}
+
+		.description {
+			min-height: 18px;
+			font-size: 0.75em;
+		}
+
+		table {
+			z-select,
+			z-input,
+			.form-input,
+			.date-input {
+				min-height: auto !important;
+			}
+
+			.form-input,
+			.date-input,
+			select,
+			z-select,
+			z-input,
+			z-datepicker,
+			z-datetimepicker,
+			input,
+			mat-radio-group,
+			mat-checkbox,
+			mat-autocomplete,
+			mat-datepicker-toggle {
+				margin-top: 2px !important;
+				margin-bottom: 2px !important;
+			}
+		}
+
+		.form-input,
+		.date-input,
+		select,
+		z-select,
+		z-input,
+		z-datepicker,
+		z-datetimepicker,
+		input:not([class*="inputContent"]),
+		mat-radio-group,
+		mat-checkbox,
+		mat-autocomplete {
+			&:not(.noMargin) {
+				margin-left: 0px !important;
+
+				&.form-input-text {
+					margin-bottom: 10px !important;
+				}
+
+				margin-bottom: 2px !important;
+			}
+		}
+
+		z-select,
+		z-input,
+		.mat-form-field-input,
+		.form-input,
+		.date-input {
+			margin-top: 0px !important;
+			min-height: $min-height-form * 1px;
+		}
+
+		.z-select,
+		mat-form-field,
+		.form-input {
+			&.doubleLabel {
+				min-height: $min-height-form-double-label * 1px;
+			}
+
+			&.double {
+				min-height: ($min-height-form * 2) * 1px;
+			}
+
+			&.noError {
+				min-height: ($min-height-form * 0.5) * 1px;
+			}
+		}
+
+		mat-radio-group {
+			margin-left: 0px !important;
+			margin-top: 5px;
+		}
+
+		mat-button-toggle-group {
+			line-height: $button-height * 1px;
+			margin-left: 0px !important;
+			margin-bottom: 15px;
+			height: auto !important;
+		}
+	}
+
+	//Intermediaire
+	.box-elevation-height-auto {
+		height: auto !important;
+		background-color: #fffdfb;
+		border: solid 1px #707070;
+	}
+
+	.ng-valid:not(section):not(form):not(div):not(z-datepicker):not(z-input):not(z-datetimepicker):not(mat-checkbox):not(mat-form-field):not(mat-radio-group) {
+		background-color: variable.$color-valid !important;
+	}
+
+	.rechercheContent {
+		input {
+			text-transform: uppercase;
+		}
+	}
+}

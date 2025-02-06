@@ -1,0 +1,32 @@
+<ng-container *ngIf="icone">
+    <ng-container *ngIf="svg; else noSvg">
+        <svg-icon
+            [matTooltip]="info ? info : ''"
+            [matTooltipClass]="classInfo + ' ' + classToolTip"
+            [matTooltipPosition]="infoPosition ? infoPosition : 'right'"
+            [matBadgeHidden]="matBadgeHidden"
+            [matBadge]="badge"
+            [src]="'assets/svg/' + (type ? type + '/' : '') + icone + '.svg'"
+            [class]="classIcone"></svg-icon>
+    </ng-container>
+    <ng-template #noSvg>
+        <ng-container *ngIf="selectedIconHtml; else matIcon">
+            <span
+                [matTooltip]="info ? info : ''"
+                [matTooltipClass]="classInfo + ' ' + classToolTip"
+                [matTooltipPosition]="infoPosition ? infoPosition : 'right'"
+                [matBadgeHidden]="matBadgeHidden"
+                [matBadge]="badge"
+                [matBadgeColor]="matBadgeColor"
+                [matBadgeSize]="matBadgeSize"
+                [ngStyle]="color ? {color: color} : null"
+                [class]="matBadgeClass"
+                [innerHTML]="selectedIconHtml"
+                [style.transform]="rotation ? 'rotate(' + rotation + 'deg)' : ''">
+            </span>
+        </ng-container>
+        <ng-template #matIcon>
+            <mat-icon>{{ icone }}</mat-icon>
+        </ng-template>
+    </ng-template>
+</ng-container>

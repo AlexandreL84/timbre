@@ -1,0 +1,57 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../variable" as variable;
+
+@mixin color($theme) {
+	$color-config: mat.get-color-config($theme);
+	$accent-palette: map.get($color-config, "accent");
+	$accent: mat.get-color-from-palette($accent-palette);
+	$primary-palette: map.get($color-config, "primary");
+	$primary: mat.get-color-from-palette($primary-palette);
+
+	mat-option {
+		color: $primary;
+		border-bottom: 1px solid mat.get-color-from-palette($primary-palette, 50);
+	}
+}
+
+.mat-autocomplete-panel {
+	mat-option {
+		height: variable.$height-auto-complete;
+		line-height: variable.$height-auto-complete;
+
+		&.matOption100 {
+			height: 100% !important;
+		}
+
+		&.matOptionDouble {
+			height: 45% !important;
+			margin: 2.5% auto 2.5% auto !important;
+		}
+
+		span {
+			display: table-cell;
+		}
+	}
+}
+
+.form-input {
+	.mat-form-autocomplete-div {
+		/*max-width: $inputWidth * 1px;*/
+
+		.mat-form-autocomplete {
+			height: variable.$select-height !important;
+			width: 100% !important;
+			border: 1px solid variable.$input-border-color;
+			border-radius: 5px !important;
+			padding: 1px 5px 1px 0px;
+			background-color: variable.$color-valid !important;
+
+			input {
+				width: auto !important;
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+		}
+	}
+}

@@ -1,0 +1,25 @@
+<div fxLayout="column" fxFlex="100" fxLayoutGap="1%">
+    <h2 *ngIf="data?.titre" mat-dialog-title class="{{ data?.classTitre }}" [ngClass]="{move: data?.move}" [cdkDragDisabled]="!data?.move" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+        {{ data?.titre }}
+    </h2>
+    <div mat-dialog-content>
+        <p *ngIf="data?.message" [innerHTML]="data?.message"></p>
+        <ng-container *ngIf="content">
+            <ng-container *ngTemplateOutlet="content"> </ng-container>
+        </ng-container>
+    </div>
+
+    <div mat-dialog-actions [fxLayoutAlign]="data?.positionBtn ? data?.positionBtn : data?.desactiveBtnGauche ? 'center' : positionBtn" [style.padding-right]="'10px'">
+		<button
+			*ngIf="!data?.desactiveBtnGauche"
+			type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="annuler()">
+			{{ data?.btnGauche }}
+		</button>
+		<button
+			*ngIf="!data?.desactiveBtnDroite"
+			type="submit" class="rounded large color-white" mat-raised-button color="accent"
+			(click)="valider()">
+			{{ data?.btnDroite }}
+		</button>
+    </div>
+</div>

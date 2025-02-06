@@ -1,0 +1,17 @@
+.dialogImage {
+	.closeDialogImage {
+		position: absolute;
+		font-size: 1.5em;
+		margin-right: 5px;
+	}
+
+	img {
+		&.imageWidthContent {
+			max-height: 93vh;
+		}
+		&:not(.imageWidthContent) {
+			max-height: 95vh;
+		}
+	}
+}
+

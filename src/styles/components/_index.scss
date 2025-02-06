@@ -1,0 +1,22 @@
+@use "button/button" as button;
+@use "input/input" as input;
+@use "formulaire/formulaire" as formulaire;
+@use "select/select" as select;
+@use "date/date" as date;
+@use "error/error" as error;
+@use "tooltip/tooltip" as tooltip;
+@use "auto-complete/auto-complete" as autoComplete;
+
+@use "icon/icon";
+@use "container/container";
+
+@mixin theme($theme) {
+	@include button.color($theme);
+	@include input.color($theme);
+	@include formulaire.color($theme);
+	@include select.color($theme);
+	@include date.color($theme);
+	@include error.color($theme);
+	@include tooltip.color($theme);
+	@include autoComplete.color($theme);
+}

@@ -1,0 +1,140 @@
+<div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
+	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
+		<span>TIMBRE PAYS FORMULAIRE</span>
+		<span>{{ timbrePaysModel?.libelle }}</span>
+	</div>
+
+	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
+		<z-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></z-spinner>
+	</ng-template>
+	<ng-template #load>
+		<form
+			#formModif="ngForm"
+			ngForm="formModif"
+			(ngSubmit)="valider(formModif)"
+			class="formulaire-box-elevation"
+			[ngClass]="formModif?.submitted  ?'red-color' : 'blue-color'"
+			fxLayoutGap="20px"
+			fxFlex="100"
+			fxLayout="column"
+			fxLayoutAlign="space-between stretch"
+		>
+			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
+				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
+				<div fxLayout="column" class="form-input">
+					<label>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'code'"></z-libelle-model>
+					</label>
+					<input
+						name="code"
+						[(ngModel)]="timbrePaysModel.code"
+						type="text"
+						trim
+						upperCase
+						noEspace
+						required
+						zControl
+					/>
+				</div>
+
+				<div fxLayout="column" class="form-input">
+					<label>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'libelle'"></z-libelle-model>
+					</label>
+					<input
+						name="libelle"
+						[(ngModel)]="timbrePaysModel.libelle"
+						type="text"
+						trim
+						required
+						zControl
+					/>
+				</div>
+
+				<div fxLayout="column" class="form-input">
+					<label>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'libelle2'"></z-libelle-model>
+					</label>
+					<input
+						name="libelle2"
+						[(ngModel)]="timbrePaysModel.libelle2"
+						type="text"
+						trim
+						zControl
+					/>
+				</div>
+
+				<div fxLayout="column" class="form-input">
+					<label>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'classeur'"></z-libelle-model>
+					</label>
+					<input
+						name="classeur"
+						[(ngModel)]="timbrePaysModel.classeur"
+						type="number"
+						class="numberOnly"
+						minlength="1"
+						maxlength="2"
+						min="1"
+						zMin="1"
+						[max]="maxClasseur"
+						[zMax]="maxClasseur"
+						required
+						zControl
+					/>
+				</div>
+
+				<div fxLayout="column" class="form-input">
+					<label>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'page'"></z-libelle-model>
+					</label>
+					<input
+						name="page"
+						[(ngModel)]="timbrePaysModel.page"
+						type="number"
+						class="numberOnly"
+						minlength="1"
+						maxlength="2"
+						min="1"
+						zMin="1"
+						[max]="maxPage"
+						[zMax]="maxPage"
+						required
+						zControl
+					/>
+				</div>
+				<div fxLayout="column" class="form-input">
+					<label>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'total'"></z-libelle-model>
+					</label>
+					<input
+						name="total"
+						[(ngModel)]="timbrePaysModel.total"
+						type="number"
+						class="numberOnly"
+						minlength="1"
+						maxlength="5"
+						min="0"
+						zMin="0"
+						required
+						zControl
+					/>
+				</div>
+
+				<lib-upload [object]="timbrePaysModel" [key]="'drapeau'" (outPutObject)="timbrePaysModel = $event"></lib-upload>
+				<lib-upload [object]="timbrePaysModel" [key]="'imageUrl'" (outPutObject)="timbrePaysModel = $event"></lib-upload>
+			</div>
+
+			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
+				<button
+					type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">
+					Annuler
+				</button>
+				<button
+					type="submit" class="rounded large color-white" mat-raised-button color="accent">
+					Enregistrer
+				</button>
+			</div>
+		</form>
+	</ng-template>
+</div>

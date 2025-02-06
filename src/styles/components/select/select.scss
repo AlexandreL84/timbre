@@ -1,0 +1,27 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../variable" as variable;
+
+@mixin color($theme) {
+	$color-config: mat.get-color-config($theme);
+	$primary-palette: map.get($color-config, "primary");
+	$primary: mat.get-color-from-palette($primary-palette);
+}
+
+select {
+	margin: variable.$wrapper-margin;
+	top: variable.$input-top;
+	z-index: 1;
+	border-radius: 5px;
+	width: 100%;
+	transition: border-color variable.$placeholder-transition;
+	outline: none;
+	height: variable.$select-height;
+	line-height: variable.$select-height;
+	border: 1px solid variable.$input-border-color;
+	background-color: variable.$color-valid !important;;
+}
+
+.mat-select-value {
+	padding-left: 5px;
+}

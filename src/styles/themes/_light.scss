@@ -1,0 +1,31 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../palette/blue" as blue-palette;
+@use "../palette/orange" as orange-palette;
+@use "../palette/gray" as gray-palette;
+@use "../components";
+
+
+@function mat-set-background($theme, $backgroundColor) {
+	$palette-color: map-get($theme, color);
+	$background: map-get($palette-color, background);
+	$background: map_merge($background, (background: $backgroundColor));
+	$palette-color: map_merge($palette-color, (background: $background));
+	@return map_merge($theme, (color: $palette-color));
+}
+
+$my-app-light-primary: mat.define-palette(blue-palette.$blue-theme);
+$my-app-light-accent: mat.define-palette(orange-palette.$orange-theme);
+$my-app-light-warn: mat.define-palette(mat.$red-palette);
+$my-background: mat.define-palette(gray-palette.$gray-theme);
+
+$theme: mat.define-light-theme(
+		(
+			color: (
+				primary: $my-app-light-primary,
+				accent: $my-app-light-accent,
+				warn: $my-app-light-warn,
+			)
+		)
+);
+$my-app-light-theme: mat-set-background($theme, white);

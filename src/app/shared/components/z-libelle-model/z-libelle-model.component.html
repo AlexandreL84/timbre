@@ -1,0 +1,21 @@
+<ng-container *ngIf="object">
+    <span fxLayout="row" fxLayoutGap="5px" class="{{ classLibelle }}" [ngClass]="{widthAuto: propriete == 'unite' || separator}">
+        <span
+            [innerHTML]="
+                toLowerCase ? object?.getPropertyLibelle(key, propriete)?.charAt(0).toLowerCase() + object?.getPropertyLibelle(key, propriete)?.slice(1) : object?.getPropertyLibelle(key, propriete)
+            ">
+        </span>
+        <ng-container *ngIf="propriete != 'unite'">
+            <span *ngIf="showUnite && object?.getPropertyLibelle(key, 'uniteInfo')">{{ object?.getPropertyLibelle(key, "uniteInfo") }}</span>
+            <ng-container *ngIf="showInfo && (propriete == 'label' || propriete == 'label2' || propriete == 'label3') && (object?.getPropertyLibelle(key, 'info') || info)">
+                <z-icon
+                    class="iconInfo {{ classIcone }}"
+                    [icone]="FontAwesomeEnum.CIRCLE_INFO"
+                    [info]="info ? info : object?.getPropertyLibelle(key, 'info')"
+                    [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"></z-icon>
+            </ng-container>
+        </ng-container>
+        <span *ngIf="showQuestion && object?.getPropertyLibelle(key, 'question')">{{ object?.getPropertyLibelle(key, "question") }}</span>
+        <span *ngIf="separator">{{ separator }}&nbsp;</span>
+    </span>
+</ng-container>

@@ -1,0 +1,18 @@
+<div fxLayout="column" class="form-input">
+	<label>
+		<z-libelle-model [object]="object" [key]="key"></z-libelle-model>
+	</label>
+	<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+		<img *ngIf="object[key] && !selectedFile" [src]="object[key]" alt="Image actuelle" class="imgPays" />
+		<canvas #canvas *ngIf="selectedFile" ></canvas>
+
+		<input
+			id="{{id}}"
+			type="file"
+			accept="image/*"
+			(change)="onFileSelected($event)"
+			hidden
+		/>
+		<button type="button" class="rounded large color-white" mat-raised-button color="accent" (click)="triggerFileInput()">Choisir une image</button>
+	</div>
+</div>

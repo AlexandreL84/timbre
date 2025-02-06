@@ -1,0 +1,25 @@
+<section *ngIf="application" fxLayout="column" fxLayoutGap="2%" [ngClass.gt-sm]="'mainContainerGlob'" class="heightMax">
+    <div fxLayout="column" fxLayoutGap="20px">
+        <div fxLayout="row" fxLayoutAlign="center stretch" class="primary">
+            <div fxFlex="90" fxLayout="column" fxLayoutGap="30px">
+                <div fxLayout="column" fxLayoutGap.lt-md="20px" fxLayout.gt-sm="row-reverse" fxLayoutAlign.gt-sm="center center" fxFlexOffset="30px">
+                    <img fxFlex.gt-sm="50" fxFlex="100" [src]="'administration/Erreur-404-vecteur.svg' | ftpUrl" alt="" />
+                    <div fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
+                        <span class="textPrincipal">Erreur 404</span>
+                        <span class="textSecondaire">Page introuvable</span>
+                        <button
+                            mat-raised-button
+                            color="accent"
+                            class="rounded large"
+                            (click)="navigate(application === ApplicationEnum.PORTAIL_ZEPHIR ? 'home' : application === ApplicationEnum.PORTAIL_VITRINE ? 'protocole' : 'accueil')">
+                            Retour à l'accueil
+                        </button>
+                    </div>
+                </div>
+                <span *ngIf="application === ApplicationEnum.ESPACE_ASSURE" fxFlexAlign="center">
+                    En cas de problème persistant, rendez-vous dans la rubrique <a class="click" (click)="navigate('aide')"><u>Aide</u></a> pour contacter notre équipe technique.
+                </span>
+            </div>
+        </div>
+    </div>
+</section>

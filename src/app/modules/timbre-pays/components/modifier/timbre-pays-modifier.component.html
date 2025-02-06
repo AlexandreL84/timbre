@@ -1,0 +1,18 @@
+TIMBRE PAYS
+
+<button (click)="addTimbreBouchon()">Ajouter</button>
+
+<table width="100%">
+	<tr>
+		<th>Id</th>
+		<th>Code</th>
+		<th>Libellé</th>
+	</tr>
+	<tr *ngFor="let timbre of timbres$ | async">
+		<td>{{timbre?.getId()}}</td>
+		<td>{{timbre?.getCode()}}</td>
+		<td>{{timbre?.getLibelle()}}</td>
+		<td><button (click)="timbrePaysService.deleteTimbre(timbre)">supprimer</button> </td>
+		<td><button (click)="timbrePaysService.deleteTimbre(timbre)">supprimer</button> </td>
+	</tr>
+</table>

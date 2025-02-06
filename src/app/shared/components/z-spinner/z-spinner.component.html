@@ -1,0 +1,15 @@
+<div fxLayout="column" [fxLayoutAlign]="align" class="{{ _classSpinner }}">
+    <ng-template [ngIf]="bar" [ngIfElse]="noBar">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </ng-template>
+
+    <ng-template #noBar>
+        <p *ngIf="text" class="{{ classText }}">{{ text }}</p>
+        <ng-template [ngIf]="diameter" [ngIfElse]="noDiameter">
+            <mat-spinner [diameter]="diameter" [matTooltip]="info ? info : ''"></mat-spinner>
+        </ng-template>
+        <ng-template #noDiameter>
+            <mat-spinner></mat-spinner>
+        </ng-template>
+    </ng-template>
+</div>

@@ -1,0 +1,45 @@
+@use "sass:map";
+@use "@angular/material" as mat;
+@use "../palette/blue" as blue-palette;
+@use "../palette/orange" as orange-palette;
+@use "../palette/gray" as gray-palette;
+
+@use "../typography/config" as typography;
+@use "../components" as component;
+
+$my-app-dark-primary: mat.define-palette(blue-palette.$blue-theme);
+$my-app-dark-accent: mat.define-palette(orange-palette.$orange-theme);
+$my-app-dark-warn: mat.define-palette(mat.$red-palette);
+$my-app-dark-theme: mat.define-dark-theme(
+		(
+			color: (
+				primary: $my-app-dark-primary,
+				accent: $my-app-dark-accent,
+				warn: $my-app-dark-warn,
+			),
+		)
+);
+
+$my-app-dark-variants: (
+	success: $my-app-dark-success,
+);
+
+.dark-theme {
+	@include mat.core-color($my-app-dark-theme);
+	@include mat.button-color($my-app-dark-theme);
+	@include mat.toolbar-theme($my-app-dark-theme);
+	@include component.theme($my-app-dark-theme, $my-app-dark-variants);
+	@include mat.radio-theme($my-app-dark-theme);
+	@include mat.checkbox-theme($my-app-dark-theme);
+	@include mat.divider-theme($my-app-dark-theme);
+}
+
+$color-config: mat.get-color-config($my-app-dark-theme);
+$primary-palette: map-get($color-config, 'primary');
+$accent-palette: map-get($color-config, 'accent');
+$primary: mat.get-color-from-palette($primary-palette, 500);
+$accent: mat.get-color-from-palette($accent-palette, 500);
+
+.primary {
+	color: $primary
+}
