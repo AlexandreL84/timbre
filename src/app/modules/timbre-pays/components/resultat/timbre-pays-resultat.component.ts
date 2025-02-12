@@ -137,16 +137,16 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 	generatePDFByImage() {
 		const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/book-f941b.appspot.com/o/AF.png?alt=media&token=a1039f78-3cff-41ab-8569-ea1b2cefe2c1';
 		this.generatePDF(null);
-		this.uploadService.getImageBase642(imageUrl);
+		//this.uploadService.getImageBase642(imageUrl);
 
-		this.uploadService.getImageBase64(imageUrl).subscribe(
+		/*this.uploadService.getImageBase64(imageUrl).subscribe(
 			(base64) => {
 				this.generatePDF(base64);
 			},
 			(error) => {
 				console.error(error);
 			}
-		);
+		);*/
 	}
 
 	generatePDF(base64) {
