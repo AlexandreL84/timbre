@@ -1,5 +1,5 @@
 <div fxLayout="column" fxFlex="100" fxLayoutGap="1%">
-    <h2 *ngIf="data?.titre" mat-dialog-title class="{{ data?.classTitre }}" [ngClass]="{move: data?.move}" [cdkDragDisabled]="!data?.move" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragHandle>
+    <h2 *ngIf="data?.titre" mat-dialog-title class="{{ data?.classTitre }}">
         {{ data?.titre }}
     </h2>
     <div mat-dialog-content>

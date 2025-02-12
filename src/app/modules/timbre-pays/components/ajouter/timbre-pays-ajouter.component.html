@@ -1,7 +1,7 @@
 <div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
 	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
-		<span>{{timbrePaysModel?.getId()? 'MODIFICATION' : 'AJOUT'}} </span>
-		<span>{{ timbrePaysModel?.getLibelle() }}</span>
+		<span>Ajout de timbres pour le pays </span>
+		<span class="bold">{{ timbrePaysModel?.getLibelle() }}</span>
 	</div>
 
 	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
@@ -9,29 +9,29 @@
 	</ng-template>
 	<ng-template #load>
 		<form
-			#formModif="ngForm"
-			ngForm="formModif"
-			(ngSubmit)="valider(formModif)"
+			#formAjout="ngForm"
+			ngForm="formAjout"
+			(ngSubmit)="valider(formAjout)"
 			class="formulaire-box-elevation"
-			[ngClass]="formModif?.submitted  ?'red-color' : 'blue-color'"
+			[ngClass]="formAjout?.submitted  ?'red-color' : 'blue-color'"
 			fxLayoutGap="20px"
 			fxFlex="100"
 			fxLayout="column"
 			fxLayoutAlign="space-between stretch"
 		>
 			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
-				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 				<div fxLayout="column" class="form-input">
 					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'code'"></z-libelle-model>
+						Nombre de timbres
 					</label>
 					<input
-						name="code"
-						[(ngModel)]="timbrePaysModel.code"
-						type="text"
-						trim
-						upperCase
-						noEspace
+						name="nbTimbres"
+						[ngModel]="nbTimbres"
+						(ngModelChange)="changeTotal($event)"
+						type="number"
+						class="numberOnly"
+						minlength="1"
+						maxlength="4"
 						required
 						zControl
 					/>
@@ -39,95 +39,22 @@
 
 				<div fxLayout="column" class="form-input">
 					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'libelle'"></z-libelle-model>
+						<z-libelle-model [object]="timbrePaysModel" [key]="'total'"></z-libelle-model>
 					</label>
 					<input
-						name="libelle"
-						[(ngModel)]="timbrePaysModel.libelle"
-						type="text"
-						trim
+						name="total"
+						[(ngModel)]="this.total"
+						type="number"
+						class="numberOnly"
+						minlength="1"
+						maxlength="4"
+						[disabled]="nbTimbres != 0"
 						required
 						zControl
 					/>
-				</div>
-
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'libelleLangue'"></z-libelle-model>
-					</label>
-					<input
-						name="libelleLangue"
-						[(ngModel)]="timbrePaysModel.libelleLangue"
-						type="text"
-						trim
-						zControl
-					/>
-				</div>
-				<lib-upload [object]="timbrePaysModel" [key]="'imageLangue'" [keyZoom]="'imageLangueZoom'"  [dossier]="'langue'" [code]="timbrePaysModel?.getCode()" [maxWidth]="780" [maxHeight]="200" (outPutObject)="timbrePaysModel = $event"></lib-upload>
-
-
-				<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
-					<div fxLayout="column" class="form-input">
-						<label>
-							<z-libelle-model [object]="timbrePaysModel" [key]="'classeur'"></z-libelle-model>
-						</label>
-						<input
-							name="classeur"
-							[(ngModel)]="timbrePaysModel.classeur"
-							type="number"
-							class="numberOnly"
-							minlength="1"
-							maxlength="2"
-							min="1"
-							zMin="1"
-							[max]="maxClasseur"
-							[zMax]="maxClasseur"
-							required
-							zControl
-						/>
-					</div>
-
-					<div fxLayout="column" class="form-input">
-						<label>
-							<z-libelle-model [object]="timbrePaysModel" [key]="'page'"></z-libelle-model>
-						</label>
-						<input
-							name="page"
-							[(ngModel)]="timbrePaysModel.page"
-							type="number"
-							class="numberOnly"
-							minlength="1"
-							maxlength="2"
-							min="1"
-							zMin="1"
-							[max]="maxPage"
-							[zMax]="maxPage"
-							required
-							zControl
-						/>
-					</div>
-					<div fxLayout="column" class="form-input">
-						<label>
-							<z-libelle-model [object]="timbrePaysModel" [key]="'total'"></z-libelle-model>
-						</label>
-						<input
-							name="total"
-							[(ngModel)]="timbrePaysModel.total"
-							type="number"
-							class="numberOnly"
-							minlength="1"
-							maxlength="5"
-							min="0"
-							zMin="0"
-							required
-							zControl
-						/>
-					</div>
-				</div>
-
-				<div fxLayout="row" fxLayoutGap="25px" fxLayoutAlign="space-evenly center">
-					<lib-upload [object]="timbrePaysModel" [key]="'drapeau'" [keyZoom]="'drapeauZoom'" [dossier]="'drapeau'" [code]="timbrePaysModel?.getCode()" [maxWidth]="620" [maxHeight]="430"  [alignLabel]="'space-evenly center'" (outPutObject)="timbrePaysModel = $event"></lib-upload>
-					<lib-upload [object]="timbrePaysModel" [key]="'map'" [keyZoom]="'mapZoom'"  [dossier]="'map'" [code]="timbrePaysModel?.getCode()" [maxWidth]="220" [maxHeight]="220"  [alignLabel]="'space-evenly center'"(outPutObject)="timbrePaysModel = $event"></lib-upload>
+					<!--
+					<span class="bold">{{  +this.nbTimbres + +this.timbrePaysModel.getTotal() }}</span>
+					-->
 				</div>
 			</div>
 

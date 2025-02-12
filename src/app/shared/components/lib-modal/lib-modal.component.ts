@@ -1,4 +1,4 @@
-import {Component, Inject, Input, OnDestroy, ViewChild} from "@angular/core";
+import {Component, Inject, Input } from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {isNotNullOrUndefined, isNullOrUndefined} from "../../utils/utils";
@@ -14,20 +14,18 @@ export interface DialogData {
     desactiveBtnDroite: boolean;
     desactiveBtnGauche: boolean;
     positionBtn: string;
-    move: boolean;
 }
 
 @Component({
-    selector: "z-modal",
-    templateUrl: "./z-modal.component.html",
+    selector: "lib-modal",
+    templateUrl: "./lib-modal.component.html",
 })
-export class ZModalComponent implements OnDestroy {
+export class LibModalComponent {
     @Input() content: any;
-    @Input() componentRef;
 
 	positionBtn = "space-between";
 
-    constructor(public dialogRef: MatDialogRef<ZModalComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public router: Router) {
+    constructor(public dialogRef: MatDialogRef<LibModalComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData, public router: Router) {
         if (isNullOrUndefined(data.btnDroite)) {
             data.btnDroite = "Valider";
         }
@@ -46,12 +44,6 @@ export class ZModalComponent implements OnDestroy {
         this.dialogRef.close(true);
         if (isNotNullOrUndefined(this.data.route)) {
             this.router.navigate(["/" + this.data.route]);
-        }
-    }
-
-    ngOnDestroy() {
-        if (isNotNullOrUndefined(this.componentRef)) {
-            this.componentRef.destroy();
         }
     }
 }

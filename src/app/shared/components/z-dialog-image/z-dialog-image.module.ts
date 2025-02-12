@@ -1,12 +1,13 @@
 import {NgModule} from "@angular/core";
-import {ZIconComponent} from "./z-icon.component";
 import {CommonModule} from "@angular/common";
 import {MaterialModule} from "../../modules/material.module";
-import {AngularSvgIconModule} from "angular-svg-icon";
+import {ZDialogImageComponent} from "./z-dialog-image.component";
+import {ZIconModule} from "../z-icon";
+import {FlexLayoutModule} from "@angular/flex-layout";
 
 @NgModule({
-    declarations: [ZIconComponent],
-    imports: [CommonModule, MaterialModule, AngularSvgIconModule],
-    exports: [ZIconComponent],
+    declarations: [ZDialogImageComponent],
+	imports: [CommonModule, MaterialModule, FlexLayoutModule, ZIconModule],
+    exports: [ZDialogImageComponent],
 })
-export class ZIconModule {}
+export class ZDialogImageModule {}

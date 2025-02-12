@@ -1,16 +1,26 @@
 @use "sass:map";
 @use "@angular/material" as mat;
 @use "../palette/blue" as blue-palette;
+@use "../palette/yellow" as yellow-palette;
+@use "../palette/green" as green-palette;
 @use "../palette/orange" as orange-palette;
 @use "../palette/gray" as gray-palette;
+@use "../components" as components;
 
-@use "../typography/config" as typography;
-@use "../components" as component;
+@function mat-set-background($theme, $backgroundColor) {
+	$palette-color: map-get($theme, color);
+	$background: map-get($palette-color, background);
+	$background: map_merge($background, (background: $backgroundColor));
+	$palette-color: map_merge($palette-color, (background: $background));
+	@return map_merge($theme, (color: $palette-color));
+}
 
-$my-app-dark-primary: mat.define-palette(blue-palette.$blue-theme);
-$my-app-dark-accent: mat.define-palette(orange-palette.$orange-theme);
-$my-app-dark-warn: mat.define-palette(mat.$red-palette);
-$my-app-dark-theme: mat.define-dark-theme(
+
+
+$my-app-dark-primary: mat.m2-define-palette(green-palette.$green-theme);
+$my-app-dark-accent: mat.m2-define-palette(green-palette.$green-theme);
+$my-app-dark-warn: mat.m2-define-palette(mat.$m2-deep-orange-palette);
+$theme: mat.m2-define-dark-theme(
 		(
 			color: (
 				primary: $my-app-dark-primary,
@@ -20,26 +30,26 @@ $my-app-dark-theme: mat.define-dark-theme(
 		)
 );
 
+
+/*$my-app-dark-success: mat.m2-define-palette(success-palette.$green-theme);
 $my-app-dark-variants: (
 	success: $my-app-dark-success,
-);
+);*/
 
 .dark-theme {
-	@include mat.core-color($my-app-dark-theme);
-	@include mat.button-color($my-app-dark-theme);
-	@include mat.toolbar-theme($my-app-dark-theme);
-	@include component.theme($my-app-dark-theme, $my-app-dark-variants);
-	@include mat.radio-theme($my-app-dark-theme);
-	@include mat.checkbox-theme($my-app-dark-theme);
-	@include mat.divider-theme($my-app-dark-theme);
+	@include mat.core-color($theme);
+	@include mat.button-color($theme);
+	@include mat.toolbar-theme($theme);
+	//@include component.theme($my-app-dark-theme, $my-app-dark-variants);
+	@include mat.radio-theme($theme);
+	@include mat.checkbox-theme($theme);
+	@include mat.divider-theme($theme);
 }
 
-$color-config: mat.get-color-config($my-app-dark-theme);
+/*$color-config: mat.m2-get-color-config($theme);
 $primary-palette: map-get($color-config, 'primary');
 $accent-palette: map-get($color-config, 'accent');
-$primary: mat.get-color-from-palette($primary-palette, 500);
-$accent: mat.get-color-from-palette($accent-palette, 500);
+$primary: mat.m2-get-color-from-palette($primary-palette, 500);
+$accent: mat.m2-get-color-from-palette($accent-palette, 500);*/
 
-.primary {
-	color: $primary
-}
+

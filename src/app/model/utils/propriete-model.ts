@@ -1,7 +1,7 @@
-import {isNotNullOrUndefined, isObject} from "../utils/utils";
+import {isNotNullOrUndefined, isNullOrUndefined, isObject} from "../../shared/utils/utils";
+import "reflect-metadata";
 
 export abstract class ProprieteModel {
-    isModified: boolean;
 
     getPropertyLibelle(propertyKey: string, propriete?: string): string {
         try {
@@ -9,7 +9,7 @@ export abstract class ProprieteModel {
             if (isNotNullOrUndefined(metaData)) {
                 const libelle = metaData.libelle;
 
-                if (isNotNullOrUndefined(propriete)) {
+                if (isNullOrUndefined(propriete)) {
                     propriete = "label";
                 }
 

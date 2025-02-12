@@ -1,44 +1,31 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../../services/auth.service";
+import {FormBuilder, FormGroup, NgForm, Validators} from "@angular/forms";
+import {AuthService} from "../../../../shared/services/auth.service";
 
 @Component({
-    selector: "app-login",
-    templateUrl: "./login.component.html",
-    styleUrls: ["./login.component.scss"],
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-
-  signupForm: FormGroup;
-  errorMessage: string;
+  @ViewChild("loginForm") public loginForm!: NgForm;
+  errorMessage: string = "";
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   ngOnInit() {
-    this.initForm();
   }
 
-  initForm() {
-    this.signupForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
-    });
-  }
 
   onSubmit() {
-    const email = this.signupForm.get('email').value;
-    const password = this.signupForm.get('password').value;
+    console.log(this.loginForm.value);
 
-    this.authService.createNewUser(email, password).then(
-      () => {
-        this.router.navigate(['/books']);
-      },
-      (error) => {
-        this.errorMessage = error;
-      }
-    );
+    /*const email = this.loginForm['email'].value;
+    const password = this.signupForm.get('password').value;
+    this.authService.createNewUser(email, password)*/
   }
 }

@@ -1,26 +1,33 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
 import {finalize} from "rxjs/operators";
 import {AngularFireStorage} from "@angular/fire/compat/storage";
+import {isNotNullOrUndefined} from "../../utils/utils";
+import {FontAwesomeEnum} from "../../enum/font-awesome";
+import {UtilsService} from "../../services/utils.service";
 
 @Component({
-    selector: "lib-upload",
-    templateUrl: "./lib-upload.component.html",
-    styleUrls: ["./lib-upload.component.scss"],
+	selector: "lib-upload",
+	templateUrl: "./lib-upload.component.html",
+	styleUrls: ["./lib-upload.component.scss"],
 })
-export class LibUploadComponent {
-	@ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+export class LibUploadComponent  {
+	@ViewChild('canvas', {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
 
-	@Input() object
-	@Input() key
-	@Input() maxWidth = 100;
-	@Input() maxHeight = 200
+	@Input() object;
+	@Input() key: string;
+	@Input() keyZoom: string;
+	@Input() code: string;
+	@Input() dossier: string;
+	@Input() maxWidth: number = 100;
+	@Input() maxHeight: number = 200
+	@Input() alignLabel: string;
 
 	@Output() outPutObject: EventEmitter<any> = new EventEmitter<any>();
 
 	selectedFile!: File;
 	id: string = "file" + Math.floor(Math.random() * Math.floor(1000));
 
-	constructor(private storage: AngularFireStorage) {
+	constructor(private storage: AngularFireStorage, public utilsService: UtilsService) {
 	}
 
 	triggerFileInput(): void {
@@ -42,7 +49,6 @@ export class LibUploadComponent {
 
 				img.onload = () => {
 					const canvas = this.canvas.nativeElement;
-					console.log(this.canvas.nativeElement)
 					const ctx = canvas.getContext('2d');
 
 					if (ctx) {
@@ -74,7 +80,12 @@ export class LibUploadComponent {
 	}
 
 	saveFile() {
-		const filePath = `images/${Date.now()}-resized.png`;
+		let filePath: string;
+		if (isNotNullOrUndefined(this.code)) {
+			filePath = "images/" + (isNotNullOrUndefined(this.dossier) ? (this.dossier + "/") : "") + this.code + '.png';
+		} else {
+			filePath = `images/${Date.now()}-resized.png`;
+		}
 		const fileRef = this.storage.ref(filePath);
 
 		try {
@@ -89,8 +100,9 @@ export class LibUploadComponent {
 							finalize(() => {
 								fileRef.getDownloadURL().subscribe((url) => {
 									this.object[this.key] = url;
+									//console.log(this.object)
 									this.outPutObject.emit(this.object)
-									console.log('URL de l’image téléchargée : ', url);
+									//console.log('URL de l’image téléchargée : ', url);
 								});
 							})
 						)
@@ -101,4 +113,6 @@ export class LibUploadComponent {
 			console.error('Error uploading image:', error);
 		}
 	}
+
+	protected readonly FontAwesomeEnum = FontAwesomeEnum;
 }

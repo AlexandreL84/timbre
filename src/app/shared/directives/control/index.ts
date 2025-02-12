@@ -1,1 +1,1 @@
-export * from "./controlErrors.directive";
+export * from "./control-errors.directive";

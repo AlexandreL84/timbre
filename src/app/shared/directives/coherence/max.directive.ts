@@ -1,6 +1,6 @@
 import {NG_VALIDATORS, UntypedFormControl, ValidationErrors, Validator} from "@angular/forms";
 import {Directive, Input, OnChanges, SimpleChanges} from "@angular/core";
-import {isNotNullOrUndefined, isUndefined} from "../../../utils/cleva-utils";
+import {isNotNullOrUndefined, isUndefined} from "../../utils/utils";
 
 @Directive({
     selector: "[zMax][formControlName],[zMax][formControl],[zMax][ngModel]",

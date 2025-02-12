@@ -1,4 +1,56 @@
-/* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+@use '@angular/cdk';
+@use "styles/themes/light";
+@use "./styles/components";
+@use "./styles/typography/config" as typography;
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+@include mat.ripple();
+@include cdk.a11y-visually-hidden();
+@include cdk.overlay();
+@include cdk.text-field-autosize();
+@include cdk.text-field-autofill();
+@include mat.private-strong-focus-indicators-structural-styling('mat');
+@include mat.private-strong-focus-indicators-structural-styling('mat-mdc');
+
+@include mat.all-component-themes(light.$my-app-light-theme);
+@include components.theme(light.$my-app-light-theme);
+
+$color-config: mat.m2-get-color-config(light.$my-app-light-theme);
+
+html,
+body {
+	height: 100%;
+}
+
+body {
+	margin: 0;
+	font-family: Roboto, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+}
+
+.bg-white {
+	background-color: white;
+}
+
+.color-white {
+	color: white !important;
+}
+
+.width100 {
+	width: 100%;
+}
+
+.click {
+	cursor: pointer !important;
+}
+
+.spinner {
+	height: 300px;
+	width: 100%;
+}
+
 mat-spinner {
 	svg {
 

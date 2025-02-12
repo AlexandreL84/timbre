@@ -1,0 +1,12 @@
+echo "# timbre" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/AlexandreL84/timbre.git
+
+ng build --configuration production
+
+git commit -m "second commit"
+
+git commit -m "suppression image"

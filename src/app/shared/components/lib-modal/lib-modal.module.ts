@@ -1,15 +1,12 @@
 import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {ZModalComponent} from "./z-modal.component";
+import {LibModalComponent} from "./lib-modal.component";
 import {MaterialModule} from "../../modules/material.module";
-import {ZBlocInfoModule} from "../z-bloc-info/z-bloc-info.module";
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {DragDropModule} from "@angular/cdk/drag-drop";
-import {DirectiveLibModule} from "../directives/directive-lib.module";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
-    declarations: [ZModalComponent],
-    imports: [CommonModule, FlexLayoutModule, MaterialModule, ZBlocInfoModule, DragDropModule, DirectiveLibModule],
-    exports: [ZModalComponent],
+    declarations: [LibModalComponent],
+    imports: [CommonModule, FlexLayoutModule, MaterialModule],
+    exports: [LibModalComponent],
 })
-export class ZModalModule {}
+export class LibModalModule {}

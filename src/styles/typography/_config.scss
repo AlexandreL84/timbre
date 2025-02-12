@@ -31,7 +31,6 @@ $max-vw: 1200px;
 	@return math.div($value, ($value * 0 + 1));
 }
 
-
 .bold {
 	font-weight: bold;
 }

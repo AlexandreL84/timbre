@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from "@angular/core";
-import {isNotNullOrUndefined} from "../utils";
 import {DomSanitizer} from "@angular/platform-browser";
+import {isNotNullOrUndefined} from "../utils/utils";
 
 @Pipe({
     name: "reduireChaine",

@@ -1,1 +1,25 @@
-TIMBRE PAYS
+<app-simple-notification></app-simple-notification>
+<div fxLayout="column" fxLayoutGap="20px">
+	<app-header [titre]="''"></app-header>
+
+	<div fxLayout="row" fxLayoutAlign="space-between stretch">
+		<div fxFlex="5"></div>
+		<div fxFlex fxLayout="column" fxLayoutGap="20px">
+			<div fxLayout="row" fxLayoutGap="20px">
+				<button class="rounded large color-white" mat-raised-button color="primary" (click)="addTimbre()">
+					Ajouter
+				</button>
+				<button class="rounded large color-white" mat-raised-button color="accent"
+						(click)="addTimbreBouchon()">
+					Bouchon
+				</button>
+				<button class="rounded large color-white" mat-raised-button color="accent"
+						(click)="importer()">
+					Importer
+				</button>
+			</div>
+			<app-timbre-pays-resultat [timbres$]="timbrePaysService.getTimbres()"></app-timbre-pays-resultat>
+		</div>
+		<div fxFlex="5"></div>
+	</div>
+</div>

@@ -3,7 +3,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {MatBadgeSize} from "@angular/material/badge";
 import {TooltipPosition} from "@angular/material/tooltip";
 import {isNotNullOrUndefined, Utils} from "../../utils/utils";
-import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../enum/font-awesome";
+import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../../enum/font-awesome";
 
 @Component({
     selector: "z-icon",

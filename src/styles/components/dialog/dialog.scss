@@ -1,75 +1,13 @@
-@use "sass:map";
-@use "@angular/material" as mat;
-
-@mixin color($theme) {
-	$color-config: mat.m2-get-color-config($theme);
-	$accent-palette: map.get($color-config, "accent");
-	$accent: mat.m2-get-color-from-palette($accent-palette);
-	$primary-palette: map.get($color-config, "primary");
-	$primary: mat.m2-get-color-from-palette($primary-palette);
-
-	button {
-		&.mat-icon-button.mat-accent {
-			background-color: $accent;
-		}
+.dialog-modal {
+	.titre-modal {
+		padding: 20px 15px 20px 15px !important;
 	}
 
-	.boutonBasic {
-		color: $primary !important;
+	.bloc-modal {
+		padding: 10px 15px 10px 15px !important;
 	}
 
-	.boutonSubmit {
-		background-color: $primary !important;
-	}
-}
-
-button {
-	max-height: 100%;
-	font-family: Roboto, "Helvetica Neue", sans-serif;
-	&.mat-button.selected {
-		background-color: white;
-	}
-	&.mat-raised-button {
-		color: white;
-	}
-	&.mat-raised-button.mat-accent {
-		color: white;
-	}
-	&.mat-raised-button.mat-primary {
-		color: white;
-	}
-	&.mat-icon-button.mat-accent {
-		color: white;
-		font-size: large;
-	}
-}
-
-button {
-	&.rounded {
-		border-radius: 27px;
-	}
-	&.rounded-small {
-		border-radius: 7px;
-	}
-	&.large {
-		min-height: 36px;
-		width: 210px;
-	}
-	&.extra-large {
-		min-height: 36px;
-		width: 300px;
-	}
-	&.medium {
-		width: 160px;
-	}
-	&.small {
-		width: 110px;
-		max-height: 25px;
-	}
-	.roundIcon  {
-		margin-right: 10px;
-		&.small {
-			margin-top: 5px;
-		}
+	.bloc-bouton-modal {
+		padding: 0px 15px 15px 15px !important;
 	}
 }

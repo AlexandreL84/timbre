@@ -1,4 +1,26 @@
-canvas,.imgPays {
-	max-width: 100px;
-	max-height: 200px;
+.mat-column-total {
+	width: 70px !important;
+	text-align: center;
+}
+.mat-column-classeur,
+.mat-column-page {
+	width: 40px !important;
+	text-align: center;
+}
+
+.mat-column-ajouter,
+.mat-column-modifier,
+.mat-column-supprimer {
+	width: 50px !important;
+	text-align: center;
+}
+
+.imgPays {
+	//max-width: 40px !important;
+	max-height: 45px !important;
+}
+
+.imgLangue {
+	//max-width: 60px !important;
+	max-height: 45px !important;
 }

@@ -1,5 +1,5 @@
 <ng-container *ngIf="object">
-    <span fxLayout="row" fxLayoutGap="5px" class="{{ classLibelle }}" [ngClass]="{widthAuto: propriete == 'unite' || separator}">
+    <span fxLayout="row" fxLayoutGap="5px" class="{{ classLibelle }}" [ngClass]="{widthAuto: propriete == 'unite' || separator}" fxLayoutAlign="{{align}}">
         <span
             [innerHTML]="
                 toLowerCase ? object?.getPropertyLibelle(key, propriete)?.charAt(0).toLowerCase() + object?.getPropertyLibelle(key, propriete)?.slice(1) : object?.getPropertyLibelle(key, propriete)

@@ -6,12 +6,7 @@
 	}
 
 	img {
-		&.imageWidthContent {
-			max-height: 93vh;
-		}
-		&:not(.imageWidthContent) {
-			max-height: 95vh;
-		}
+		max-height: 95vh;
 	}
 }
 

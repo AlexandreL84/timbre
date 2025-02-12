@@ -1,6 +1,5 @@
-import {Component, Inject} from "@angular/core";
+import {Component} from "@angular/core";
 import {Router} from "@angular/router";
-import {ApplicationEnum} from "../../enums";
 
 @Component({
     selector: "ea-page-not-found",
@@ -8,9 +7,8 @@ import {ApplicationEnum} from "../../enums";
     styleUrls: ["./page-not-found.component.scss"],
 })
 export class PageNotFoundComponent {
-    readonly ApplicationEnum = ApplicationEnum;
 
-    constructor(@Inject("application") public application: string, private router: Router) {}
+    constructor(private router: Router) {}
 
     navigate(route: string) {
         this.router.navigate([route]);

@@ -46,15 +46,15 @@ $colorBgNoValid: #ffe8e9;
  */
 
 mat-error {
-	font-size: 0.75em;
+	font-size: 1em;
 }
 
 @mixin color($theme) {
 	//@import "~@libs-z-tools/styles/formulaire.scss";
 
-	$color-config: mat.get-color-config($theme);
+	$color-config: mat.m2-get-color-config($theme);
 	$primary-palette: map.get($color-config, "primary");
-	$primary: mat.get-color-from-palette($primary-palette);
+	$primary: mat.m2-get-color-from-palette($primary-palette);
 
 	.formulaire-box-elevation {
 		mat-form-field.ng-invalid,

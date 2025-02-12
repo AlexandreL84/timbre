@@ -1,9 +1,14 @@
-<div fxLayout="column" class="form-input">
+<div class="form-input" fxLayout="column"  [fxLayoutAlign]="alignLabel? 'space-evenly center': 'start stretch'">
 	<label>
-		<z-libelle-model [object]="object" [key]="key"></z-libelle-model>
+		<z-libelle-model [object]="object" [key]="key" [align]="alignLabel"></z-libelle-model>
 	</label>
-	<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
-		<img *ngIf="object[key] && !selectedFile" [src]="object[key]" alt="Image actuelle" class="imgPays" />
+	<div [fxLayout]="alignLabel && !(selectedFile || object[key])? 'column': 'row'" fxLayoutGap="10px" fxLayoutAlign="start center" [fxLayoutAlign]="(selectedFile || object[key])? 'space-evenly start': 'start center'">
+		<img *ngIf="object[key]"
+			 [src]="object[key]"
+			 class="imgSelect click"
+			 alt="Image actuelle"
+			 (click)="utilsService.zoom(object[keyZoom]? object[keyZoom] : object[key])"/>
+
 		<canvas #canvas *ngIf="selectedFile" ></canvas>
 
 		<input
@@ -13,6 +18,19 @@
 			(change)="onFileSelected($event)"
 			hidden
 		/>
-		<button type="button" class="rounded large color-white" mat-raised-button color="accent" (click)="triggerFileInput()">Choisir une image</button>
+		<z-icon
+			*ngIf="selectedFile || object[key]"
+			class="primary click"
+			style="font-size: 1.5em"
+			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PEN"
+			[info]="'Modifier'"
+			(click)="triggerFileInput()"
+		>
+		</z-icon>
+		<button
+			*ngIf="!(selectedFile || object[key])"
+			type="button" class="rounded large color-white" mat-raised-button color="accent" (click)="triggerFileInput()">
+			Choisir une image
+		</button>
 	</div>
 </div>

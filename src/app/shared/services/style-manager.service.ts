@@ -1,19 +1,17 @@
 import {Injectable} from "@angular/core";
 
 @Injectable({providedIn: "root"})
-export class StyleManager {
+export class StyleManagerService {
     isDark = false;
 
     toggleDarkTheme() {
         if (this.isDark) {
             this.removeStyle("dark-theme");
             document.body.classList.remove("dark-theme");
-            this.isDark = false;
         } else {
             const href = "dark-theme.css";
             getLinkElementForKey("dark-theme").setAttribute("href", href);
             document.body.classList.add("dark-theme");
-            this.isDark = true;
         }
     }
 

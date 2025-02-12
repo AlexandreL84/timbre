@@ -1,15 +1,17 @@
 import {NgModule} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {RouterModule} from "@angular/router";
-import {LoginComponent} from "./login/login.component";
 import {FlexLayoutModule} from "@angular/flex-layout";
-import {MaterialModule, ZInputModule} from "@libs/z-tools";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatCheckbox} from "@angular/material/checkbox";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {DirectiveModule} from "../../shared/directives/directive.module";
+import {LoginComponent} from "./components/login/login.component";
 
 const route = [{path: "login", component: LoginComponent}];
 
 @NgModule({
     declarations: [LoginComponent],
-    imports: [CommonModule, RouterModule.forChild(route), MaterialModule, FlexLayoutModule, ZInputModule, FormsModule],
+  imports: [CommonModule, RouterModule.forChild(route), FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule],
 })
 export class AuthentificationModule {}

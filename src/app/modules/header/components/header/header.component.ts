@@ -1,44 +1,25 @@
-import {Component, OnInit} from "@angular/core";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {AuthService} from "../../../services/auth.service";
+import {Component, Input, OnInit} from '@angular/core';
+import {StyleManagerService} from "../../../../shared/services/style-manager.service";
 
 @Component({
-    selector: "app-login",
-    templateUrl: "./login.component.html",
-    styleUrls: ["./login.component.scss"],
+	selector: 'app-header',
+	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class HeaderComponent implements OnInit {
 
-  signupForm: FormGroup;
-  errorMessage: string;
+	@Input() titre: string
 
-  constructor(private formBuilder: FormBuilder,
-              private authService: AuthService,
-              private router: Router) { }
+	constructor(public styleManagerService: StyleManagerService) {
+	}
 
-  ngOnInit() {
-    this.initForm();
-  }
+	ngOnInit() {
+	}
 
-  initForm() {
-    this.signupForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/[0-9a-zA-Z]{6,}/)]]
-    });
-  }
-
-  onSubmit() {
-    const email = this.signupForm.get('email').value;
-    const password = this.signupForm.get('password').value;
-
-    this.authService.createNewUser(email, password).then(
-      () => {
-        this.router.navigate(['/books']);
-      },
-      (error) => {
-        this.errorMessage = error;
-      }
-    );
-  }
+	toggleDarkTheme() {
+		console.log(this.styleManagerService.isDark)
+		console.log(this.styleManagerService.isDark)
+		this.styleManagerService.toggleDarkTheme();
+		this.styleManagerService.isDark = !this.styleManagerService.isDark;
+	}
 }

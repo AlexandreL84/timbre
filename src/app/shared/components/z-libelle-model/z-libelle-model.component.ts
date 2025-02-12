@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {FontAwesomeEnum} from "../enum/font-awesome";
+import {FontAwesomeEnum} from "../../enum/font-awesome";
 
 @Component({
     selector: "z-libelle-model",
@@ -17,6 +17,7 @@ export class ZLibelleModelComponent  {
     @Input() showUnite: boolean = true;
     @Input() showQuestion: boolean = false;
     @Input() separator: string;
+	@Input() align: string = "start center";
 
     readonly FontAwesomeEnum = FontAwesomeEnum;
 }

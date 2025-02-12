@@ -1,140 +1,174 @@
-<div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
-	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
-		<span>TIMBRE PAYS FORMULAIRE</span>
-		<span>{{ timbrePaysModel?.libelle }}</span>
+<z-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></z-spinner>
+
+<section [fxHide]="(load$ | async) == false">
+	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+		<div fxFlex style="font-size: 1.5em">
+			<span>Nombre de timbres : </span>
+			<span class="bold">{{ timbrePaysService.total$ |async }}</span>
+		</div>
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
+			 style="width: 200px; min-height:55px; height: 55px">
+			<input
+				(input)="applyFilter($event)"
+				placeholder="Filtrer les données"
+				type="text"
+			/>
+		</div>
+		<z-icon
+			class="primary click"
+			style="font-size: 2em"
+			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+			[info]="'Exporter tableauu'"
+			(click)="exportTable()"
+		>
+		</z-icon>
+		<z-icon
+			class="primary click"
+			style="font-size: 2em"
+			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+			[info]="'Exporter en pdg'"
+			(click)="generatePDFByImage()"
+		>
+		</z-icon>
 	</div>
 
-	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
-		<z-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></z-spinner>
-	</ng-template>
-	<ng-template #load>
-		<form
-			#formModif="ngForm"
-			ngForm="formModif"
-			(ngSubmit)="valider(formModif)"
-			class="formulaire-box-elevation"
-			[ngClass]="formModif?.submitted  ?'red-color' : 'blue-color'"
-			fxLayoutGap="20px"
-			fxFlex="100"
-			fxLayout="column"
-			fxLayoutAlign="space-between stretch"
-		>
-			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
-				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'code'"></z-libelle-model>
-					</label>
-					<input
-						name="code"
-						[(ngModel)]="timbrePaysModel.code"
-						type="text"
-						trim
-						upperCase
-						noEspace
-						required
-						zControl
-					/>
-				</div>
+	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+		<ng-container matColumnDef="drapeau">
+			<th mat-header-cell *matHeaderCellDef>
+				<z-libelle-model [object]="timbre" [key]="'drapeau'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<img *ngIf="element?.getDrapeau()"
+					 [src]="element?.getDrapeau()"
+					 class="imgPays click"
+					 (click)="utilsService.zoom(element?.getDrapeauZoom())"/>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="code">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<z-libelle-model [object]="timbre" [key]="'code'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getCode() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="libelle">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<z-libelle-model [object]="timbre" [key]="'libelle'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getLibelle() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="libelleLangue">
+			<th mat-header-cell *matHeaderCellDef>
+				<z-libelle-model [object]="timbre" [key]="'libelleLangue'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<span *ngIf="element?.getLibelleLangue()">
+					{{ element?.getLibelleLangue() }}
+				</span>
+				<img *ngIf="element?.getImageLangue()"
+					 [src]="element?.getImageLangue()"
+					 class="imgLangue click"
+					 (click)="utilsService.zoom(element?.getImageLangueZoom())"/>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="classeur">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<z-libelle-model [object]="timbre" [key]="'classeur'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getClasseur() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="page">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<z-libelle-model [object]="timbre" [key]="'page'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getPage() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="total">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<z-libelle-model [object]="timbre" [key]="'total'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getTotal() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="image">
+			<th mat-header-cell *matHeaderCellDef>
+				<z-libelle-model [object]="timbre" [key]="'map'"></z-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<img *ngIf="element?.getMap()"
+					 [src]="element?.getMap()"
+					 class="imgPays click"
+					 (click)="utilsService.zoom(element?.getMapZoom())"/>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="ajouter">
+			<th mat-header-cell *matHeaderCellDef>
+				<z-icon
+					style="font-size: 1.5em"
+					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="'Ajouter timbre'"
+				></z-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<z-icon
+					class="primary click"
+					style="font-size: 1.5em"
+					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="'Ajouter timbre'"
+					(click)="ajouter(element)"
+				></z-icon>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="modifier">
+			<th mat-header-cell *matHeaderCellDef>
+				<z-icon
+					style="font-size: 1.5em"
+					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.PENCIL"
+					[info]="'Modifier'"
+				></z-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<z-icon
+					class="primary click"
+					style="font-size: 1.5em"
+					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+					[info]="'Modifier'"
+					(click)="modifierTimbre(element)"
+				></z-icon>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="supprimer">
+			<th mat-header-cell *matHeaderCellDef>
+				<z-icon
+					style="font-size: 1.5em"
+					[type]="FontAwesomeEnum.TYPE_SOLID"
+					[icone]="FontAwesomeEnum.TRASH"
+					[info]="'Modifier'"
+				></z-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<z-icon
+					class="primary click"
+					style="font-size: 1.5em"
+					[type]="FontAwesomeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
+					[info]="'Supprimer'"
+					(click)="deleteTimbre(element)"
+				></z-icon>
+			</td>
+		</ng-container>
 
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'libelle'"></z-libelle-model>
-					</label>
-					<input
-						name="libelle"
-						[(ngModel)]="timbrePaysModel.libelle"
-						type="text"
-						trim
-						required
-						zControl
-					/>
-				</div>
-
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'libelle2'"></z-libelle-model>
-					</label>
-					<input
-						name="libelle2"
-						[(ngModel)]="timbrePaysModel.libelle2"
-						type="text"
-						trim
-						zControl
-					/>
-				</div>
-
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'classeur'"></z-libelle-model>
-					</label>
-					<input
-						name="classeur"
-						[(ngModel)]="timbrePaysModel.classeur"
-						type="number"
-						class="numberOnly"
-						minlength="1"
-						maxlength="2"
-						min="1"
-						zMin="1"
-						[max]="maxClasseur"
-						[zMax]="maxClasseur"
-						required
-						zControl
-					/>
-				</div>
-
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'page'"></z-libelle-model>
-					</label>
-					<input
-						name="page"
-						[(ngModel)]="timbrePaysModel.page"
-						type="number"
-						class="numberOnly"
-						minlength="1"
-						maxlength="2"
-						min="1"
-						zMin="1"
-						[max]="maxPage"
-						[zMax]="maxPage"
-						required
-						zControl
-					/>
-				</div>
-				<div fxLayout="column" class="form-input">
-					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'total'"></z-libelle-model>
-					</label>
-					<input
-						name="total"
-						[(ngModel)]="timbrePaysModel.total"
-						type="number"
-						class="numberOnly"
-						minlength="1"
-						maxlength="5"
-						min="0"
-						zMin="0"
-						required
-						zControl
-					/>
-				</div>
-
-				<lib-upload [object]="timbrePaysModel" [key]="'drapeau'" (outPutObject)="timbrePaysModel = $event"></lib-upload>
-				<lib-upload [object]="timbrePaysModel" [key]="'imageUrl'" (outPutObject)="timbrePaysModel = $event"></lib-upload>
-			</div>
-
-			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
-				<button
-					type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">
-					Annuler
-				</button>
-				<button
-					type="submit" class="rounded large color-white" mat-raised-button color="accent">
-					Enregistrer
-				</button>
-			</div>
-		</form>
-	</ng-template>
-</div>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary color-white"></tr>
+		<tr mat-row *matRowDef="let element; columns: displayedColumns"></tr>
+	</table>
+	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+</section>

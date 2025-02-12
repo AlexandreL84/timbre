@@ -1,25 +1,7 @@
-<div class="row">
-  <div class="col-sm-8 col-sm-offset-2">
-    <h2>Créer un compte</h2>
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Adresse mail</label>
-        <input type="text"
-               id="email"
-               class="form-control"
-               formControlName="email">
-      </div>
-      <div class="form-group">
-        <label for="password">Mot de passe</label>
-        <input type="password"
-               id="password"
-               class="form-control"
-               formControlName="password">
-      </div>
-      <button class="btn btn-primary"
-              type="submit"
-              [disabled]="signupForm.invalid">Créer mon compte</button>
-    </form>
-    <p class="text-danger">{{ errorMessage }}</p>
-  </div>
+<div fxLayout="row" [ngStyle.lt-md]="{height: '60px'}" [ngStyle]="{height: '120px'}" class="bg-primary" fxLayoutAlign="space-between center">
+	<div fxLayout="column" fxFlex fxLayoutAlign="center center"><span class="color-white bold titre-main">{{ titre }}</span></div>
+
+	<button mat-icon-button (click)="toggleDarkTheme()" fxLayoutAlign="center end">
+		<mat-icon class="color-white">{{ styleManagerService.isDark ? "dark_mode" : "light_mode" }}</mat-icon>
+	</button>
 </div>

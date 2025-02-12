@@ -2,11 +2,11 @@
 @use "@angular/material" as mat;
 
 @mixin color($theme) {
-	$color-config: mat.get-color-config($theme);
+	$color-config: mat.m2-get-color-config($theme);
 	$accent-palette: map.get($color-config, "accent");
-	$accent: mat.get-color-from-palette($accent-palette);
+	$accent: mat.m2-get-color-from-palette($accent-palette);
 	$primary-palette: map.get($color-config, "primary");
-	$primary: mat.get-color-from-palette($primary-palette);
+	$primary: mat.m2-get-color-from-palette($primary-palette);
 
 	button {
 		&.mat-icon-button.mat-accent {

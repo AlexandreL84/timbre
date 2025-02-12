@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {NotificationsService, SimpleNotificationsModule} from "angular2-notifications";
 import {SimpleNotificationComponent} from "./simple-notification.component";
-import {HttpResponseHandlerService} from "../../services/httpResponseHandler.service";
+import {HttpResponseHandlerService} from "../../shared/services/httpResponseHandler.service";
 
 @NgModule({
     declarations: [

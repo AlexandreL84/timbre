@@ -5,7 +5,6 @@
 @use "../palette/gray" as gray-palette;
 @use "../components";
 
-
 @function mat-set-background($theme, $backgroundColor) {
 	$palette-color: map-get($theme, color);
 	$background: map-get($palette-color, background);
@@ -14,12 +13,12 @@
 	@return map_merge($theme, (color: $palette-color));
 }
 
-$my-app-light-primary: mat.define-palette(blue-palette.$blue-theme);
-$my-app-light-accent: mat.define-palette(orange-palette.$orange-theme);
-$my-app-light-warn: mat.define-palette(mat.$red-palette);
-$my-background: mat.define-palette(gray-palette.$gray-theme);
+$my-app-light-primary: mat.m2-define-palette(blue-palette.$blue-theme);
+$my-app-light-accent: mat.m2-define-palette(orange-palette.$orange-theme);
+$my-app-light-warn: mat.m2-define-palette(mat.$m2-red-palette);
+$my-background: mat.m2-define-palette(gray-palette.$gray-theme);
 
-$theme: mat.define-light-theme(
+$theme: mat.m2-define-light-theme(
 		(
 			color: (
 				primary: $my-app-light-primary,
@@ -29,3 +28,4 @@ $theme: mat.define-light-theme(
 		)
 );
 $my-app-light-theme: mat-set-background($theme, white);
+
