@@ -10,3 +10,10 @@ ng build --configuration production
 git commit -m "second commit"
 
 git commit -m "suppression image"
+
+https://AlexandreL84.github.io/timbre/
+
+
+ng add angular-cli-ghpages
+
+ng deploy --base-href=/timbre/
