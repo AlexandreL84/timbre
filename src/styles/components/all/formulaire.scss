@@ -251,10 +251,6 @@ mat-error {
 		}
 
 		label {
-			&:not([class*="width100"]) {
-				max-width: 90%;
-			}
-
 			margin-bottom: 5px;
 			margin-left: 0px !important;
 		}
