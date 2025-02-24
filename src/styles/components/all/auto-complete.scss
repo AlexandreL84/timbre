@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "@angular/material" as mat;
+@use "../../../../node_modules/@angular/material/index" as mat;
 @use "../variable" as variable;
 
 @mixin color($theme) {
@@ -15,30 +15,8 @@
 	}
 }
 
-.mat-autocomplete-panel {
-	mat-option {
-		height: variable.$height-auto-complete;
-		line-height: variable.$height-auto-complete;
-
-		&.matOption100 {
-			height: 100% !important;
-		}
-
-		&.matOptionDouble {
-			height: 45% !important;
-			margin: 2.5% auto 2.5% auto !important;
-		}
-
-		span {
-			display: table-cell;
-		}
-	}
-}
-
 .form-input {
 	.mat-form-autocomplete-div {
-		/*max-width: $inputWidth * 1px;*/
-
 		.mat-form-autocomplete {
 			height: variable.$select-height !important;
 			width: 100% !important;

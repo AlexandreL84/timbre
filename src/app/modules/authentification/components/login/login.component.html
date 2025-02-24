@@ -1,5 +1,65 @@
-<form #loginForm="ngForm" (ngSubmit)="onSubmit()">
-  <input type="text" name="username" ngModel required>
-  <input type="password" name="password" ngModel required>
-  <button type="submit" [disabled]="!loginForm.valid">Login</button>
-</form>
+<div fxLayout="column" fxLayoutGap="20px">
+	<app-header [titre]="'Connexion'"></app-header>
+
+	<ng-template [ngIf]="(redirection$ | async) == true" [ngIfElse]="load">
+		<z-spinner fxFlexFill [textSpec]="'Redirection en cours ...'" [classSpinner]="'primary'"></z-spinner>
+	</ng-template>
+	<ng-template #load>
+		<div fxFlexFill fxLayout="column" fxLayoutAlign="center center" fxFlexOffset="40px">
+			<form
+				#formLogin="ngForm"
+				ngForm="formLogin"
+				(ngSubmit)="onSignIn()"
+				class="formulaire-box-elevation height100"
+				[ngClass]="formLogin?.submitted  ?'red-color' : 'blue-color'"
+				fxLayoutGap="20px"
+				fxFlex="100"
+				fxLayout="column"
+				fxLayoutAlign="space-between stretch"
+			>
+				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
+
+				<div fxLayout="column" fxLayoutGap="30px">
+					<div fxLayout="column" class="form-input">
+						<label>
+							Email
+						</label>
+						<input
+							name="email"
+							[(ngModel)]="email"
+							type="text"
+							format="mail"
+							style="max-width: 400px"
+							required
+							zControl
+						/>
+					</div>
+
+					<div fxLayout="column" class="form-input">
+						<label>
+							Mot de passe
+						</label>
+						<input
+							type="password"
+							[(ngModel)]="password"
+							name="password"
+							style="max-width: 400px"
+							required
+							zControl
+						/>
+						<!--
+						<span class="bold">{{  +this.nbTimbres + +this.timbrePaysModel.getTotal() }}</span>
+						-->
+					</div>
+				</div>
+
+				<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center end">
+					<button
+						type="submit" class="rounded large color-white" mat-raised-button color="accent">
+						Enregistrer
+					</button>
+				</div>
+			</form>
+		</div>
+	</ng-template>
+</div>

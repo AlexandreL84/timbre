@@ -1,12 +1,12 @@
 import {Routes} from '@angular/router';
-import {AuthGuardService} from "./shared/services/auth-guard.service";
+import {AuthGuard} from "./shared/guards/auth.guard";
 
 export const routes: Routes = [
-	/*{
-		path: 'auth/signup',
+	{
+		path: 'login',
 		loadChildren: () => import("./modules/authentification/authentification.module").then(m => m.AuthentificationModule),
 	},
-	{
+	/*{
 		path: 'auth/signin',
 		loadChildren: () => import("./modules/authentification/authentification.module").then(m => m.AuthentificationModule),
 	},*/
@@ -14,6 +14,7 @@ export const routes: Routes = [
 		path: "pays",
 		//canActivate: [AuthGuardService],
 		loadChildren: () => import("./modules/timbre-pays/timbre-pays.module").then(m => m.TimbrePaysModule),
+		canActivate: [AuthGuard],
 	},
 	/*{
 		path: "**",

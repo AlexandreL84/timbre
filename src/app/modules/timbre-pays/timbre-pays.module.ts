@@ -18,7 +18,6 @@ import {SimpleNotificationModule} from "../simple-notification/simple-notificati
 import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.module";
 import {TimbrePaysImporterComponent} from "./components/importer/timbre-pays-importer.component";
 import {TimbrePaysResultatComponent} from "./components/resultat/timbre-pays-resultat.component";
-import {TimbrePaysTestComponent} from "./components/test/timbre-pays-test.component";
 import {UploadService} from "../../shared/services/upload.service";
 import {provideHttpClient} from "@angular/common/http";
 import {ZDialogImageModule} from "../../shared/components/z-dialog-image/z-dialog-image.module";
@@ -28,7 +27,7 @@ import {TimbrePaysAjouterComponent} from "./components/ajouter/timbre-pays-ajout
 
 @NgModule({
 	declarations: [
-		TimbrePaysLayoutComponent, TimbrePaysModifierComponent, TimbrePaysImporterComponent, TimbrePaysResultatComponent, TimbrePaysTestComponent, TimbrePaysAjouterComponent
+		TimbrePaysLayoutComponent, TimbrePaysModifierComponent, TimbrePaysImporterComponent, TimbrePaysResultatComponent, TimbrePaysAjouterComponent
 	],
 	imports: [
 		MaterialModule,

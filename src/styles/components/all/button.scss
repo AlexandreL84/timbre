@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "@angular/material" as mat;
+@use "../../../../node_modules/@angular/material/index" as mat;
 
 @mixin color($theme) {
 	$color-config: mat.m2-get-color-config($theme);
@@ -13,63 +13,17 @@
 			background-color: $accent;
 		}
 	}
-
-	.boutonBasic {
-		color: $primary !important;
-	}
-
-	.boutonSubmit {
-		background-color: $primary !important;
-	}
 }
 
 button {
 	max-height: 100%;
 	font-family: Roboto, "Helvetica Neue", sans-serif;
-	&.mat-button.selected {
-		background-color: white;
-	}
-	&.mat-raised-button {
-		color: white;
-	}
-	&.mat-raised-button.mat-accent {
-		color: white;
-	}
-	&.mat-raised-button.mat-primary {
-		color: white;
-	}
-	&.mat-icon-button.mat-accent {
-		color: white;
-		font-size: large;
-	}
-}
 
-button {
 	&.rounded {
 		border-radius: 27px;
-	}
-	&.rounded-small {
-		border-radius: 7px;
 	}
 	&.large {
 		min-height: 36px;
 		width: 210px;
-	}
-	&.extra-large {
-		min-height: 36px;
-		width: 300px;
-	}
-	&.medium {
-		width: 160px;
-	}
-	&.small {
-		width: 110px;
-		max-height: 25px;
-	}
-	.roundIcon  {
-		margin-right: 10px;
-		&.small {
-			margin-top: 5px;
-		}
 	}
 }

@@ -1,25 +1,24 @@
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {Injectable} from "@angular/core";
-import {Observable} from "rxjs";
-import {first, map} from "rxjs/operators";
-import {isNotNullOrUndefined} from "../utils/cleva-utils";
-import {AuthDataService} from "../store/auth/auth-data.service";
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { Observable } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class AuthGuard implements CanActivate {
-    constructor(private authDataService: AuthDataService, private router: Router) {}
+	constructor(private authService: AuthService, private router: Router) {}
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-        return this.authDataService.userAuthenticated$.pipe(
-            first(logged => isNotNullOrUndefined(logged)),
-            map(logged => {
-                if (!logged) {
-                    this.router.navigate(["/login"]);
-                    sessionStorage.setItem("urlToLoad", state.url.toString());
-                    return false;
-                }
-                return true;
-            })
-        );
-    }
+	canActivate(): Observable<boolean> {
+		return this.authService.getCurrentUser().pipe(
+			take(1),
+			map(user => !!user),
+			tap(loggedIn => {
+				if (!loggedIn) {
+					this.router.navigate(['/login']);
+				}
+			})
+		);
+	}
 }

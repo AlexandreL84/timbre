@@ -1,31 +1,40 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, NgForm, Validators} from "@angular/forms";
+import {Component, ViewChild} from '@angular/core';
 import {AuthService} from "../../../../shared/services/auth.service";
+import {BehaviorSubject} from "rxjs";
+import {NgForm} from "@angular/forms";
+import {Router} from "@angular/router";
 
 @Component({
-  selector: "app-login",
-  templateUrl: "./login.component.html",
-  styleUrls: ["./login.component.scss"],
+	selector: 'app-login',
+	templateUrl: './login.component.html',
+	styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
-  @ViewChild("loginForm") public loginForm!: NgForm;
-  errorMessage: string = "";
+export class LoginComponent {
+	@ViewChild("formLogin") formLogin: NgForm;
+	redirection$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
+	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-  constructor(private formBuilder: FormBuilder,
-              private authService: AuthService,
-              private router: Router) {
-  }
+	email: string;
+	password: string;
 
-  ngOnInit() {
-  }
+	constructor(private authService: AuthService, private router: Router) {
 
+	}
 
-  onSubmit() {
-    console.log(this.loginForm.value);
-
-    /*const email = this.loginForm['email'].value;
-    const password = this.signupForm.get('password').value;
-    this.authService.createNewUser(email, password)*/
-  }
+	onSignIn() {
+		this.messageError$.next(null);
+		this.redirection$.next(null);
+		if (this.formLogin?.valid) {
+			this.authService.signIn(this.email, this.password)
+				.then((result) => {
+					console.log("ok")
+					this.router.navigate(['/pays']);
+					this.redirection$.next(true);
+				})
+				.catch((error) => {
+					console.log(error)
+					this.messageError$.next("Email ou mot de pase incorrect")
+				});
+		}
+	}
 }

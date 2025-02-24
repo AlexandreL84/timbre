@@ -1,27 +1,29 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
-@Injectable()
+@Injectable({
+	providedIn: 'root'
+})
 export class AuthService {
-  constructor() {
-  }
+	constructor(private afAuth: AngularFireAuth) {}
 
-  /*createNewUser(email: string, password: string) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-      }
-    );
-  }
+	// Méthode de connexion avec email et mot de passe
+	signIn(email: string, password: string) {
+		return this.afAuth.signInWithEmailAndPassword(email, password);
+	}
 
-  signInUser(email: string, password: string) {
-    return new Promise(
-      (resolve, reject) => {
-        firebase.auth().signInWithEmailAndPassword(email, password)
-      }
-    );
-  }
+	// Méthode d'inscription avec email et mot de passe
+	signUp(email: string, password: string) {
+		return this.afAuth.createUserWithEmailAndPassword(email, password);
+	}
 
-  signOutUser() {
-    firebase.auth().signOut();
-  }*/
+	// Méthode de déconnexion
+	signOut() {
+		return this.afAuth.signOut();
+	}
+
+	// Méthode pour obtenir l'utilisateur actuellement connecté
+	getCurrentUser() {
+		return this.afAuth.authState;
+	}
 }

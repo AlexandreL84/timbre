@@ -1,5 +1,5 @@
 @use "sass:map";
-@use "@angular/material" as mat;
+@use "../../../../node_modules/@angular/material/index" as mat;
 @use "../variable" as variable;
 
 $min-height-form: 75;
@@ -7,18 +7,8 @@ $min-height-form-double-label: 90;
 $button-height: 30;
 $colorNoValid: #a94442;
 $colorBgNoValid: #ffe8e9;
-//$min-height-form: 85px; //Pour 2 messages d'erreurs
 
 .formulaire {
-	/*
-	@media screen and (max-width: 959px) {
-		font-size: 1.25em;
-	}
-	@media screen and (max-width: 599px) {
-		font-size: 1em;
-	}
-	*/
-
 	.titreFormulaire {
 		font-size: 22px;
 		font-weight: bold;
@@ -30,20 +20,6 @@ $colorBgNoValid: #ffe8e9;
 		}
 	}
 }
-
-.verticalShrinker {
-	padding-top: 25px;
-	padding-bottom: 25px;
-}
-
-/*
-.formulaire-action {
-	@media screen and (max-width: 959px) {
-		font-size: 0.7em;
-	}
-}
-
- */
 
 mat-error {
 	font-size: 1em;
@@ -227,18 +203,6 @@ mat-error {
 			.mat-form-field-wrapper {
 				padding-bottom: 0px !important;
 			}
-		}
-
-		h2 {
-			margin-left: 0px !important;
-			margin-bottom: 10px !important;
-			font-size: 1.55em;
-		}
-
-		h3,
-		h4 {
-			margin-left: 0px !important;
-			margin-bottom: 2%;
 		}
 
 		mat-divider {

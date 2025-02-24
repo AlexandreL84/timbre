@@ -2,7 +2,7 @@
 
 <section [fxHide]="(load$ | async) == false">
 	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
-		<div fxFlex style="font-size: 1.5em">
+		<div fxFlex style="font-size: 1.2em">
 			<span>Nombre de timbres : </span>
 			<span class="bold">{{ timbrePaysService.total$ |async }}</span>
 		</div>
@@ -16,7 +16,7 @@
 		</div>
 		<z-icon
 			class="primary click"
-			style="font-size: 2em"
+			style="font-size: 1.7em"
 			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
 			[info]="'Exporter tableauu'"
 			(click)="exportTable()"
@@ -24,7 +24,7 @@
 		</z-icon>
 		<z-icon
 			class="primary click"
-			style="font-size: 2em"
+			style="font-size: 1.7em"
 			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
 			[info]="'Exporter en pdg'"
 			(click)="generatePDFByImage()"
@@ -34,10 +34,10 @@
 
 	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 		<ng-container matColumnDef="drapeau">
-			<th mat-header-cell *matHeaderCellDef>
-				<z-libelle-model [object]="timbre" [key]="'drapeau'"></z-libelle-model>
+			<th mat-header-cell *matHeaderCellDef class="drapeau">
+				<z-libelle-model class="hide-on-mobile" [object]="timbre" [key]="'drapeau'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<img *ngIf="element?.getDrapeau()"
 					 [src]="element?.getDrapeau()"
 					 class="imgPays click"
@@ -45,10 +45,10 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="code">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
-				<z-libelle-model [object]="timbre" [key]="'code'"></z-libelle-model>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
+				<z-libelle-model  [object]="timbre" [key]="'code'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
 				{{ element?.getCode() }}
 			</td>
 		</ng-container>
@@ -61,10 +61,10 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="libelleLangue">
-			<th mat-header-cell *matHeaderCellDef>
+			<th mat-header-cell *matHeaderCellDef class="hide-on-mobile">
 				<z-libelle-model [object]="timbre" [key]="'libelleLangue'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
 				<span *ngIf="element?.getLibelleLangue()">
 					{{ element?.getLibelleLangue() }}
 				</span>
@@ -75,53 +75,53 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="classeur">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="alignCenter">
 				<z-libelle-model [object]="timbre" [key]="'classeur'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				{{ element?.getClasseur() }}
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="page">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="alignCenter">
 				<z-libelle-model [object]="timbre" [key]="'page'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				{{ element?.getPage() }}
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="total">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="alignCenter">
 				<z-libelle-model [object]="timbre" [key]="'total'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				{{ element?.getTotal() }}
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="image">
-			<th mat-header-cell *matHeaderCellDef>
+			<th mat-header-cell *matHeaderCellDef class="hide-on-mobile">
 				<z-libelle-model [object]="timbre" [key]="'map'"></z-libelle-model>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
 				<img *ngIf="element?.getMap()"
 					 [src]="element?.getMap()"
-					 class="imgPays click"
+					 class="imgMap click"
 					 (click)="utilsService.zoom(element?.getMapZoom())"/>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="ajouter">
-			<th mat-header-cell *matHeaderCellDef>
+			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<z-icon
-					style="font-size: 1.5em"
+					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_LIGHT"
 					[icone]="FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="'Ajouter timbre'"
 				></z-icon>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<z-icon
 					class="primary click"
-					style="font-size: 1.5em"
+					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="'Ajouter timbre'"
 					(click)="ajouter(element)"
@@ -129,18 +129,18 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="modifier">
-			<th mat-header-cell *matHeaderCellDef>
+			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<z-icon
-					style="font-size: 1.5em"
+					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_LIGHT"
 					[icone]="FontAwesomeEnum.PENCIL"
 					[info]="'Modifier'"
 				></z-icon>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<z-icon
 					class="primary click"
-					style="font-size: 1.5em"
+					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
 					[info]="'Modifier'"
 					(click)="modifierTimbre(element)"
@@ -148,18 +148,18 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="supprimer">
-			<th mat-header-cell *matHeaderCellDef>
+			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<z-icon
-					style="font-size: 1.5em"
+					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_SOLID"
 					[icone]="FontAwesomeEnum.TRASH"
 					[info]="'Modifier'"
 				></z-icon>
 			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<z-icon
 					class="primary click"
-					style="font-size: 1.5em"
+					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
 					[info]="'Supprimer'"
 					(click)="deleteTimbre(element)"
@@ -168,7 +168,7 @@
 		</ng-container>
 
 		<tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary color-white"></tr>
-		<tr mat-row *matRowDef="let element; columns: displayedColumns"></tr>
+		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row"></tr>
 	</table>
 	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
 </section>

@@ -8,42 +8,18 @@
 	$primary-palette: map.get($color-config, "primary");
 	$primary: mat.m2-get-color-from-palette($primary-palette);
 
-	$primary-50: mat.m2-get-color-from-palette($primary-palette, 50);
-	$accent-50: mat.m2-get-color-from-palette($accent-palette, 50);
-	$primary-contrast-50: mat.m2-get-contrast-color-from-palette($primary-palette, 50);
-	$primary-contrast-100: mat.m2-get-contrast-color-from-palette($primary-palette, 100);
+	//$primary-50: mat.m2-get-color-from-palette($primary-palette, 50);
 
 	.primary {
 		color: $primary;
-	}
-
-	.bg-primary-50 {
-		background-color: $primary-50;
 	}
 
 	.bg-primary {
 		background-color: $primary !important;
 	}
 
-	.bg-primary-contrast-100 {
-		background-color: $primary-contrast-100;
-	}
-
-	.primary-contrast-50 {
-		color: $primary-contrast-50;
-	}
-
-
 	.accent {
 		color: $accent;
-	}
-
-	.bg-accent-50 {
-		background-color: $accent-50;
-	}
-
-	.accent500 {
-		color: $accent !important;
 	}
 
 	.bg-accent {

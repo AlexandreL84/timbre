@@ -9,11 +9,12 @@ import {DirectiveModule} from "../../shared/directives/directive.module";
 import {HeaderComponent} from "./components/header/header.component";
 import {MatIcon} from "@angular/material/icon";
 import {MatIconButton} from "@angular/material/button";
+import {ZIconModule} from "../../shared/components/z-icon";
 
 
 @NgModule({
     declarations: [HeaderComponent],
-    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton],
+    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, ZIconModule],
     exports: [
         HeaderComponent
     ]

@@ -5,6 +5,7 @@ import {TrimDirective} from "./trim.directive";
 import {MaxDirective, MinDirective} from "./coherence";
 import {UpperCaseDirective} from "./upper-case.directive";
 import {DragAndDropDirective} from "./drag-and-drop.directive";
+import {FormatDirective} from "./format.directive";
 
 @NgModule({
     declarations: [
@@ -14,7 +15,8 @@ import {DragAndDropDirective} from "./drag-and-drop.directive";
 		MinDirective,
 		MaxDirective,
 		UpperCaseDirective,
-		DragAndDropDirective
+		DragAndDropDirective,
+		FormatDirective
     ],
 	exports: [
 		NoEspaceDirective,
@@ -23,7 +25,8 @@ import {DragAndDropDirective} from "./drag-and-drop.directive";
 		MinDirective,
 		MaxDirective,
 		UpperCaseDirective,
-		DragAndDropDirective
+		DragAndDropDirective,
+		FormatDirective
 	],
     imports: [],
     providers: [],

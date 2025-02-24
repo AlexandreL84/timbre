@@ -11,6 +11,7 @@ import {FIREBASE_OPTIONS} from "@angular/fire/compat";
 import {getAuth, provideAuth} from "@angular/fire/auth";
 import {HttpResponseHandlerService} from "./shared/services/httpResponseHandler.service";
 import {NotificationsService} from "angular2-notifications";
+import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 
 
 export const appConfig: ApplicationConfig = {
@@ -21,6 +22,7 @@ export const appConfig: ApplicationConfig = {
         provideZoneChangeDetection({eventCoalescing: true}), provideRouter(routes),
 		//AngularFireDatabaseModule,
 		AngularFireStorageModule,
+		AngularFireAuthModule,
 		provideAuth(() => getAuth()),
 		{ provide: FIREBASE_OPTIONS, useValue: environment.firebase },
 		HttpResponseHandlerService, NotificationsService

@@ -1,7 +1,23 @@
-<div fxLayout="row" [ngStyle.lt-md]="{height: '60px'}" [ngStyle]="{height: '120px'}" class="bg-primary" fxLayoutAlign="space-between center">
-	<div fxLayout="column" fxFlex fxLayoutAlign="center center"><span class="color-white bold titre-main">{{ titre }}</span></div>
+<div fxLayout="row" [ngStyle.lt-md]="{height: '60px'}" [ngStyle]="{height: '120px'}" class="bg-primary"
+	 style="padding: 0px 15px" fxLayoutAlign="space-between center">
+	<div fxLayout="column" fxFlex fxLayoutAlign="center center"><span
+		class="color-white bold titre-main">{{ titre }}</span></div>
 
-	<button mat-icon-button (click)="toggleDarkTheme()" fxLayoutAlign="center end">
-		<mat-icon class="color-white">{{ styleManagerService.isDark ? "dark_mode" : "light_mode" }}</mat-icon>
-	</button>
+	<div fxLayoutAlign="center end" fxLayoutGap="15px">
+		<z-icon [icone]="FontAwesomeEnum.PALETTE"
+				style="font-size: 2em"
+				[color]="'white'"
+				[info]="'changer couleur'"
+				[classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+				(click)="toggleDarkTheme()">
+
+		</z-icon>
+
+		<z-icon [icone]="FontAwesomeEnum.POWER_OFF"
+				style="font-size: 2em"
+				[color]="'white'"
+				[info]="'Déconnexion'"
+				[classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+				(click)="logout()"></z-icon>
+	</div>
 </div>

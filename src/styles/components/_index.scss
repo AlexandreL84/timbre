@@ -1,16 +1,15 @@
-@use "button/button" as button;
-@use "input/input" as input;
-@use "formulaire/formulaire" as formulaire;
-@use "select/select" as select;
-@use "date/date" as date;
-@use "error/error" as error;
-@use "tooltip/tooltip" as tooltip;
-@use "auto-complete/auto-complete" as autoComplete;
-@use "dialog/dialog" as dialog;
+@use "all/button" as button;
+@use "all/input" as input;
+@use "all/formulaire" as formulaire;
+@use "all/select" as select;
+@use "all/date" as date;
+@use "all/error" as error;
+@use "all/tooltip" as tooltip;
+@use "all/auto-complete" as autoComplete;
+@use "all/dialog" as dialog;
+@use "all/align" as align;
+@use "all/spinner" as spinner;
 @use "global" as global;
-
-@use "icon/icon";
-@use "container/container";
 
 @mixin theme($theme) {
 	@include button.color($theme);

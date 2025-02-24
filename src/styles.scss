@@ -38,26 +38,6 @@ body {
 	color: white !important;
 }
 
-.width100 {
-	width: 100%;
-}
-
 .click {
 	cursor: pointer !important;
-}
-
-.spinner {
-	height: 300px;
-	width: 100%;
-}
-
-mat-spinner {
-	svg {
-
-		color: #000000;
-
-		circle {
-			stroke: #000000
-		}
-	}
 }
