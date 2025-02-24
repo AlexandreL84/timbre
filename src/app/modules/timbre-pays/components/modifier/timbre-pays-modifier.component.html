@@ -5,7 +5,7 @@
 	</div>
 
 	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
-		<z-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></z-spinner>
+		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 	</ng-template>
 	<ng-template #load>
 		<form
@@ -23,7 +23,7 @@
 				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 				<div fxLayout="column" class="form-input">
 					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'code'"></z-libelle-model>
+						<lib-libelle-model [object]="timbrePaysModel" [key]="'code'"></lib-libelle-model>
 					</label>
 					<input
 						name="code"
@@ -39,7 +39,7 @@
 
 				<div fxLayout="column" class="form-input">
 					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'libelle'"></z-libelle-model>
+						<lib-libelle-model [object]="timbrePaysModel" [key]="'libelle'"></lib-libelle-model>
 					</label>
 					<input
 						name="libelle"
@@ -53,7 +53,7 @@
 
 				<div fxLayout="column" class="form-input">
 					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'libelleLangue'"></z-libelle-model>
+						<lib-libelle-model [object]="timbrePaysModel" [key]="'libelleLangue'"></lib-libelle-model>
 					</label>
 					<input
 						name="libelleLangue"
@@ -69,7 +69,7 @@
 				<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
 					<div fxLayout="column" class="form-input">
 						<label>
-							<z-libelle-model [object]="timbrePaysModel" [key]="'classeur'"></z-libelle-model>
+							<lib-libelle-model [object]="timbrePaysModel" [key]="'classeur'"></lib-libelle-model>
 						</label>
 						<input
 							name="classeur"
@@ -89,7 +89,7 @@
 
 					<div fxLayout="column" class="form-input">
 						<label>
-							<z-libelle-model [object]="timbrePaysModel" [key]="'page'"></z-libelle-model>
+							<lib-libelle-model [object]="timbrePaysModel" [key]="'page'"></lib-libelle-model>
 						</label>
 						<input
 							name="page"
@@ -108,7 +108,7 @@
 					</div>
 					<div fxLayout="column" class="form-input">
 						<label>
-							<z-libelle-model [object]="timbrePaysModel" [key]="'total'"></z-libelle-model>
+							<lib-libelle-model [object]="timbrePaysModel" [key]="'total'"></lib-libelle-model>
 						</label>
 						<input
 							name="total"

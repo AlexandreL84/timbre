@@ -5,7 +5,7 @@
 	</div>
 
 	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
-		<z-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></z-spinner>
+		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 	</ng-template>
 	<ng-template #load>
 		<form
@@ -39,7 +39,7 @@
 
 				<div fxLayout="column" class="form-input">
 					<label>
-						<z-libelle-model [object]="timbrePaysModel" [key]="'total'"></z-libelle-model>
+						<lib-libelle-model [object]="timbrePaysModel" [key]="'total'"></lib-libelle-model>
 					</label>
 					<input
 						name="total"

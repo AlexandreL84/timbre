@@ -1,6 +1,6 @@
 <div class="form-input" fxLayout="column"  [fxLayoutAlign]="alignLabel? 'space-evenly center': 'start stretch'">
 	<label>
-		<z-libelle-model [object]="object" [key]="key" [align]="alignLabel"></z-libelle-model>
+		<lib-libelle-model [object]="object" [key]="key" [align]="alignLabel"></lib-libelle-model>
 	</label>
 	<div [fxLayout]="alignLabel && !(selectedFile || object[key])? 'column': 'row'" fxLayoutGap="10px" fxLayoutAlign="start center" [fxLayoutAlign]="(selectedFile || object[key])? 'space-evenly start': 'start center'">
 		<img *ngIf="object[key]"
@@ -18,7 +18,7 @@
 			(change)="onFileSelected($event)"
 			hidden
 		/>
-		<z-icon
+		<lib-icon
 			*ngIf="selectedFile || object[key]"
 			class="primary click"
 			style="font-size: 1.5em"
@@ -26,7 +26,7 @@
 			[info]="'Modifier'"
 			(click)="triggerFileInput()"
 		>
-		</z-icon>
+		</lib-icon>
 		<button
 			*ngIf="!(selectedFile || object[key])"
 			type="button" class="rounded large color-white" mat-raised-button color="accent" (click)="triggerFileInput()">

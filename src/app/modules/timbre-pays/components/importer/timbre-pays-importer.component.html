@@ -4,7 +4,7 @@
 	</div>
 
 	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
-		<z-spinner fxFlexFill [textSpec]="messageLoad$ | async"></z-spinner>
+		<lib-spinner fxFlexFill [textSpec]="messageLoad$ | async"></lib-spinner>
 	</ng-template>
 	<ng-template #load>
 		<form

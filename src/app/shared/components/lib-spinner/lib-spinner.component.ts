@@ -2,11 +2,11 @@ import {Component, Input} from "@angular/core";
 import {isNotNullOrUndefined} from "../../utils/utils";
 
 @Component({
-    selector: "z-spinner",
-    templateUrl: "./z-spinner.component.html",
-    styleUrls: ["./z-spinner.component.scss"],
+    selector: "lib-spinner",
+    templateUrl: "./lib-spinner.component.html",
+    styleUrls: ["./lib-spinner.component.scss"],
 })
-export class ZSpinnerComponent {
+export class LibSpinnerComponent {
     @Input() size: number = 100;
     @Input() bar: boolean = false;
     @Input() color: boolean = false;

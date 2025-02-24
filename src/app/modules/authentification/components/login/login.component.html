@@ -2,7 +2,7 @@
 	<app-header [titre]="'Connexion'"></app-header>
 
 	<ng-template [ngIf]="(redirection$ | async) == true" [ngIfElse]="load">
-		<z-spinner fxFlexFill [textSpec]="'Redirection en cours ...'" [classSpinner]="'primary'"></z-spinner>
+		<lib-spinner fxFlexFill [textSpec]="'Redirection en cours ...'" [classSpinner]="'primary'"></lib-spinner>
 	</ng-template>
 	<ng-template #load>
 		<div fxFlexFill fxLayout="column" fxLayoutAlign="center center" fxFlexOffset="40px">

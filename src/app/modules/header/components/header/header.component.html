@@ -4,20 +4,20 @@
 		class="color-white bold titre-main">{{ titre }}</span></div>
 
 	<div fxLayoutAlign="center end" fxLayoutGap="15px">
-		<z-icon [icone]="FontAwesomeEnum.PALETTE"
+		<lib-icon [icone]="FontAwesomeEnum.PALETTE"
 				style="font-size: 2em"
 				[color]="'white'"
-				[info]="'changer couleur'"
+				[info]="'Changer couleur'"
 				[classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
 				(click)="toggleDarkTheme()">
 
-		</z-icon>
+		</lib-icon>
 
-		<z-icon [icone]="FontAwesomeEnum.POWER_OFF"
+		<lib-icon [icone]="FontAwesomeEnum.POWER_OFF"
 				style="font-size: 2em"
 				[color]="'white'"
 				[info]="'Déconnexion'"
 				[classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
-				(click)="logout()"></z-icon>
+				(click)="logout()"></lib-icon>
 	</div>
 </div>

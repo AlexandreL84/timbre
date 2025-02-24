@@ -2,10 +2,10 @@ import {Component, Input} from "@angular/core";
 import {FontAwesomeEnum} from "../../enum/font-awesome";
 
 @Component({
-    selector: "z-libelle-model",
-    templateUrl: "./z-libelle-model.component.html",
+    selector: "lib-libelle-model",
+    templateUrl: "./lib-libelle-model.component.html",
 })
-export class ZLibelleModelComponent  {
+export class LibLibelleModelComponent {
     @Input() object;
     @Input() key: string;
     @Input() classLibelle: string = null;

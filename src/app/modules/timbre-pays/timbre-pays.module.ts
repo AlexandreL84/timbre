@@ -7,9 +7,7 @@ import {MaterialModule} from "../../shared/modules/material.module";
 import {TimbrePaysLayoutComponent} from "./layout/timbre-pays-layout.component";
 import {TimbrePaysService} from "./services/timbre-pays.service";
 import {TimbrePaysModifierComponent} from "./components/modifier/timbre-pays-modifier.component";
-import {ZSpinnerModule} from "../../shared/components/z-spinner";
-import {ZLibelleModelModule} from "../../shared/components/z-libelle-model";
-import {ZIconModule} from "../../shared/components/z-icon";
+import {LibSpinnerModule} from "../../shared/components/lib-spinner";
 import {HeaderModule} from "../header/header.module";
 import {DirectiveModule} from "../../shared/directives/directive.module";
 import {ErrorModule} from "../error";
@@ -20,10 +18,12 @@ import {TimbrePaysImporterComponent} from "./components/importer/timbre-pays-imp
 import {TimbrePaysResultatComponent} from "./components/resultat/timbre-pays-resultat.component";
 import {UploadService} from "../../shared/services/upload.service";
 import {provideHttpClient} from "@angular/common/http";
-import {ZDialogImageModule} from "../../shared/components/z-dialog-image/z-dialog-image.module";
+import {LibDialogImageModule} from "../../shared/components/lib-dialog-image/lib-dialog-image.module";
 import {UtilsService} from "../../shared/services/utils.service";
 import {LibModalModule} from "../../shared/components/lib-modal/lib-modal.module";
 import {TimbrePaysAjouterComponent} from "./components/ajouter/timbre-pays-ajouter.component";
+import {LibIconModule} from "../../shared/components/lib-icon";
+import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
 
 @NgModule({
 	declarations: [
@@ -37,10 +37,10 @@ import {TimbrePaysAjouterComponent} from "./components/ajouter/timbre-pays-ajout
 		FlexLayoutModule,
 		FormsModule,
 		AsyncPipe,
-		ZSpinnerModule,
-		ZIconModule,
-		ZDialogImageModule,
-		ZLibelleModelModule,
+		LibSpinnerModule,
+		LibIconModule,
+		LibDialogImageModule,
+		LibLibelleModelModule,
 		HeaderModule,
 		DirectiveModule,
 		ErrorModule,

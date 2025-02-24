@@ -6,11 +6,11 @@ import {isNotNullOrUndefined, Utils} from "../../utils/utils";
 import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../../enum/font-awesome";
 
 @Component({
-    selector: "z-icon",
-    templateUrl: "./z-icon.component.html",
-    styleUrls: ["./z-icon.component.scss"],
+    selector: "lib-icon",
+    templateUrl: "./lib-icon.component.html",
+    styleUrls: ["./lib-icon.component.scss"],
 })
-export class ZIconComponent implements OnInit, AfterViewChecked, OnChanges {
+export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
     @Input() icone: string;
     @Input() type: string;
     @Input() info: string;

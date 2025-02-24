@@ -1,12 +1,12 @@
 import {NgModule} from "@angular/core";
-import {ZIconComponent} from "./z-icon.component";
+import {LibIconComponent} from "./lib-icon.component";
 import {CommonModule} from "@angular/common";
 import {MaterialModule} from "../../modules/material.module";
 import {AngularSvgIconModule} from "angular-svg-icon";
 
 @NgModule({
-    declarations: [ZIconComponent],
+    declarations: [LibIconComponent],
     imports: [CommonModule, MaterialModule, AngularSvgIconModule],
-    exports: [ZIconComponent],
+    exports: [LibIconComponent],
 })
-export class ZIconModule {}
+export class LibIconModule {}
