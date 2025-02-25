@@ -7,7 +7,9 @@ import {MaterialModule} from "../../shared/modules/material.module";
 @NgModule({
     declarations: [ErrorControlComponent,],
     imports: [CommonModule, MaterialModule, FlexModule, FlexLayoutModule],
-    exports: [],
+    exports: [
+        ErrorControlComponent
+    ],
     providers: [
     ],
 })

@@ -10,10 +10,6 @@ export class ErrorControlComponent {
 	@Input() attribut: string;
 	@Input() needTouched = true;
 
-	shouldShowErrors(): boolean {
-		return this.control && this.control.errors && (this.needTouched ? this.control.touched : true);
-	}
-
 	listOfErrors(): string[] {
 		const _errors = [];
 		if (this.control.hasError("required")) {

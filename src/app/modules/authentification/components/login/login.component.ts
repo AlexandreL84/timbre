@@ -3,6 +3,7 @@ import {AuthService} from "../../../../shared/services/auth.service";
 import {BehaviorSubject} from "rxjs";
 import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
+import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 
 @Component({
 	selector: 'app-login',
@@ -16,9 +17,10 @@ export class LoginComponent {
 
 	email: string;
 	password: string;
+	showPswd: boolean = false;
+	readonly FontAwesomeEnum = FontAwesomeEnum;
 
 	constructor(private authService: AuthService, private router: Router) {
-
 	}
 
 	onSignIn() {
@@ -36,5 +38,9 @@ export class LoginComponent {
 					this.messageError$.next("Email ou mot de pase incorrect")
 				});
 		}
+	}
+
+	public showPassword() {
+		this.showPswd = !this.showPswd;
 	}
 }

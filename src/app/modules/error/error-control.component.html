@@ -1,5 +1,5 @@
 <div *ngIf="control && control.errors && (needTouched ? control.touched : true)" fxLayout="column">
-    <mat-error *ngFor="let error of listOfErrors()">
+    <mat-error *ngFor="let error of listOfErrors()" style="font-size: 0.875em">
         {{ error }}
     </mat-error>
 </div>

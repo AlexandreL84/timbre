@@ -12,12 +12,14 @@ import {MatButton} from "@angular/material/button";
 import {MatError} from "@angular/material/form-field";
 import {LibSpinnerModule} from "../../shared/components/lib-spinner";
 import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
+import {LibIconModule} from "../../shared/components/lib-icon";
+import {ErrorModule} from "../error";
 
 const route = [{path: "", component: LoginComponent}];
 
 @NgModule({
 	declarations: [LoginComponent],
-	imports: [CommonModule, RouterModule.forChild(route), FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, HeaderModule, MatButton, LibLibelleModelModule, MatError, LibSpinnerModule],
+	imports: [CommonModule, RouterModule.forChild(route), FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, HeaderModule, MatButton, LibLibelleModelModule, MatError, LibSpinnerModule, LibIconModule, ErrorModule],
 })
 export class AuthentificationModule {
 }
