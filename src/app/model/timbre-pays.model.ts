@@ -1,6 +1,5 @@
 import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
-import {isNotNullOrUndefined} from "../shared/utils/utils";
 
 export class TimbrePaysModel extends ProprieteModel {
 	@Label("Identifiant")

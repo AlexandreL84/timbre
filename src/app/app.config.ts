@@ -12,6 +12,8 @@ import {getAuth, provideAuth} from "@angular/fire/auth";
 import {HttpResponseHandlerService} from "./shared/services/httpResponseHandler.service";
 import {NotificationsService} from "angular2-notifications";
 import {AngularFireAuthModule} from "@angular/fire/compat/auth";
+import {MatPaginatorIntl} from "@angular/material/paginator";
+import {PaginatorIntlService} from "./shared/services/paginator-intl.service";
 
 
 export const appConfig: ApplicationConfig = {
@@ -25,7 +27,8 @@ export const appConfig: ApplicationConfig = {
 		AngularFireAuthModule,
 		provideAuth(() => getAuth()),
 		{ provide: FIREBASE_OPTIONS, useValue: environment.firebase },
-		HttpResponseHandlerService, NotificationsService
+		HttpResponseHandlerService, NotificationsService,
+		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
 
 		//provideDatabase((app: any) => getDatabase(app, "https://book-f941b.firebaseio.com/"))
     ]

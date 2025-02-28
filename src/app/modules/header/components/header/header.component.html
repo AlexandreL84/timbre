@@ -1,23 +1,32 @@
-<div fxLayout="row" [ngStyle.lt-md]="{height: '60px'}" [ngStyle]="{height: '120px'}" class="bg-primary"
-	 style="padding: 0px 15px" fxLayoutAlign="space-between center">
-	<div fxLayout="column" fxFlex fxLayoutAlign="center center"><span
-		class="color-white bold titre-main">{{ titre }}</span></div>
+<div fxLayout="row" [ngStyle.lt-md]="{height: '60px'}"
+	 [ngStyle]="{height: '120px'}"
+	 class="bg-primary"
+	 style="padding: 0px 15px"
+	 fxLayoutAlign="space-between center">
+	<div fxLayout="column" fxFlex="15" fxLayoutAlign="start center">
+		<span class="color-white" style="font-size: 1.5em">
+			{{ (user$ | async)?.getNom() }} {{ (user$ | async)?.getPrenom() }}
+		</span>
+	</div>
+	<div fxLayout="column" fxFlex fxLayoutAlign="center center">
+		<span class="color-white bold titre-main">{{ titre }}</span>
+	</div>
 
 	<div fxLayoutAlign="center end" fxLayoutGap="15px">
 		<lib-icon [icone]="FontAwesomeEnum.PALETTE"
-				style="font-size: 2em"
-				[color]="'white'"
-				[info]="'Changer couleur'"
-				[classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
-				(click)="toggleDarkTheme()">
-
+				  style="font-size: 2em"
+				  [color]="'white'"
+				  [info]="'Changer couleur'"
+				  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+				  (click)="toggleDarkTheme()">
 		</lib-icon>
 
 		<lib-icon [icone]="FontAwesomeEnum.POWER_OFF"
-				style="font-size: 2em"
-				[color]="'white'"
-				[info]="'Déconnexion'"
-				[classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
-				(click)="logout()"></lib-icon>
+				  style="font-size: 2em"
+				  [color]="'white'"
+				  [info]="'Déconnexion'"
+				  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+				  (click)="logout()">
+		</lib-icon>
 	</div>
 </div>

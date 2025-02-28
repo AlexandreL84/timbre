@@ -67,6 +67,7 @@ export enum FontAwesomeEnum {
     CIRCLE_INFO = "fa-circle-info",
     CIRCLE_NOTCH = "fa-circle-notch",
     CIRCLE_PLUS = "fa-circle-plus",
+	CIRCLE_MINUS = "fa-circle-minus",
     CIRCLE_QUESTION = "fa-circle-question",
     CIRCLE_PLAY = "fa-circle-play",
     CIRCLE_USER = "fa-circle-user",

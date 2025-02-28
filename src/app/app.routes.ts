@@ -6,13 +6,13 @@ export const routes: Routes = [
 		path: 'login',
 		loadChildren: () => import("./modules/authentification/authentification.module").then(m => m.AuthentificationModule),
 	},
-	/*{
-		path: 'auth/signin',
-		loadChildren: () => import("./modules/authentification/authentification.module").then(m => m.AuthentificationModule),
-	},*/
+	{
+		path: "timbre",
+		loadChildren: () => import("./modules/timbre/timbre.module").then(m => m.TimbreModule),
+		canActivate: [AuthGuard],
+	},
 	{
 		path: "pays",
-		//canActivate: [AuthGuardService],
 		loadChildren: () => import("./modules/timbre-pays/timbre-pays.module").then(m => m.TimbrePaysModule),
 		canActivate: [AuthGuard],
 	},

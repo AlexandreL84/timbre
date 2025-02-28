@@ -3,6 +3,8 @@ import {StyleManagerService} from "../../../../shared/services/style-manager.ser
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {Router} from "@angular/router";
+import {Observable} from "rxjs";
+import {UserModel} from "../../../../model/user.model";
 
 @Component({
 	selector: 'app-header',
@@ -14,8 +16,10 @@ export class HeaderComponent {
 	@Input() titre: string
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	user$: Observable<UserModel>;
 
 	constructor(public styleManagerService: StyleManagerService, private authService: AuthService, private router: Router) {
+		this.user$ = this.authService.getUser();
 	}
 
 	toggleDarkTheme() {

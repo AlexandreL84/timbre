@@ -29,7 +29,6 @@ export class LoginComponent {
 		if (this.formLogin?.valid) {
 			this.authService.signIn(this.email, this.password)
 				.then((result) => {
-					console.log("ok")
 					this.router.navigate(['/pays']);
 					this.redirection$.next(true);
 				})
