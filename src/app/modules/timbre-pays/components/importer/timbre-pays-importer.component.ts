@@ -196,8 +196,6 @@ export class TimbrePaysImporterComponent implements OnInit {
 			if (isNotNullOrUndefined(mapZoom)) {
 				timbreModel.setMapZoom(mapZoom);
 			}
-			console.log(timbreModel);
-
 
 			this.timbrePaysService.addTimbre(timbreModel)
 			if (last) {

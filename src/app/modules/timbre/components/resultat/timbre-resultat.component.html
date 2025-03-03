@@ -4,14 +4,58 @@
 	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
 		<div fxFlex style="font-size: 1.2em">
 			<span>Nombre de timbres : </span>
-			<span class="bold">{{ timbreService.total$ |async }}</span>
+			<span class="bold">{{ dataSource?.data?.length }}</span>
 		</div>
+
+		<!--
+		<div fxLayout="row" fxLayoutAlign="end center" style="width: 75px">
+			<mat-checkbox color="primary" [(ngModel)]="timbreCritereModel.acquis" (ngModelChange)="filtreByCritere()">
+				<lib-libelle-model [object]="timbreCritereModel" [key]="'acquis'"></lib-libelle-model>
+			</mat-checkbox>
+		</div>
+		-->
+
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+			<mat-select name="acquis"
+						[(ngModel)]="timbreCritereModel.acquis"
+						[placeholder]="'Acquis'"
+						(ngModelChange)="filtreByCritere()">
+				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
+				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
+				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
+			</mat-select>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+			<mat-select name="doublon"
+						[(ngModel)]="timbreCritereModel.doublon"
+						[placeholder]="'Doublon'"
+						(ngModelChange)="filtreByCritere()">
+				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
+				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
+				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
+			</mat-select>
+		</div>
+
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+			<mat-select name="anneeSelect"
+						multiple
+						[(ngModel)]="timbreCritereModel.annees"
+						[placeholder]="'Années'"
+						(ngModelChange)="filtreByCritere()">
+				<mat-option class="selectMin" *ngFor="let annee of Utils.generateRange(anneeMin, anneeMax)"
+							[value]="annee?.toString()">
+					{{ annee }}
+				</mat-option>
+			</mat-select>
+		</div>
+
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
 			 style="width: 200px; min-height:55px; height: 55px">
 			<input
-				(input)="applyFilter($event)"
 				placeholder="Filtrer les données"
 				type="text"
+				(input)="applyFilter($event)"
 			/>
 		</div>
 		<lib-icon
@@ -67,7 +111,7 @@
 				<lib-libelle-model [object]="timbre" [key]="'idBloc'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getIdBloc() ? "Oui" : "Non" }}
+				{{ element?.getIdBloc() ? element?.getIdBloc() : "Non" }}
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="monnaie">
@@ -75,7 +119,7 @@
 				<lib-libelle-model [object]="timbre" [key]="'monnaie'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
-				{{ element?.getMonnaie() }}
+				{{ element?.getMonnaie() == "E" ? "€" : "Francs" }}
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="type">
@@ -105,6 +149,7 @@
 					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="element?.getTimbreAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
 					(click)="acquis(element)"
 				>
 				</lib-icon>
@@ -121,6 +166,7 @@
 					style="font-size: 1.2em"
 					[type]="FontAwesomeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="element?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
 					(click)="doublon(element)"
 				>
 				</lib-icon>

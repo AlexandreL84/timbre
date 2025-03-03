@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {TimbreService} from "../../services/timbre.service";
-import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
+import {isNotNullOrUndefined, Utils} from "../../../../shared/utils/utils";
 import {MatDialog} from "@angular/material/dialog";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {MatSort, Sort} from "@angular/material/sort";
@@ -13,6 +13,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
+import {TimbreAcquisModel} from "../../../../model/timbre-acquis.model";
+import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -29,15 +31,20 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreModel> = new MatTableDataSource<TimbreModel>();
 	displayedColumns: string[];
+	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 	public timbre: TimbreModel = new TimbreModel();
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	anneeMin: number = 2000;
+	anneeMax: number = new Date().getFullYear();
 
 	constructor(public timbreService: TimbreService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
 	ngOnInit(): void {
+		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
+
 		this.displayedColumns = ["image", "annee", "code", "idBloc", "monnaie", "type",  "yt",  "acquis", "doublon"];
 		if (this.modif) {
 			this.displayedColumns.push("modifier", "supprimer");
@@ -61,6 +68,13 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 		if (isNotNullOrUndefined(sort)) {
 			this.dataSource.sort = this.sort;
 		}
+	}
+
+	filtreByCritere() {
+		if (this.timbreCritereModel.getAcquis() == "NON") {
+			this.timbreCritereModel.setDoublon("TOUS");
+		}
+		this.timbreService.getTimbres(this.timbreCritereModel)
 	}
 
 	applyFilter(event: Event) {
@@ -171,4 +185,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 
 		doc.save('document.pdf');*/
 	}
+
+	protected readonly array = Array;
+	protected readonly Utils = Utils;
 }

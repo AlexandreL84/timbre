@@ -50,7 +50,7 @@ export class TimbrePaysModifierComponent implements OnInit {
 	valider(formModif: NgForm) {
 		this.messageError$.next(null)
 		if (formModif?.valid) {
-			if (isNotNullOrUndefined(this.timbrePaysModel.getMap())) {
+			if (isNotNullOrUndefined(this.timbrePaysModel.getDrapeau())) {
 				this.saveData();
 			} else {
 				this.messageError$.next("Veuillez sélectionner une image")

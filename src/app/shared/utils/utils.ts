@@ -29,4 +29,8 @@ export class Utils {
 	static getRandom(max) {
 		return Math.floor(Math.random() * Math.floor(max));
 	}
+
+	static generateRange(min: number, max: number): number[] {
+		return Array.from({ length: max - min + 1 }, (_, i) => i + min);
+	}
 }

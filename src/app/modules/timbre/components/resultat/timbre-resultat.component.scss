@@ -1,4 +1,4 @@
-@mixin changeSize($height, $widthBouton) {
+@mixin changeSize($widthAcquis, $height, $widthBouton) {
 	.mat-row {
 		height: $height * 1px;
 	}
@@ -6,6 +6,13 @@
 	.image {
 		//max-width: 40px !important;
 		max-height: $height - 5 * 1px !important;
+	}
+
+	.mat-column-acquis,
+	.mat-column-doublon {
+		width: $widthAcquis * 1px !important;
+		max-width: $widthAcquis * 1px !important;
+		padding: 0px !important;
 	}
 
 	.mat-column-ajouter,
@@ -53,10 +60,10 @@
 	}
 }
 
-@include changeSize(35, 35);
+@include changeSize(60, 35, 35);
 
 @media screen and (max-width: 800px) {
-	@include changeSize(25, 10);
+	@include changeSize(50, 25, 20);
 	@include changeSizeMobile(0.8, 5, 15, 40, 15, 25);
 
 	.hide-on-mobile {

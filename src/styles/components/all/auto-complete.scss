@@ -4,8 +4,7 @@
 
 @mixin color($theme) {
 	$color-config: mat.m2-get-color-config($theme);
-	$accent-palette: map.get($color-config, "accent");
-	$accent: mat.m2-get-color-from-palette($accent-palette);
+
 	$primary-palette: map.get($color-config, "primary");
 	$primary: mat.m2-get-color-from-palette($primary-palette);
 

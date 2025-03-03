@@ -92,7 +92,6 @@ export class TimbreImporterComponent implements OnInit {
 		timbreModel.setYt(item["YT"] != "NULL" && item["YT"] != "" ? item["YT"] : null);
 
 		let image = "/assets/images/timbres/" + timbreModel.getAnnee() + "/";
-		console.log(timbreModel.getIdBloc())
 		if (isNotNullOrUndefined(timbreModel.getIdBloc())) {
 			image += "bloc/" + timbreModel.getIdBloc() + "-";
 		}
@@ -158,8 +157,6 @@ export class TimbreImporterComponent implements OnInit {
 			timbreModel.setImageTable(imageTable);
 			timbreModel.setImage(image);
 			timbreModel.setImageZoom(imageZoom);
-			console.log(timbreModel);
-
 			this.timbreService.addTimbre(timbreModel)
 			if (last) {
 				this.load$.next(true);

@@ -169,7 +169,6 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		const tableColumn = ["Code", "Libellé", "Classeur", "Page", "Total"];
 		const tableRows = [];
 		this.dataSource.data.forEach(data => {
-			console.log(data);
 			tableRows.push([data.getCode(), data?.getLibelle(), data?.getClasseur(), data?.getPage(), data?.getTotal()]);
 		})
 

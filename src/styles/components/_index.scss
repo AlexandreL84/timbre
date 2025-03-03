@@ -9,17 +9,18 @@
 @use "all/dialog" as dialog;
 @use "all/align" as align;
 @use "all/spinner" as spinner;
+@use "all/table" as table;
 @use "global" as global;
 
 @mixin theme($theme) {
 	@include button.color($theme);
-	@include input.color($theme);
+	//@include input.color($theme);
 	@include formulaire.color($theme);
-	@include select.color($theme);
+	//@include select.color($theme);
 	@include date.color($theme);
 	@include error.color($theme);
 	@include tooltip.color($theme);
 	@include autoComplete.color($theme);
 	@include global.color($theme);
-
+	@include table.color($theme);
 }
