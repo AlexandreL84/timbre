@@ -27,16 +27,16 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		if (window.location.href.indexOf("timbre") > 0) {
-			this.iconAutre.setIcone(FontAwesomeEnum.EARTH_EUROPE);
-			this.iconAutre.setType(FontAwesomeTypeEnum.TYPE_SOLID);
-			this.iconAutre.setInfo("Timbres Étranger");
-			this.iconAutre.setLien("/pays");
-		} else if (window.location.href.indexOf("pays") > 0) {
+		if (window.location.href.indexOf("pays") > 0) {
 			this.iconAutre.setIcone(FontAwesomeEnum.FLAG);
 			this.iconAutre.setType(FontAwesomeTypeEnum.TYPE_LIGHT);
 			this.iconAutre.setInfo("Timbres Français");
 			this.iconAutre.setLien("/timbre");
+		} else if (window.location.href.indexOf("timbre") > 0) {
+			this.iconAutre.setIcone(FontAwesomeEnum.EARTH_EUROPE);
+			this.iconAutre.setType(FontAwesomeTypeEnum.TYPE_SOLID);
+			this.iconAutre.setInfo("Timbres Étranger");
+			this.iconAutre.setLien("/pays");
 		}
 		console.log(window.location.href)
 		console.log(this.iconAutre)
