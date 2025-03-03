@@ -17,7 +17,7 @@
 		<lib-icon
 			class="primary click"
 			style="font-size: 1.7em"
-			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
 			[info]="'Exporter tableauu'"
 			(click)="exportTable()"
 		>
@@ -25,7 +25,7 @@
 		<lib-icon
 			class="primary click"
 			style="font-size: 1.7em"
-			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
 			[info]="'Exporter en pdf'"
 			(click)="generatePDFByImage()"
 		>
@@ -113,7 +113,7 @@
 			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<lib-icon
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="'Ajouter timbre'"
 				></lib-icon>
@@ -122,7 +122,7 @@
 				<lib-icon
 					class="primary click"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.CIRCLE_PLUS"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="'Ajouter timbre'"
 					(click)="ajouter(element)"
 				></lib-icon>
@@ -132,7 +132,7 @@
 			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<lib-icon
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="FontAwesomeEnum.PENCIL"
 					[info]="'Modifier'"
 				></lib-icon>
@@ -141,7 +141,7 @@
 				<lib-icon
 					class="primary click"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
 					[info]="'Modifier'"
 					(click)="modifierTimbre(element)"
 				></lib-icon>
@@ -151,7 +151,7 @@
 			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<lib-icon
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_SOLID"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
 					[icone]="FontAwesomeEnum.TRASH"
 					[info]="'Modifier'"
 				></lib-icon>
@@ -160,7 +160,7 @@
 				<lib-icon
 					class="primary click"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
 					[info]="'Supprimer'"
 					(click)="deleteTimbre(element)"
 				></lib-icon>

@@ -13,6 +13,16 @@
 	</div>
 
 	<div fxLayoutAlign="center end" fxLayoutGap="15px">
+		<lib-icon *ngIf="iconAutre?.icone"
+				  [icone]="iconAutre?.icone"
+				  [type]="iconAutre?.type"
+				  style="font-size: 2em"
+				  [color]="'white'"
+				  [info]="iconAutre?.info"
+				  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+				  (click)="navigate(iconAutre?.lien)">
+		</lib-icon>
+
 		<lib-icon [icone]="FontAwesomeEnum.PALETTE"
 				  style="font-size: 2em"
 				  [color]="'white'"

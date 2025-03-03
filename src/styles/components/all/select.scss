@@ -23,6 +23,10 @@ select {
 	.mat-mdc-select-arrow-wrapper {
 		margin-right: 5px;
 	}
+
+	.mat-mdc-select-panel {
+		//@extend .scrollBarAccent;
+	}
 }
 
 .selectMin {

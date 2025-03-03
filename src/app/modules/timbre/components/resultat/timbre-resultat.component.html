@@ -28,6 +28,7 @@
 
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
 			<mat-select name="doublon"
+						class="scrollBarAccent"
 						[(ngModel)]="timbreCritereModel.doublon"
 						[placeholder]="'Doublon'"
 						(ngModelChange)="filtreByCritere()">
@@ -37,7 +38,7 @@
 			</mat-select>
 		</div>
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 150px">
 			<mat-select name="anneeSelect"
 						multiple
 						[(ngModel)]="timbreCritereModel.annees"
@@ -61,7 +62,7 @@
 		<lib-icon
 			class="primary click"
 			style="font-size: 1.7em"
-			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
 			[info]="'Exporter tableauu'"
 			(click)="exportTable()"
 		>
@@ -70,7 +71,7 @@
 		<lib-icon
 			class="primary click"
 			style="font-size: 1.7em"
-			[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
 			[info]="'Exporter en pdf'"
 			(click)="generatePDFByImage()"
 		>
@@ -147,7 +148,7 @@
 					class="click"
 					[classIcone]="element?.getTimbreAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="element?.getTimbreAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
 					(click)="acquis(element)"
@@ -164,7 +165,7 @@
 					class="click"
 					[classIcone]="element?.getTimbreAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="element?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
 					(click)="doublon(element)"
@@ -176,7 +177,7 @@
 			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<lib-icon
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="FontAwesomeEnum.PENCIL"
 					[info]="'Modifier'"
 				></lib-icon>
@@ -185,7 +186,7 @@
 				<lib-icon
 					class="primary click"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
 					[info]="'Modifier'"
 					(click)="modifierTimbre(element)"
 				>
@@ -196,7 +197,7 @@
 			<th mat-header-cell *matHeaderCellDef class="alignCenter">
 				<lib-icon
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_SOLID"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
 					[icone]="FontAwesomeEnum.TRASH"
 					[info]="'Modifier'"
 				></lib-icon>
@@ -205,7 +206,7 @@
 				<lib-icon
 					class="primary click"
 					style="font-size: 1.2em"
-					[type]="FontAwesomeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
 					[info]="'Supprimer'"
 					(click)="deleteTimbre(element)"
 				></lib-icon>

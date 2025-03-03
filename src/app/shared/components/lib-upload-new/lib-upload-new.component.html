@@ -1,0 +1,38 @@
+<div class="form-input" fxLayout="column"  [fxLayoutAlign]="fileUploadModel.getAlignLabel() ? 'space-evenly center': 'start stretch'">
+	<label>
+		<lib-libelle-model [object]="object" [key]="fileUploadModel.getDetail()[0].getKey()?.toString()" [align]="fileUploadModel.getAlignLabel() "></lib-libelle-model>
+	</label>
+	<div [fxLayout]="fileUploadModel.getAlignLabel() && !(selectedFile || object[fileUploadModel.getDetail()[0].getKey()])? 'column': 'row'" fxLayoutGap="10px" fxLayoutAlign="start center" [fxLayoutAlign]="(selectedFile || object[fileUploadModel.getDetail()[0].getKey()])? 'space-evenly start': 'start center'">
+		<img *ngIf="object[fileUploadModel.getDetail()[0].getKey() ]"
+			 [src]="object[fileUploadModel.getDetail()[0].getKey()]"
+			 class="imgSelect click"
+			 alt="Image actuelle"/>
+		<!--
+		 (click)="utilsService.zoom(object[keyZoom]? object[keyZoom] : object[fileUploadModel.getDetail()[0].getKey()])"
+	 -->
+
+		<canvas #canvas *ngIf="selectedFile" ></canvas>
+
+		<input
+			id="{{id}}"
+			type="file"
+			accept="image/*"
+			(change)="onFileSelected($event)"
+			hidden
+		/>
+		<lib-icon
+			*ngIf="selectedFile || object[fileUploadModel.getDetail()[0].getKey()]"
+			class="primary click"
+			style="font-size: 1.5em"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PEN"
+			[info]="'Modifier'"
+			(click)="triggerFileInput()"
+		>
+		</lib-icon>
+		<button
+			*ngIf="!(selectedFile || object[fileUploadModel.getDetail()[0].getKey()])"
+			type="button" class="rounded large color-white" mat-raised-button color="accent" (click)="triggerFileInput()">
+			Choisir une image
+		</button>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+@use "sass:map";
+@use "../../../../node_modules/@angular/material/index" as mat;
+
+@mixin color($theme) {
+	$color-config: mat.m2-get-color-config($theme);
+
+	$accent-palette: map.get($color-config, "accent");
+	$accent: mat.m2-get-color-from-palette($accent-palette);
+
+	.scrollBarAccent {
+		scrollbar-color: #5d6c73 #ecedee;
+		scrollbar-width: thin;
+
+		&::-webkit-scrollbar {
+			width: 5px;
+		}
+
+		&::-webkit-scrollbar-track {
+			background-color: $accent !important;
+		}
+
+		&::-webkit-scrollbar-thumb {
+			background-color: $accent !important;
+		}
+
+		&::-webkit-scrollbar-thumb:hover {
+			background-color: $accent !important;
+		}
+	}
+}

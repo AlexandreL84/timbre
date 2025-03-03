@@ -14,7 +14,7 @@ export class UserModel extends ProprieteModel {
 	@Label("Droit")
 	droit: number;
 
-	constructor(id?: string,nom?: string, prenom?: string, droit?: number) {
+	constructor(id?: string, nom?: string, prenom?: string, droit?: number) {
 		super();
 		this.id = id ? id : null;
 		this.nom = nom ? nom : null;

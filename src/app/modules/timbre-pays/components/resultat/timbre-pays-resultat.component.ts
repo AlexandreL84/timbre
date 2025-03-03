@@ -18,6 +18,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import {UploadService} from "../../../../shared/services/upload.service";
+import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 
 @Component({
 	selector: "app-timbre-pays-resultat",
@@ -37,6 +38,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 	public timbre: TimbrePaysModel = new TimbrePaysModel();
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
 	constructor(public timbrePaysService: TimbrePaysService, private dialog: MatDialog, public utilsService: UtilsService, private uploadService: UploadService) {
 		this.dataSource = new MatTableDataSource([]);
@@ -200,4 +202,5 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 			});
 		}
 	}
+
 }

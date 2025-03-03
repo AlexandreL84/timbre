@@ -1,0 +1,7 @@
+$width: 100;
+$height: 200;
+
+canvas,.imgSelect {
+	max-width: $width * 1px;
+	max-height: $height * 1px;
+ }

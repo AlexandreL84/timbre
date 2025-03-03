@@ -15,6 +15,7 @@ import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
 import {TimbreAcquisModel} from "../../../../model/timbre-acquis.model";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
+import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -35,6 +36,8 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	public timbre: TimbreModel = new TimbreModel();
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+	readonly Utils = Utils;
 	anneeMin: number = 2000;
 	anneeMax: number = new Date().getFullYear();
 
@@ -185,7 +188,4 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 
 		doc.save('document.pdf');*/
 	}
-
-	protected readonly array = Array;
-	protected readonly Utils = Utils;
 }
