@@ -95,8 +95,6 @@ export class TimbreService {
 					if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == "TOUS" || (timbreCritereModel.getDoublon() == "OUI" && timbreModel.getTimbreAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == "NON" && !timbreModel.getTimbreAcquisModel().isDoublon()))) {
 						ajout = false
 					}
-				} else {
-					timbresModel.push(timbreModel);
 				}
 				if (ajout == true) {
 					timbresModel.push(timbreModel);
