@@ -4,6 +4,7 @@ import {MatBadgeSize} from "@angular/material/badge";
 import {TooltipPosition} from "@angular/material/tooltip";
 import {isNotNullOrUndefined, Utils} from "../../utils/utils";
 import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../../enum/font-awesome";
+import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enum";
 
 @Component({
     selector: "lib-icon",
@@ -55,10 +56,10 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
             if (isNotNullOrUndefined(this.info)) {
                 classIcon += " click";
             }
-            if (isNotNullOrUndefined(this.type) && this.type.length !== 0 && this.type != "" && this.type != FontAwesomeEnum.TYPE_SOLID?.toString()) {
+            if (isNotNullOrUndefined(this.type) && this.type.length !== 0 && this.type != "" && this.type != FontAwesomeTypeEnum.TYPE_SOLID?.toString()) {
                 classIcon += " fa-" + this.type;
             } else {
-                classIcon += " fa-" + FontAwesomeEnum.TYPE_SOLID;
+                classIcon += " fa-" + FontAwesomeTypeEnum.TYPE_SOLID;
             }
             if (isNotNullOrUndefined(this.size)) {
                 classIcon += " fa-" + this.size;
