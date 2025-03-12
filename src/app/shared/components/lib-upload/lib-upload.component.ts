@@ -4,6 +4,7 @@ import {AngularFireStorage} from "@angular/fire/compat/storage";
 import {isNotNullOrUndefined} from "../../utils/utils";
 import {FontAwesomeEnum} from "../../enum/font-awesome";
 import {UtilsService} from "../../services/utils.service";
+import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enum";
 
 @Component({
 	selector: "lib-upload",
@@ -26,6 +27,9 @@ export class LibUploadComponent  {
 
 	selectedFile!: File;
 	id: string = "file" + Math.floor(Math.random() * Math.floor(1000));
+
+	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
 	constructor(private storage: AngularFireStorage, public utilsService: UtilsService) {
 	}
@@ -113,6 +117,4 @@ export class LibUploadComponent  {
 			console.error('Error uploading image:', error);
 		}
 	}
-
-	protected readonly FontAwesomeEnum = FontAwesomeEnum;
 }
