@@ -38,8 +38,6 @@ export class HeaderComponent implements OnInit {
 			this.iconAutre.setInfo("Timbres Étranger");
 			this.iconAutre.setLien("/pays");
 		}
-		console.log(window.location.href)
-		console.log(this.iconAutre)
 	}
 
 	navigate(lien: string) {

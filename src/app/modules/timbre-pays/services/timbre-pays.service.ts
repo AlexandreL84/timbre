@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {MapperModel} from "../../../model/utils/mapper-model";
 import {TimbrePaysModel} from "../../../model/timbre-pays.model";
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {Utils} from "../../../shared/utils/utils";
+import {plainToInstance} from "class-transformer";
 
 @Injectable()
 export class TimbrePaysService {
@@ -25,7 +25,7 @@ export class TimbrePaysService {
 	/*getTimbreByIdAsync(id: any): Observable<TimbrePaysModel> {
 		return this.firestore.collection(this.basePath).doc(id).valueChanges().pipe(
 			map((data: any) => {
-				return new MapperModel(TimbrePaysModel).map(data);
+				return plainToInstance(TimbrePaysModel, data);
 			}))
 	}*/
 
@@ -33,7 +33,7 @@ export class TimbrePaysService {
 		return this.firestore.collection(this.basePath, ref => ref.where('id', '==', id))
 			.valueChanges().pipe(
 				map((data: any) => {
-					return new MapperModel(TimbrePaysModel).map(data[0]);
+					return plainToInstance(TimbrePaysModel, data[0]);
 				}))
 	}
 
@@ -41,7 +41,7 @@ export class TimbrePaysService {
 		return this.firestore.collection(this.basePath, ref => ref.where('code', '==', code))
 			.valueChanges().pipe(
 				map((data: any) => {
-					return new MapperModel(TimbrePaysModel).map(data[0]);
+					return plainToInstance(TimbrePaysModel, data[0]);
 				}))
 	}
 
@@ -49,16 +49,16 @@ export class TimbrePaysService {
 		return this.firestore.collection(this.basePath).valueChanges().pipe(
 			map((timbres: any) => {
 				let total: number = 0;
-				let timbresModel = [];
+				let timbresPaysModel: TimbrePaysModel[] = [];
 				if (timbres?.length > 0) {
 					timbres.forEach((timbre: any) => {
-						const timbreModel: TimbrePaysModel = new MapperModel(TimbrePaysModel).map(timbre);
-						timbresModel.push(timbreModel);
-						total += +timbreModel.getTotal();
+						const timbrePaysModel: TimbrePaysModel = plainToInstance(TimbrePaysModel, timbre);
+						timbresPaysModel.push(timbrePaysModel);
+						total += +timbrePaysModel.getTotal();
 					});
 				}
 				this.total$.next(total);
-				return timbresModel;
+				return timbresPaysModel;
 			}))
 	}
 

@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {MapperModel} from "../../../model/utils/mapper-model";
 import {TimbreModel} from "../../../model/timbre.model";
 import {BehaviorSubject, combineLatestWith, first, map, Observable, switchMap} from "rxjs";
-import {AngularFirestore, CollectionReference} from "@angular/fire/compat/firestore";
+import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {isNotNullOrUndefined, Utils} from "../../../shared/utils/utils";
 import {AuthService} from "../../../shared/services/auth.service";
 import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";
+import {plainToInstance} from "class-transformer";
 
 @Injectable()
 export class TimbreService {
@@ -29,7 +29,7 @@ export class TimbreService {
 	/*getTimbreByIdAsync(id: any): Observable<TimbreModel> {
 		return this.firestore.collection(this.basePath).doc(id).valueChanges().pipe(
 			map((data: any) => {
-				return new MapperModel(TimbreModel).map(data);
+				return plainToInstance(TimbreModel, data);
 			}))
 	}*/
 
@@ -37,7 +37,7 @@ export class TimbreService {
 		return this.firestore.collection(this.basePath, ref => ref.where('id', '==', id))
 			.valueChanges().pipe(
 				map((data: any) => {
-					return new MapperModel(TimbreModel).map(data[0]);
+					return plainToInstance(TimbreModel, data[0]);
 				}));
 	}
 
@@ -45,7 +45,7 @@ export class TimbreService {
 		return this.firestore.collection(this.basePath, ref => ref.where('code', '==', code))
 			.valueChanges().pipe(
 				map((data: any) => {
-					return new MapperModel(TimbreModel).map(data[0]);
+					return plainToInstance(TimbreModel, data[0]);
 				}));
 	}
 
@@ -80,10 +80,11 @@ export class TimbreService {
 		let timbresModel = [];
 		if (timbres?.length > 0) {
 			timbres.forEach((timbre: any) => {
-				const timbreModel: TimbreModel = new MapperModel(TimbreModel).map(timbre);
+				const timbreModel: TimbreModel = plainToInstance(TimbreModel, timbre);
+
 				const findTimbreAcquis = timbreAcquis.find(timbre => timbre["idTimbre"] == timbreModel.getId());
 				if (isNotNullOrUndefined(findTimbreAcquis)) {
-					timbreModel.setTimbreAcquisModel(new MapperModel(TimbreAcquisModel).map(findTimbreAcquis));
+					timbreModel.setTimbreAcquisModel(plainToInstance(TimbreAcquisModel, findTimbreAcquis));
 				} else {
 					timbreModel.setTimbreAcquisModel(new TimbreAcquisModel());
 				}

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
-import {BehaviorSubject, combineLatest, map, Observable} from "rxjs";
+import {combineLatest, map, Observable} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {isNotNullOrUndefined} from "../utils/utils";
 import {UserModel} from "../../model/user.model";
-import {MapperModel} from "../../model/utils/mapper-model";
+import {plainToInstance} from "class-transformer";
 
 @Injectable({
 	providedIn: 'root'
@@ -41,7 +41,7 @@ export class AuthService {
 		return combineLatest([this.afAuth.authState, collectionUser]).pipe(map(([user, users]) => {
 				const findUser = users.find(userFind => userFind["id"] == user.uid);
 				if (isNotNullOrUndefined(findUser)) {
-					return new MapperModel(UserModel).map(findUser);
+					return plainToInstance(UserModel, findUser);
 				}
 				return null;
 			})
