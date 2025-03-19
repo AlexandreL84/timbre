@@ -82,50 +82,50 @@ export class TimbrePaysImporterComponent implements OnInit {
 	}
 
 	setTimbre(item): TimbrePaysModel {
-		const timbreModel: TimbrePaysModel = new TimbrePaysModel();
-		timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
-		timbreModel.setCode(item["CODE"] != "NULL" ? item["CODE"] : "");
-		timbreModel.setLibelle(item["LIBELLE_FR"] != "NULL" ? item["LIBELLE_FR"] : "");
-		timbreModel.setZone(item["ZONE"] != "NULL" ? item["ZONE"] : "");
-		timbreModel.setClasseur(item["CLASSEUR"] != "NULL" ? item["CLASSEUR"] : "");
-		timbreModel.setPage(item["PAGE"] != "NULL" ? item["PAGE"] : "");
-		timbreModel.setTotal(item["TOTAL"] != "NULL" ? item["TOTAL"] : "");
-		timbreModel.setVisible(item["VISIBLE"] != "NULL" ? item["VISIBLE"] : "");
+		const timbrePaysModel: TimbrePaysModel = new TimbrePaysModel();
+		timbrePaysModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
+		timbrePaysModel.setCode(item["CODE"] != "NULL" ? item["CODE"] : "");
+		timbrePaysModel.setLibelle(item["LIBELLE_FR"] != "NULL" ? item["LIBELLE_FR"] : "");
+		timbrePaysModel.setZone(item["ZONE"] != "NULL" ? item["ZONE"] : "");
+		timbrePaysModel.setClasseur(item["CLASSEUR"] != "NULL" ? item["CLASSEUR"] : "");
+		timbrePaysModel.setPage(item["PAGE"] != "NULL" ? item["PAGE"] : "");
+		timbrePaysModel.setTotal(item["TOTAL"] != "NULL" ? item["TOTAL"] : "");
+		timbrePaysModel.setVisible(item["VISIBLE"] != "NULL" ? item["VISIBLE"] : "");
 
-		const imageDrapeau = '/assets/images/drapeau/' + timbreModel.getCode() + '.png';
+		const imageDrapeau = '/assets/images/drapeau/' + timbrePaysModel.getCode() + '.png';
 		this.uploadService.checkIfImageExists(imageDrapeau).pipe(first()).subscribe(
 			exists => {
 				if (exists) {
-					timbreModel.setDrapeau(imageDrapeau);
+					timbrePaysModel.setDrapeau(imageDrapeau);
 				}
 			}
 		);
 
-		const imageLangue = '/assets/images/langue/' + timbreModel.getCode() + '.png';
+		const imageLangue = '/assets/images/langue/' + timbrePaysModel.getCode() + '.png';
 		this.uploadService.checkIfImageExists(imageLangue).pipe(first()).subscribe(
 			exists => {
 				if (exists) {
-					timbreModel.setImageLangue(imageLangue);
+					timbrePaysModel.setImageLangue(imageLangue);
 				} else {
-					timbreModel.setLibelleLangue(item["LIBELLE_LANGUE"] != "NULL" ? item["LIBELLE_LANGUE"] : "");
+					timbrePaysModel.setLibelleLangue(item["LIBELLE_LANGUE"] != "NULL" ? item["LIBELLE_LANGUE"] : "");
 				}
 			}
 		);
 
-		const imageMap = '/assets/images/map/' + timbreModel.getCode() + '.png';
+		const imageMap = '/assets/images/map/' + timbrePaysModel.getCode() + '.png';
 		this.uploadService.checkIfImageExists(imageMap).pipe(first()).subscribe(
 			exists => {
 				if (exists) {
-					timbreModel.setMap(imageMap);
+					timbrePaysModel.setMap(imageMap);
 				} else {
-					timbreModel.setMap(item["MAP"] != "NULL" ? item["MAP"] : "");
+					timbrePaysModel.setMap(item["MAP"] != "NULL" ? item["MAP"] : "");
 				}
 			}
 		);
 		//this.uploadedUrl = await this.processAndUploadImage();
-		//timbreModel.setDrapeau(await this.processAndUploadImage());
+		//timbrePaysModel.setDrapeau(await this.processAndUploadImage());
 
-		return timbreModel
+		return timbrePaysModel
 	}
 
 
@@ -156,8 +156,8 @@ export class TimbrePaysImporterComponent implements OnInit {
 			this.messageLoad$.next("Import en cours ...");
 			this.timbres$.pipe(first()).subscribe(timbresModel => {
 				if (isNotNullOrUndefined(timbresModel) && timbresModel?.length > 0) {
-					timbresModel.forEach((timbreModel, index) => {
-						this.saveTimbre(timbreModel, index == timbresModel.length - 1);
+					timbresModel.forEach((timbrePaysModel, index) => {
+						this.saveTimbre(timbrePaysModel, index == timbresModel.length - 1);
 					})
 					//this.close();
 					//this.saveData(timbresModel);
@@ -169,35 +169,35 @@ export class TimbrePaysImporterComponent implements OnInit {
 		}
 	}
 
-	saveTimbre(timbreModel: TimbrePaysModel, last: boolean) {
+	saveTimbre(timbrePaysModel: TimbrePaysModel, last: boolean) {
 		combineLatest([
-			this.uploadService.processAndUploadImage(timbreModel?.getDrapeau(), this.timbrePaysService.widthDrapeau * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightDrapeau), this.timbrePaysService.heigthTable, timbreModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/drapeau"),
-			this.uploadService.processAndUploadImage((timbreModel?.getImageLangue() ? timbreModel?.getImageLangue() : null), this.timbrePaysService.widthLangue * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightLangue), this.timbrePaysService.heigthTable, timbreModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/langue"),
-			this.uploadService.processAndUploadImage(timbreModel?.getMap(), this.timbrePaysService.widthMap * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightMap), this.timbrePaysService.heigthTable, timbreModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/map"),
-			this.uploadService.processAndUploadImage(timbreModel?.getDrapeau(), this.timbrePaysService.widthDrapeau, this.timbrePaysService.heightDrapeau, timbreModel?.getCode(), this.timbrePaysService.dossierImage + "drapeau"),
-			this.uploadService.processAndUploadImage((timbreModel?.getImageLangue()? timbreModel?.getImageLangue() : null), this.timbrePaysService.widthLangue, this.timbrePaysService.heightLangue, timbreModel?.getCode(), this.timbrePaysService.dossierImage + "langue"),
-			this.uploadService.processAndUploadImage(timbreModel?.getMap(), this.timbrePaysService.widthMap, this.timbrePaysService.heightMap, timbreModel?.getCode(), this.timbrePaysService.dossierImage + "map")
+			this.uploadService.processAndUploadImage(timbrePaysModel?.getDrapeau(), this.timbrePaysService.widthDrapeau * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightDrapeau), this.timbrePaysService.heigthTable, timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "drapeau"),
+			this.uploadService.processAndUploadImage((timbrePaysModel?.getImageLangue() ? timbrePaysModel?.getImageLangue() : null), this.timbrePaysService.widthLangue * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightLangue), this.timbrePaysService.heigthTable, timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "langue"),
+			this.uploadService.processAndUploadImage(timbrePaysModel?.getMap(), this.timbrePaysService.widthMap * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightMap), this.timbrePaysService.heigthTable, timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "map"),
+			this.uploadService.processAndUploadImage(timbrePaysModel?.getDrapeau(), this.timbrePaysService.widthDrapeau, this.timbrePaysService.heightDrapeau, timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/drapeau"),
+			this.uploadService.processAndUploadImage((timbrePaysModel?.getImageLangue()? timbrePaysModel?.getImageLangue() : null), this.timbrePaysService.widthLangue, this.timbrePaysService.heightLangue, timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/langue"),
+			this.uploadService.processAndUploadImage(timbrePaysModel?.getMap(), this.timbrePaysService.widthMap, this.timbrePaysService.heightMap, timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/map")
 		]).pipe(first()).subscribe(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => {
-			if (isNotNullOrUndefined(drapeau)) {
-				timbreModel.setDrapeau(drapeau);
+			if (isNotNullOrUndefined(drapeau) && drapeau != "nok") {
+				timbrePaysModel.setDrapeau(drapeau);
 			}
-			if (isNotNullOrUndefined(langue)) {
-				timbreModel.setImageLangue(langue);
+			if (isNotNullOrUndefined(langue) && langue != "nok") {
+				timbrePaysModel.setImageLangue(langue);
 			}
-			if (isNotNullOrUndefined(map)) {
-				timbreModel.setMap(map);
+			if (isNotNullOrUndefined(map) && map != "nok") {
+				timbrePaysModel.setMap(map);
 			}
-			if (isNotNullOrUndefined(drapeauZoom)) {
-				timbreModel.setDrapeauZoom(drapeauZoom);
+			if (isNotNullOrUndefined(drapeauZoom) && drapeauZoom != "nok") {
+				timbrePaysModel.setDrapeauZoom(drapeauZoom);
 			}
-			if (isNotNullOrUndefined(langueZoom)) {
-				timbreModel.setImageLangueZoom(langueZoom);
+			if (isNotNullOrUndefined(langueZoom) && langueZoom != "nok") {
+				timbrePaysModel.setImageLangueZoom(langueZoom);
 			}
-			if (isNotNullOrUndefined(mapZoom)) {
-				timbreModel.setMapZoom(mapZoom);
+			if (isNotNullOrUndefined(mapZoom) && mapZoom != "nok") {
+				timbrePaysModel.setMapZoom(mapZoom);
 			}
 
-			this.timbrePaysService.addTimbre(timbreModel)
+			this.timbrePaysService.addTimbre(timbrePaysModel)
 			if (last) {
 				this.load$.next(true);
 				this.close()

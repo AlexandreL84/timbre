@@ -22,6 +22,23 @@
 			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
 				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 
+				<div *ngIf="timbreModel?.getId()" fxLayout="column" class="form-input">
+					<label>
+						<lib-libelle-model [object]="timbreModel" [key]="'id'"></lib-libelle-model>
+					</label>
+					<input
+						name="code"
+						[(ngModel)]="timbreModel.id"
+						type="text"
+						trim
+						upperCase
+						noEspace
+						required
+						zControl
+						[disabled]="!!timbreModel?.getId()"
+					/>
+				</div>
+
 				<div fxLayout="column" class="form-input">
 					<label>
 						<lib-libelle-model [object]="timbreModel" [key]="'annee'"></lib-libelle-model>
@@ -43,6 +60,7 @@
 					/>
 				</div>
 
+				<!--
 				<div fxLayout="column" class="form-input">
 					<label>
 						<lib-libelle-model [object]="timbreModel" [key]="'code'"></lib-libelle-model>
@@ -56,8 +74,10 @@
 						noEspace
 						required
 						zControl
+						[disabled]="!!timbreModel?.getId()"
 					/>
 				</div>
+				-->
 
 				<div fxLayout="column" class="form-input">
 					<label>
@@ -102,7 +122,13 @@
 					/>
 				</div>
 
-				<lib-upload [object]="timbreModel" [key]="'image'" [keyZoom]="'imageZoom'"  [dossier]="'timbre'" [code]="timbreModel?.getCode()" [maxWidth]="780" [maxHeight]="200" (outPutObject)="timbreModel = $event"></lib-upload>
+				<lib-upload [object]="timbreModel" [key]="'image'" [maxWidth]="timbreService.widthTimbre" [maxHeight]="timbreService.heightTimbre" (outPutObject)="timbreModel = $event"></lib-upload>
+
+				<!--
+				<lib-upload [object]="timbreModel" [key]="'image'" [keyZoom]="'imageZoom'" [dossier]="'timbre'" [code]="timbreModel?.getCode()" [maxWidth]="timbreService.widthTimbreZoom" [maxHeight]="timbreService.heightTimbreZoom" (outPutObject)="timbreModel = $event"></lib-upload>
+
+				<lib-upload-new [object]="timbreModel"  [fileUploadModel]="fileUploadModel" (outPutObject)="timbreModel = $event"></lib-upload-new>
+				-->
 			</div>
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">

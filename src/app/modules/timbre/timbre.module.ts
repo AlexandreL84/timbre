@@ -13,7 +13,6 @@ import {DirectiveModule} from "../../shared/directives/directive.module";
 import {ErrorModule} from "../error";
 import {PipeModule} from "../../shared/pipes/pipe.module";
 import {SimpleNotificationModule} from "../simple-notification/simple-notification.module";
-import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.module";
 import {TimbreImporterComponent} from "./components/importer/timbre-importer.component";
 import {TimbreResultatComponent} from "./components/resultat/timbre-resultat.component";
 import {UploadService} from "../../shared/services/upload.service";
@@ -23,31 +22,32 @@ import {UtilsService} from "../../shared/services/utils.service";
 import {LibModalModule} from "../../shared/components/lib-modal/lib-modal.module";
 import {LibIconModule} from "../../shared/components/lib-icon";
 import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
+import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.module";
 
 @NgModule({
 	declarations: [
 		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatComponent
 	],
-	imports: [
-		MaterialModule,
-		TimbreRoutingModule,
-		CommonModule,
-		FlexModule,
-		FlexLayoutModule,
-		FormsModule,
-		AsyncPipe,
-		LibSpinnerModule,
-		LibIconModule,
-		LibDialogImageModule,
-		LibLibelleModelModule,
-		HeaderModule,
-		DirectiveModule,
-		ErrorModule,
-		PipeModule,
-		SimpleNotificationModule,
-		LibUploadModule,
-		LibModalModule
-	],
+    imports: [
+        MaterialModule,
+        TimbreRoutingModule,
+        CommonModule,
+        FlexModule,
+        FlexLayoutModule,
+        FormsModule,
+        AsyncPipe,
+        LibSpinnerModule,
+        LibIconModule,
+        LibDialogImageModule,
+        LibLibelleModelModule,
+        HeaderModule,
+        DirectiveModule,
+        ErrorModule,
+        PipeModule,
+        SimpleNotificationModule,
+        LibModalModule,
+        LibUploadModule
+    ],
 	exports: [TimbreLayoutComponent],
 	providers: [UtilsService, TimbreService, UploadService, provideHttpClient()],
 })

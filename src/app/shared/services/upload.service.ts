@@ -1,15 +1,12 @@
 import {Injectable} from '@angular/core';
 import {getDownloadURL, getStorage, ref, uploadBytes} from "@angular/fire/storage";
-import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {HttpClient} from "@angular/common/http";
 import {catchError, from, map, Observable, of, switchMap} from "rxjs";
-import {isNotNullOrUndefined} from "../utils/utils";
+import {isNotNullOrUndefined, isString} from "../utils/utils";
 
 @Injectable()
 export class UploadService {
-	private storage = getStorage();
-
-	constructor(private firestore: AngularFirestore, private http: HttpClient) {
+	constructor(private http: HttpClient) {
 	}
 
 	checkIfImageExists(imagePath: string) {
@@ -19,93 +16,81 @@ export class UploadService {
 		);
 	}
 
-	getImageUrlTemp(imagePath: string): Promise<string> {
-		const storageRef = ref(this.storage, imagePath);
-		return getDownloadURL(storageRef);
-	}
-
-	// Fonction pour convertir l'image en Base64
-	getImageBase642(url: string){
-		this.getImageUrlTemp(url).then(newUrl => {
-			console.log(newUrl)
-				this.http.get(newUrl, {
-						responseType: 'arraybuffer',
-						headers: {
-							'Access-Control-Allow-Origin': '*'
-						}
-					}
-				).subscribe(
-					(data) => {
-						console.log(data)
-						// Convertir l'image en Base64
-						const base64String = this.arrayBufferToBase64(data);
-					},
-					(error) => {
-					}
-				);
-			});
-
-	}
-
-	// Fonction pour convertir l'image en Base64
-	getImageBase64(url: string): Observable<string> {
-		return new Observable<string>((observer) => {
-			this.http.get(url, {
-					responseType: 'arraybuffer',
-					headers: {
-						'Access-Control-Allow-Origin': '*'
-					}
-				}
-			).subscribe(
-				(data) => {
-					console.log(data)
-					// Convertir l'image en Base64
-					const base64String = this.arrayBufferToBase64(data);
-					observer.next(base64String);
-					observer.complete();
-				},
-				(error) => {
-					observer.error('Erreur de récupération de l\'image');
-				}
-			);
-		});
-	}
-
-	private arrayBufferToBase64(buffer: ArrayBuffer): string {
-		const byteArray = new Uint8Array(buffer);
-		let binary = '';
-		byteArray.forEach((byte) => {
-			binary += String.fromCharCode(byte);
-		});
-		return btoa(binary);  // Convertit en base64
-	}
-
-	/*async onUpload() {
-		const imagePath = '/assets/images/drapeau/AD.png';
-		await this.processAndUploadImage(imagePath);
-	}*/
-
-
 	processAndUploadImage(
 		imagePath: string,
 		width: number,
 		height: number,
-		code: string,
-		dossier: string
+		code: number | string,
+		dossier: string,
+		heigthDiv?: number
 	): Observable<string> {
 		return from(fetch(imagePath)).pipe(
 			switchMap(async (response) => {
 				if (isNotNullOrUndefined(imagePath) && imagePath != "") {
+					if (isNotNullOrUndefined(heigthDiv)) {
+						width = width * (heigthDiv / height);
+					}
 					//const blob = await response.blob();
 					const img = await this.loadImageFromAssets(imagePath);
-					const resizedBlob = await this.resizeImage(img, width, height);
-					const fileRetour = 'images/' + dossier + '/' + code + '.png'
-					return this.uploadImageToFirebase(resizedBlob, fileRetour);
+					const resizedBlob = await this.getBlob(img, width, height, heigthDiv)
+					return this.uploadImageToFirebase(resizedBlob, this.getFileRetour(dossier, code));
 				} else {
-					return null;
+					return "nok";
 				}
 			})
 		);
+	}
+
+	processAndUploadImageByFile(
+		file: File | string,
+		width: number,
+		height: number,
+		code: number | string,
+		dossier?: string,
+		heigthDiv?: number
+	): Observable<string> {
+		return new Observable((observer) => {
+			//console.log(file)
+			if (isNotNullOrUndefined(file) && !isString(file)) {
+				const img = new Image();
+				const reader: FileReader = new FileReader();
+				reader.readAsDataURL(file);
+
+				reader.onload = async (event) => {
+					img.src = event.target?.result as string;
+					//const resizedBlob = await this.resizeImage(img, width, isNotNullOrUndefined(heigthDiv) ? heigthDiv : height);
+					const resizedBlob = await this.getBlob(img, width, height, heigthDiv);
+					//console.log(this.getFileRetour(dossier, code))
+
+					return this.uploadImageToFirebase(resizedBlob, this.getFileRetour(dossier, code))
+						.then((result) => {
+							observer.next(result);
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+				};
+			} else {
+				observer.next("nok");
+			}
+		});
+	}
+
+
+	getBlob(img, width: number, height: number, heigthDiv?: number): Promise<Blob> {
+		if (isNotNullOrUndefined(heigthDiv)) {
+			width = width * (heigthDiv / height);
+		}
+		return this.resizeImage(img, width, isNotNullOrUndefined(heigthDiv) ? heigthDiv : height);
+
+	}
+
+	getFileRetour(dossier: string, code: number | string): string {
+		let fileRetour = "images/";
+		if (isNotNullOrUndefined(dossier)) {
+			fileRetour = fileRetour + dossier + "/";
+		}
+		return fileRetour + code + '.png';
 	}
 
 	// Charger une image depuis le dossier assets
@@ -118,111 +103,47 @@ export class UploadService {
 		});
 	}
 
-	// Redimensionner une image
-	private resizeImage2(image: HTMLImageElement, width: number, height: number): string {
-		const canvas = document.createElement('canvas');
-		canvas.width = width;
-		canvas.height = height;
-		const ctx = canvas.getContext('2d');
-
-		if (ctx) {
-			ctx.drawImage(image, 0, 0, width, height);
-		}
-
-		// Convertir l'image en base64
-		return canvas.toDataURL('image/png');
-	}
-
-
-	resizeImage(img: HTMLImageElement, width: number, height: number): Promise<Blob> {
+	resizeImage(img: HTMLImageElement, maxWidth: number, maxHeight: number): Promise<Blob> {
 		return new Promise((resolve) => {
 			const canvas = document.createElement('canvas');
-			canvas.width = width;
-			canvas.height = height;
 			const ctx = canvas.getContext('2d');
-			ctx?.drawImage(img, 0, 0, width, height);
+
+			if (ctx) {
+				// Calcul des dimensions
+				const ratio = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
+				const width = img.width * ratio;
+				const height = img.height * ratio;
+
+				// Configuration du canvas
+				canvas.width = width;
+				canvas.height = height;
+
+				// Fond transparent
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+				// Centrage de l'image redimensionnée
+				const x = (canvas.width - width) / 2;
+				const y = (canvas.height - height) / 2;
+
+				// Dessin de l'image
+				ctx.drawImage(img, x, y, width, height);
+				//this.saveFile2();
+			}
+
 			canvas.toBlob((blob) => {
 				if (blob) resolve(blob);
-			}, 'image/png', 0.8);
+			}, 'image/png', 1);
 		});
 	}
 
-	async uploadImageToFirebase(blob: Blob, filePath: string): Promise<string> {
-		const storage = getStorage();
-		const storageRef = ref(storage, filePath);
-		await uploadBytes(storageRef, blob);
-		return await getDownloadURL(storageRef);
-	}
 
-	/*processAndUploadImage(dossier: string, code : string, canvas: HTMLCanvasElement, img: HTMLImageElement, maxWidth: number, maxHeight: number): void {
-
-		console.log("ici");
-
-
-				img.onload = () => {
-					console.log(img);
-					//const canvas = canvas.nativeElement;
-					//console.log(canvas.nativeElement)
-					const ctx = canvas.getContext('2d');
-
-					if (ctx) {
-						// Calcul des dimensions
-						const ratio = Math.min(maxWidth / img.width, maxHeight / img.height, 1);
-						const width = img.width * ratio;
-						const height = img.height * ratio;
-
-						// Configuration du canvas
-						canvas.width = maxWidth;
-						canvas.height = maxHeight;
-
-						// Fond transparent
-						ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-						// Centrage de l'image redimensionnée
-						const x = (canvas.width - width) / 2;
-						const y = (canvas.height - height) / 2;
-
-						// Dessin de l'image
-						ctx.drawImage(img, x, y, width, height);
-						this.saveFile(dossier, code, canvas);
-					}
-				};
-	}
-
-	saveFile(dossier: string, code : string, canvas: HTMLCanvasElement) {
-		let filePath: string;
-		if (isNotNullOrUndefined(code)) {
-			filePath = "images/" + (isNotNullOrUndefined(dossier) ? (dossier + "/") : "") + code + '.png';
-		} else {
-			filePath = `images/${Date.now()}-resized.png`;
+	async uploadImageToFirebase(blob: Blob | string, filePath: string): Promise<string> {
+		if (!isString(blob)) {
+			const storage = getStorage();
+			const storageRef = ref(storage, filePath);
+			await uploadBytes(storageRef, blob);
+			return await getDownloadURL(storageRef);
 		}
-		const fileRef = this.storage.ref(filePath);
-
-		try {
-			//const canvas = this.canvas.nativeElement;
-			canvas.toBlob((blob) => {
-				if (blob) {
-					const task = this.storage.upload(filePath, blob);
-
-					task
-						.snapshotChanges()
-						.pipe(
-							finalize(() => {
-								fileRef.getDownloadURL().subscribe((url) => {
-									console.log('URL de l’image téléchargée : ', url);
-									return url;
-									//this.object[this.key] = url;
-									//console.log(this.object)
-									//this.outPutObject.emit(this.object)
-								});
-							})
-						)
-						.subscribe();
-				}
-			}, 'image/png');
-		} catch (error) {
-			console.error('Error uploading image:', error);
-			return null;
-		}
-	}*/
+		return null
+	}
 }

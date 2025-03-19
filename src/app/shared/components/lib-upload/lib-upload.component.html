@@ -3,11 +3,10 @@
 		<lib-libelle-model [object]="object" [key]="key" [align]="alignLabel"></lib-libelle-model>
 	</label>
 	<div [fxLayout]="alignLabel && !(selectedFile || object[key])? 'column': 'row'" fxLayoutGap="10px" fxLayoutAlign="start center" [fxLayoutAlign]="(selectedFile || object[key])? 'space-evenly start': 'start center'">
-		<img *ngIf="object[key]"
+		<img *ngIf="object[key] && !selectedFile"
 			 [src]="object[key]"
 			 class="imgSelect click"
-			 alt="Image actuelle"
-			 (click)="utilsService.zoom(object[keyZoom]? object[keyZoom] : object[key])"/>
+			 alt="Image actuelle" />
 
 		<canvas #canvas *ngIf="selectedFile" ></canvas>
 

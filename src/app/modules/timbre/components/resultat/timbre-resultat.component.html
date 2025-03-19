@@ -45,7 +45,7 @@
 						[placeholder]="'Années'"
 						(ngModelChange)="filtreByCritere()">
 				<mat-option class="selectMin" *ngFor="let annee of Utils.generateRange(anneeMin, anneeMax)"
-							[value]="annee?.toString()">
+							[value]="annee">
 					{{ annee }}
 				</mat-option>
 			</mat-select>
@@ -91,20 +91,20 @@
 					 (click)="utilsService.zoom(element?.getImageZoom())"/>
 			</td>
 		</ng-container>
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbre" [key]="'id'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getId() }}
+			</td>
+		</ng-container>
 		<ng-container matColumnDef="annee">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header>
 				<lib-libelle-model [object]="timbre" [key]="'annee'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
 				{{ element?.getAnnee() }}
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="code">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
-				<lib-libelle-model [object]="timbre" [key]="'code'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getCode() }}
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="idBloc">

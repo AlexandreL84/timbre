@@ -25,7 +25,7 @@ export class TimbreModel extends ProprieteModel {
 	yt: string;
 
 	@Label("Image")
-	image: string;
+	image: string | File;
 
 	@Label("Image tableau")
 	imageTable: string;
@@ -37,7 +37,7 @@ export class TimbreModel extends ProprieteModel {
 	timbreAcquisModel: TimbreAcquisModel;
 
 
-	constructor(id?: number,idBloc?: string, code?: string, annee?: number, monnaie?: string, type?: string, yt?: string, image?: string, imageTable?: string, imageZoom?: string, timbreAcquisModel? : TimbreAcquisModel) {
+	constructor(id?: number, idBloc?: string, code?: string, annee?: number, monnaie?: string, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel) {
 		super();
 		this.id = id ? id : null;
 		this.idBloc = idBloc ? idBloc : null;
@@ -109,11 +109,11 @@ export class TimbreModel extends ProprieteModel {
 		this.yt = value;
 	}
 
-	getImage(): string {
+	getImage(): string | File {
 		return this.image;
 	}
 
-	setImage(value: string) {
+	setImage(value: string | File) {
 		this.image = value;
 	}
 

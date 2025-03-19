@@ -5,6 +5,7 @@ export class FileUploadModel {
 	nom: string;
 	alignLabel: string;
 	detail: FileDetailUploadModel[];
+	file: File;
 
 	getDossier(): string {
 		return this.dossier;
@@ -36,5 +37,13 @@ export class FileUploadModel {
 
 	setDetail(value: FileDetailUploadModel[]) {
 		this.detail = value;
+	}
+
+	getFile(): File {
+		return this.file;
+	}
+
+	setFile(value: File) {
+		this.file = value;
 	}
 }

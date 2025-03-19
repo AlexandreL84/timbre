@@ -13,10 +13,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
-import {TimbrePaysAjouterComponent} from "../ajouter/timbre-pays-ajouter.component";
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import html2canvas from 'html2canvas';
 import {UploadService} from "../../../../shared/services/upload.service";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 
@@ -77,20 +75,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 
-	ajouter(timbrePaysModel: TimbrePaysModel) {
-		const refDialog = this.dialog.open(TimbrePaysAjouterComponent, {
-			height: "75vh",
-			maxHeight: "350px",
-			width: "20%",
-		});
-		refDialog.componentInstance.id = timbrePaysModel.id;
-
-		refDialog.afterClosed().subscribe(() => {
-			refDialog.close();
-		});
-	}
-
-	modifierTimbre(timbrePaysModel: TimbrePaysModel) {
+	modifier(timbrePaysModel: TimbrePaysModel) {
 		const refDialog = this.dialog.open(TimbrePaysModifierComponent, {
 			height: "75vh",
 			maxHeight: "750px",

@@ -149,14 +149,22 @@ export class TimbreImporterComponent implements OnInit {
 	}
 
 	saveTimbre(timbreModel: TimbreModel, last: boolean) {
+		const dossierImage = this.timbreService.dossierImage + (isNotNullOrUndefined(timbreModel.getIdBloc()) ? "bloc/" : "")
+
 		combineLatest([
-			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre * (this.timbreService.heigthTable / this.timbreService.heightTimbre), this.timbreService.heigthTable, timbreModel?.getCode(), this.timbreService.dossierImage + (isNotNullOrUndefined(timbreModel.getIdBloc())? "bloc/" : "") + "table"),
-			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre, this.timbreService.heightTimbre, timbreModel?.getCode(), this.timbreService.dossierImage  + (isNotNullOrUndefined(timbreModel.getIdBloc())? "bloc/" : "") + "autre"),
-			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbreZoom, this.timbreService.heightTimbreZoom, timbreModel?.getCode(), this.timbreService.dossierImage  + (isNotNullOrUndefined(timbreModel.getIdBloc())? "bloc/" : "") + "zoom"),
-		]).pipe(first(([imageTable, image, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
-			timbreModel.setImageTable(imageTable);
-			timbreModel.setImage(image);
-			timbreModel.setImageZoom(imageZoom);
+			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre, this.timbreService.heightTimbre, timbreModel?.getCode(), dossierImage + "autre"),
+			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre * (this.timbreService.heigthTable / this.timbreService.heightTimbre), this.timbreService.heigthTable, timbreModel?.getCode(), dossierImage + "table"),
+			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbreZoom, this.timbreService.heightTimbreZoom, timbreModel?.getCode(), dossierImage + "zoom"),
+		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
+			if (isNotNullOrUndefined(image) && image != "nok") {
+				timbreModel.setImage(image);
+			}
+			if (isNotNullOrUndefined(imageTable) && imageTable != "nok") {
+				timbreModel.setImageTable(imageTable);
+			}
+			if (isNotNullOrUndefined(imageZoom) && imageZoom != "nok") {
+				timbreModel.setImageZoom(imageZoom);
+			}
 			this.timbreService.addTimbre(timbreModel)
 			if (last) {
 				this.load$.next(true);

@@ -3,7 +3,7 @@ import {ProprieteModel} from "./utils/propriete-model";
 
 export class TimbrePaysModel extends ProprieteModel {
 	@Label("Identifiant")
-	id: string;
+	id: number;
 
 	@Label("Code")
 	code: string;
@@ -47,7 +47,7 @@ export class TimbrePaysModel extends ProprieteModel {
 	@Label("Visible")
 	visible: boolean;
 
-	constructor(id?: string, code?: string, libelle?: string, libelleLangue?: string, imageLangueZoom?: string, imageLangue?: string, zone?: string, classeur?: number, page?: number, total?: number, map?: string,  mapZoom?: string, drapeau?: string,  drapeauZoom?: string, visible?: boolean) {
+	constructor(id?: number, code?: string, libelle?: string, libelleLangue?: string, imageLangueZoom?: string, imageLangue?: string, zone?: string, classeur?: number, page?: number, total?: number, map?: string,  mapZoom?: string, drapeau?: string,  drapeauZoom?: string, visible?: boolean) {
 		super();
 		this.id = id ? id : null;
 		this.code = code ? code : null;
@@ -66,11 +66,11 @@ export class TimbrePaysModel extends ProprieteModel {
 		this.visible = visible ? visible : false;
 	}
 
-	getId(): string {
+	getId(): number {
 		return this.id;
 	}
 
-	setId(value: string) {
+	setId(value: number) {
 		this.id = value;
 	}
 

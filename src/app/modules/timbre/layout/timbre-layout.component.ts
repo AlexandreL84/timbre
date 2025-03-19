@@ -29,7 +29,7 @@ export class TimbreLayoutComponent implements OnInit {
 	}
 
 	addTimbreBouchon() {
-		this.timbreService.addTimbre(this.timbreService.getBouchon())
+		this.timbreService.addTimbre(this.timbreService.getBouchon());
 	}
 
 	importer() {

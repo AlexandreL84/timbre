@@ -63,8 +63,7 @@
 						zControl
 					/>
 				</div>
-				<lib-upload [object]="timbrePaysModel" [key]="'imageLangue'" [keyZoom]="'imageLangueZoom'"  [dossier]="'langue'" [code]="timbrePaysModel?.getCode()" [maxWidth]="timbrePaysService.widthLangue" [maxHeight]="timbrePaysService.heightLangue" (outPutObject)="timbrePaysModel = $event"></lib-upload>
-
+				<lib-upload [object]="timbrePaysModel" [key]="'imageLangue'" [maxWidth]="timbrePaysService.widthLangue" [maxHeight]="timbrePaysService.heightLangue" (outPutObject)="timbrePaysModel = $event"></lib-upload>
 
 				<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
 					<div fxLayout="column" class="form-input">
@@ -126,8 +125,8 @@
 				</div>
 
 				<div fxLayout="row" fxLayoutGap="25px" fxLayoutAlign="space-evenly center">
-					<lib-upload [object]="timbrePaysModel" [key]="'drapeau'" [keyZoom]="'drapeauZoom'" [dossier]="'drapeau'" [code]="timbrePaysModel?.getCode()" [maxWidth]="timbrePaysService.widthDrapeau" [maxHeight]="timbrePaysService.heightDrapeau"  [alignLabel]="'space-evenly center'" (outPutObject)="timbrePaysModel = $event"></lib-upload>
-					<lib-upload [object]="timbrePaysModel" [key]="'map'" [keyZoom]="'mapZoom'"  [dossier]="'map'" [code]="timbrePaysModel?.getCode()" [maxWidth]="timbrePaysService.widthMap" [maxHeight]="timbrePaysService.heightMap"  [alignLabel]="'space-evenly center'"(outPutObject)="timbrePaysModel = $event"></lib-upload>
+					<lib-upload [object]="timbrePaysModel" [key]="'drapeau'" [maxWidth]="timbrePaysService.widthDrapeau" [maxHeight]="timbrePaysService.heightDrapeau" (outPutObject)="timbrePaysModel = $event"></lib-upload>
+					<lib-upload [object]="timbrePaysModel" [key]="'map'" [maxWidth]="timbrePaysService.widthMap" [maxHeight]="timbrePaysService.heightMap" (outPutObject)="timbrePaysModel = $event"></lib-upload>
 				</div>
 			</div>
 

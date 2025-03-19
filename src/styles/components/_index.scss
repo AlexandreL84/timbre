@@ -1,3 +1,4 @@
+@use "all/scrollbar" as scrollbar;
 @use "all/button" as button;
 @use "all/input" as input;
 @use "all/formulaire" as formulaire;
@@ -13,6 +14,7 @@
 @use "global" as global;
 
 @mixin theme($theme) {
+	@include scrollbar.color($theme);
 	@include button.color($theme);
 	//@include input.color($theme);
 	@include formulaire.color($theme);

@@ -4,12 +4,17 @@ import {BehaviorSubject, map, Observable} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {Utils} from "../../../shared/utils/utils";
 import {plainToInstance} from "class-transformer";
+import {collectionData} from "@angular/fire/firestore";
+
+interface DocumentData {
+	id: number; // Assurez-vous que vos documents ont une propriété numérique "id"
+}
 
 @Injectable()
 export class TimbrePaysService {
-	private basePath: string = '/timbres_pays';
+	private basePath: string = '/timbres_pays2';
 
-	dossierImage: string = "pays/";
+	dossierImage: string = "pays2/";
 	heigthTable: number = 50;
 	widthDrapeau: number = 620;
 	heightDrapeau: number = 430;
@@ -29,7 +34,19 @@ export class TimbrePaysService {
 			}))
 	}*/
 
-	getTimbreByIdAsync(id: string): Observable<TimbrePaysModel> {
+	getMaxIdentAsync(): Observable<number> {
+		const query =
+			this.firestore.collection(this.basePath)
+				.ref.orderBy("id", "desc")
+				.limit(1);
+
+		return collectionData(query).pipe(
+			map((docs: DocumentData[]) => (docs.length > 0 ? docs[0].id  + 1 : 1))
+		);
+	}
+
+
+	getTimbreByIdAsync(id: number): Observable<TimbrePaysModel> {
 		return this.firestore.collection(this.basePath, ref => ref.where('id', '==', id))
 			.valueChanges().pipe(
 				map((data: any) => {

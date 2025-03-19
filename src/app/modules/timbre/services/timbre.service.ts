@@ -7,6 +7,11 @@ import {AuthService} from "../../../shared/services/auth.service";
 import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";
 import {plainToInstance} from "class-transformer";
+import {collectionData} from "@angular/fire/firestore";
+
+interface DocumentData {
+	id: number; // Assurez-vous que vos documents ont une propriété numérique "id"
+}
 
 @Injectable()
 export class TimbreService {
@@ -63,10 +68,14 @@ export class TimbreService {
 		this.firestore.collection(this.basePath, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
+				console.log(timbreCritereModel)
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
+					filteredQuery = filteredQuery.where('annee', '==', timbreCritereModel.getAnnees()[0]);
 				}
 			}
+			filteredQuery = filteredQuery.orderBy("id", "asc");
+
+			console.log(filteredQuery)
 			return filteredQuery;
 		})
 			.valueChanges().pipe(combineLatestWith(this.getTimbreAcquis(timbreCritereModel)),
@@ -74,6 +83,17 @@ export class TimbreService {
 			.subscribe(([timbres, timbreAcquis]) => {
 				this.constructTimbres(timbres, timbreAcquis, timbreCritereModel);
 			});
+	}
+
+	getMaxIdentAsync(): Observable<number> {
+		const query =
+			this.firestore.collection(this.basePath)
+				.ref.orderBy("id", "desc")
+				.limit(1);
+
+		return collectionData(query).pipe(
+			map((docs: DocumentData[]) => (docs.length > 0 ? docs[0].id  + 1 : 1))
+		);
 	}
 
 	constructTimbres(timbres, timbreAcquis, timbreCritereModel?: TimbreCritereModel) {
@@ -179,11 +199,13 @@ export class TimbreService {
 	}
 
 	addTimbre(timbreModel: TimbreModel) {
-		timbreModel.setId(Utils.getRandom(10000));
-		this.firestore.collection(this.basePath).add(
-			Object.assign(new Object(), timbreModel)
-		);
-		this.getTimbres();
+		this.getMaxIdentAsync().pipe(first()).subscribe(id => {
+			timbreModel.setId(id)
+			this.firestore.collection(this.basePath).add(
+				Object.assign(new Object(), timbreModel)
+			);
+			this.getTimbres();
+		})
 	}
 
 	modifierTimbre(timbreModel: TimbreModel) {
@@ -232,8 +254,6 @@ export class TimbreService {
 
 	getBouchon(): TimbreModel {
 		let timbre: TimbreModel = new TimbreModel();
-		let id: number = Utils.getRandom(10000)
-		timbre.setId(id);
 		timbre.setCode(timbre.getId()?.toString());
 		timbre.setAnnee(2025);
 		timbre.setMonnaie("E");

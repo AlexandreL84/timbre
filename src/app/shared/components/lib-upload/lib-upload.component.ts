@@ -1,9 +1,5 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
-import {finalize} from "rxjs/operators";
-import {AngularFireStorage} from "@angular/fire/compat/storage";
-import {isNotNullOrUndefined} from "../../utils/utils";
 import {FontAwesomeEnum} from "../../enum/font-awesome";
-import {UtilsService} from "../../services/utils.service";
 import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enum";
 
 @Component({
@@ -11,14 +7,11 @@ import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enu
 	templateUrl: "./lib-upload.component.html",
 	styleUrls: ["./lib-upload.component.scss"],
 })
-export class LibUploadComponent  {
+export class LibUploadComponent {
 	@ViewChild('canvas', {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
 
 	@Input() object;
 	@Input() key: string;
-	@Input() keyZoom: string;
-	@Input() code: string;
-	@Input() dossier: string;
 	@Input() maxWidth: number = 100;
 	@Input() maxHeight: number = 200
 	@Input() alignLabel: string;
@@ -30,9 +23,6 @@ export class LibUploadComponent  {
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
-
-	constructor(private storage: AngularFireStorage, public utilsService: UtilsService) {
-	}
 
 	triggerFileInput(): void {
 		const fileInput = document.getElementById(this.id) as HTMLElement;
@@ -74,8 +64,9 @@ export class LibUploadComponent  {
 
 						// Dessin de l'image
 						ctx.drawImage(img, x, y, width, height);
-						this.saveFile();
+						//this.saveFile2();
 					}
+					this.saveFile();
 				};
 			};
 
@@ -84,37 +75,7 @@ export class LibUploadComponent  {
 	}
 
 	saveFile() {
-		let filePath: string;
-		if (isNotNullOrUndefined(this.code)) {
-			filePath = "images/" + (isNotNullOrUndefined(this.dossier) ? (this.dossier + "/") : "") + this.code + '.png';
-		} else {
-			filePath = `images/${Date.now()}-resized.png`;
-		}
-		const fileRef = this.storage.ref(filePath);
-
-		try {
-			const canvas = this.canvas.nativeElement;
-			canvas.toBlob((blob) => {
-				if (blob) {
-					const task = this.storage.upload(filePath, blob);
-
-					task
-						.snapshotChanges()
-						.pipe(
-							finalize(() => {
-								fileRef.getDownloadURL().subscribe((url) => {
-									this.object[this.key] = url;
-									//console.log(this.object)
-									this.outPutObject.emit(this.object)
-									//console.log('URL de l’image téléchargée : ', url);
-								});
-							})
-						)
-						.subscribe();
-				}
-			}, 'image/png');
-		} catch (error) {
-			console.error('Error uploading image:', error);
-		}
+		this.object[this.key] = this.selectedFile;
+		this.outPutObject.emit(this.object)
 	}
 }

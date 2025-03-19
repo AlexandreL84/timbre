@@ -48,7 +48,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	ngOnInit(): void {
 		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 
-		this.displayedColumns = ["image", "annee", "code", "idBloc", "monnaie", "type",  "yt",  "acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type",  "yt",  "acquis", "doublon"];
 		if (this.modif) {
 			this.displayedColumns.push("modifier", "supprimer");
 		}
@@ -112,7 +112,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 			maxHeight: "95vh",
 			data: {
 				titre: "Confirmation",
-				message: "Souhaitez-vous supprimer le timbre <b>" + timbreModel?.getCode() + "</b> ?",
+				message: "Souhaitez-vous supprimer le timbre <b>n° " + timbreModel?.getId() + "</b> ?",
 				btnDroite: "Oui",
 				btnGauche: "Non",
 			},

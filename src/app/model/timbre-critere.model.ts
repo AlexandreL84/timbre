@@ -3,7 +3,7 @@ import {ProprieteModel} from "./utils/propriete-model";
 
 export class TimbreCritereModel extends ProprieteModel {
 	@Label("Année")
-	annees: string[];
+	annees: number[];
 
 	@Label("Acquis")
 	acquis: string;
@@ -11,11 +11,11 @@ export class TimbreCritereModel extends ProprieteModel {
 	@Label("Doublon")
 	doublon: string;
 
-	getAnnees(): string[] {
+	getAnnees(): number[] {
 		return this.annees;
 	}
 
-	setAnnees(value: string[]) {
+	setAnnees(value: number[]) {
 		this.annees = value;
 	}
 
