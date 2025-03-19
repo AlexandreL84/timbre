@@ -77,7 +77,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 		if (this.timbreCritereModel.getAcquis() == "NON") {
 			this.timbreCritereModel.setDoublon("TOUS");
 		}
-		this.timbreService.getTimbres(this.timbreCritereModel)
+		this.timbreService.getTimbres(this.timbreCritereModel);
 	}
 
 	applyFilter(event: Event) {
@@ -100,7 +100,6 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 			width: "30%",
 		});
 		refDialog.componentInstance.id = timbreModel.getId();
-		//refDialog.componentInstance.code = timbreModel.code;
 
 		refDialog.afterClosed().subscribe(() => {
 			refDialog.close();

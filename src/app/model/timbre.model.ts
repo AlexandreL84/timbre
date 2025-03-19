@@ -1,16 +1,14 @@
 import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
 import {TimbreAcquisModel} from "./timbre-acquis.model";
+import { TimbreBlocModel } from './timbre-bloc.model';
 
 export class TimbreModel extends ProprieteModel {
 	@Label("Identifiant")
 	id: number;
 
 	@Label("Identifiant bloc")
-	idBloc: string;
-
-	@Label("Code")
-	code: string;
+	idBloc: number;
 
 	@Label("Année")
 	annee: number;
@@ -36,12 +34,14 @@ export class TimbreModel extends ProprieteModel {
 	@Label("vérif")
 	timbreAcquisModel: TimbreAcquisModel;
 
+	@Label("Bloc")
+	timbreBlocModel: TimbreBlocModel;
 
-	constructor(id?: number, idBloc?: string, code?: string, annee?: number, monnaie?: string, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel) {
+
+	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: string, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel, timbreBlocModel?: TimbreBlocModel) {
 		super();
 		this.id = id ? id : null;
 		this.idBloc = idBloc ? idBloc : null;
-		this.code = code ? code : null;
 		this.annee = annee ? annee : null;
 		this.monnaie = monnaie ? monnaie : null;
 		this.type = type ? type : null;
@@ -50,6 +50,7 @@ export class TimbreModel extends ProprieteModel {
 		this.imageTable = imageTable ? imageTable : null;
 		this.imageZoom = imageZoom ? imageZoom : null;
 		this.timbreAcquisModel = timbreAcquisModel ? timbreAcquisModel : null;
+		this.timbreBlocModel = timbreBlocModel ? timbreBlocModel : null;
 	}
 
 	getId(): number {
@@ -60,20 +61,12 @@ export class TimbreModel extends ProprieteModel {
 		this.id = value;
 	}
 
-	getIdBloc(): string {
+	getIdBloc(): number {
 		return this.idBloc;
 	}
 
-	setIdBloc(value: string) {
+	setIdBloc(value: number) {
 		this.idBloc = value;
-	}
-
-	getCode(): string {
-		return this.code;
-	}
-
-	setCode(value: string) {
-		this.code = value;
 	}
 
 	getAnnee(): number {
@@ -139,5 +132,13 @@ export class TimbreModel extends ProprieteModel {
 
 	setTimbreAcquisModel(value: TimbreAcquisModel) {
 		this.timbreAcquisModel = value;
+	}
+
+	getTimbreBlocModel(): TimbreBlocModel {
+		return this.timbreBlocModel;
+	}
+
+	setTimbreBlocModel(value: TimbreBlocModel) {
+		this.timbreBlocModel = value;
 	}
 }

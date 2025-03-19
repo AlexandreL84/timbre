@@ -104,7 +104,12 @@
 				<lib-libelle-model [object]="timbre" [key]="'annee'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getAnnee() }}
+				<ng-template [ngIf]="element?.getIdBloc()" [ngIfElse]="noBloc">
+					{{ element?.getTimbreBlocModel()?.getAnnee() }}
+				</ng-template>
+				<ng-template #noBloc>
+					{{ element?.getAnnee() }}
+				</ng-template>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="idBloc">
@@ -112,7 +117,15 @@
 				<lib-libelle-model [object]="timbre" [key]="'idBloc'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getIdBloc() ? element?.getIdBloc() : "Non" }}
+				<ng-template [ngIf]="element?.getIdBloc()" [ngIfElse]="noBloc">
+					<img *ngIf="element?.getTimbreBlocModel()?.getImage()"
+						 [src]="element?.getTimbreBlocModel()?.getImageTable()"
+						 class="image click"
+						 (click)="utilsService.zoom(element?.getTimbreBlocModel()?.getImageZoom())"/>
+				</ng-template>
+				<ng-template #noBloc>
+					Non
+				</ng-template>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="monnaie">
@@ -120,7 +133,12 @@
 				<lib-libelle-model [object]="timbre" [key]="'monnaie'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
-				{{ element?.getMonnaie() == "E" ? "€" : "Francs" }}
+				<ng-template [ngIf]="element?.getIdBloc()" [ngIfElse]="noBloc">
+					{{ element?.getTimbreBlocModel()?.getMonnaie() == "E" ? "€" : "Francs" }}
+				</ng-template>
+				<ng-template #noBloc>
+					{{ element?.getMonnaie() == "E" ? "€" : "Francs" }}
+				</ng-template>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="type">

@@ -1,0 +1,114 @@
+<div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
+	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
+		<span>{{timbreBlocModel?.getId()? 'MODIFICATION' : 'AJOUT'}} BLOC </span>
+		<span>{{ timbreBlocModel?.getId() }}</span>
+	</div>
+
+	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
+		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+	</ng-template>
+	<ng-template #load>
+		<form
+			#formModif="ngForm"
+			ngForm="formModif"
+			(ngSubmit)="valider(formModif)"
+			class="formulaire-box-elevation"
+			[ngClass]="formModif?.submitted  ?'red-color' : 'blue-color'"
+			fxLayoutGap="20px"
+			fxFlex="100"
+			fxLayout="column"
+			fxLayoutAlign="space-between stretch"
+		>
+			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
+				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
+
+				<div *ngIf="timbreBlocModel?.getId()" fxLayout="column" class="form-input">
+					<label>
+						<lib-libelle-model [object]="timbreBlocModel" [key]="'id'"></lib-libelle-model>
+					</label>
+					<input
+						name="code"
+						[(ngModel)]="timbreBlocModel.id"
+						type="text"
+						trim
+						upperCase
+						noEspace
+						required
+						zControl
+						[disabled]="!!timbreBlocModel?.getId()"
+					/>
+				</div>
+
+				<div fxLayout="column" class="form-input">
+					<label>
+						<lib-libelle-model [object]="timbreBlocModel" [key]="'annee'"></lib-libelle-model>
+					</label>
+					<input
+						name="page"
+						[(ngModel)]="timbreBlocModel.annee"
+						type="number"
+						style="width: 60px !important;"
+						class="annee"
+						minlength="4"
+						maxlength="4"
+						min="1900"
+						zMin="1900"
+						[max]="maxAnnee"
+						[zMax]="maxAnnee"
+						required
+						zControl
+					/>
+				</div>
+
+				<!--
+				<div fxLayout="column" class="form-input">
+					<label>
+						<lib-libelle-model [object]="timbreBlocModel" [key]="'code'"></lib-libelle-model>
+					</label>
+					<input
+						name="code"
+						[(ngModel)]="timbreBlocModel.code"
+						type="text"
+						trim
+						upperCase
+						noEspace
+						required
+						zControl
+						[disabled]="!!timbreBlocModel?.getId()"
+					/>
+				</div>
+				-->
+
+				<div fxLayout="column" class="form-input">
+					<label>
+						<lib-libelle-model [object]="timbreBlocModel" [key]="'monnaie'"></lib-libelle-model>
+					</label>
+					<input
+						name="monnaie"
+						[(ngModel)]="timbreBlocModel.monnaie"
+						style="width: 25px !important;"
+						type="text"
+						trim
+						minlength="1"
+						maxlength="2"
+						required
+						zControl
+					/>
+				</div>
+
+				<lib-upload [object]="timbreBlocModel" [key]="'image'" [maxWidth]="timbreBlocService.widthTimbre" [maxHeight]="timbreBlocService.heightTimbre" (outPutObject)="timbreBlocModel = $event"></lib-upload>
+			</div>
+
+			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
+				<button
+					type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">
+					Annuler
+				</button>
+				<button
+					type="submit" class="rounded large color-white" mat-raised-button color="accent">
+					Enregistrer
+				</button>
+			</div>
+		</form>
+	</ng-template>
+</div>

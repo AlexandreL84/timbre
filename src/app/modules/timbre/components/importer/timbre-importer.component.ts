@@ -7,6 +7,7 @@ import {TimbreModel} from "../../../../model/timbre.model";
 import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {TimbreService} from "../../services/timbre.service";
 import {UploadService} from "../../../../shared/services/upload.service";
+import { TimbreUtilsService } from '../../services/timbre-utils.service';
 
 @Component({
 	selector: "app-timbre-importer",
@@ -22,6 +23,7 @@ export class TimbreImporterComponent implements OnInit {
 
 	constructor(
 		private timbreService: TimbreService,
+		private timbreUtilsService: TimbreUtilsService,
 		private uploadService: UploadService,
 		public dialogRef: MatDialogRef<TimbreImporterComponent>) {
 	}
@@ -84,7 +86,6 @@ export class TimbreImporterComponent implements OnInit {
 		const timbreModel: TimbreModel = new TimbreModel();
 		//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
 		timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? item["CODE"] : null);
-		timbreModel.setCode(item["CODE"] != "NULL" && item["CODE"] != "" ? item["CODE"] : null);
 		timbreModel.setIdBloc(item["IDENT_BLOC"] != "NULL" && item["IDENT_BLOC"] != "" ? item["IDENT_BLOC"] : null);
 		timbreModel.setAnnee(item["ANNEE"] != "NULL" && item["ANNEE"] != "" ? item["ANNEE"] : null);
 		timbreModel.setMonnaie(item["MONNAIE"] != "NULL" && item["MONNAIE"] != "" ? item["MONNAIE"] : null);
@@ -149,12 +150,12 @@ export class TimbreImporterComponent implements OnInit {
 	}
 
 	saveTimbre(timbreModel: TimbreModel, last: boolean) {
-		const dossierImage = this.timbreService.dossierImage + (isNotNullOrUndefined(timbreModel.getIdBloc()) ? "bloc/" : "")
+		const dossierImage = this.timbreUtilsService.dossierImage + (isNotNullOrUndefined(timbreModel.getIdBloc()) ? "bloc/" : "")
 
 		combineLatest([
-			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre, this.timbreService.heightTimbre, timbreModel?.getCode(), dossierImage + "autre"),
-			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre * (this.timbreService.heigthTable / this.timbreService.heightTimbre), this.timbreService.heigthTable, timbreModel?.getCode(), dossierImage + "table"),
-			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbreZoom, this.timbreService.heightTimbreZoom, timbreModel?.getCode(), dossierImage + "zoom"),
+			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre, this.timbreService.heightTimbre, timbreModel?.getId(), dossierImage + "autre"),
+			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbre * (this.timbreService.heigthTable / this.timbreService.heightTimbre), this.timbreService.heigthTable, timbreModel?.getId(), dossierImage + "table"),
+			this.uploadService.processAndUploadImage(timbreModel?.getImageTable(), this.timbreService.widthTimbreZoom, this.timbreService.heightTimbreZoom, timbreModel?.getId(), dossierImage + "zoom"),
 		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
 			if (isNotNullOrUndefined(image) && image != "nok") {
 				timbreModel.setImage(image);

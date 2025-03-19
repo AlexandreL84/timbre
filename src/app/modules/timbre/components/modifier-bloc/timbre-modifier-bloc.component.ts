@@ -1,6 +1,4 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { TimbreModel } from '../../../../model/timbre.model';
-import { TimbreService } from '../../services/timbre.service';
 import { BehaviorSubject, first, combineLatest } from 'rxjs';
 import { isNotNullOrUndefined } from '../../../../shared/utils/utils';
 import { NgForm } from '@angular/forms';
@@ -11,45 +9,43 @@ import { NotificationMessageEnum } from '../../../../shared/enum/notification/no
 import { FileUploadModel } from '../../../../model/file/file-upload.model';
 import { FileDetailUploadModel } from '../../../../model/file/file-detail-upload.model';
 import { UploadService } from '../../../../shared/services/upload.service';
-import { TimbreBlocService } from '../../services/timbre-bloc.service';
 import { TimbreBlocModel } from '../../../../model/timbre-bloc.model';
+import { TimbreBlocService } from '../../services/timbre-bloc.service';
 
 
 @Component({
-	selector: 'app-timbre-modifier',
-	templateUrl: './timbre-modifier.component.html',
+	selector: 'app-timbre-modifier-bloc',
+	templateUrl: './timbre-modifier-bloc.component.html',
 })
-export class TimbreModifierComponent implements OnInit {
+export class TimbreModifierBlocComponent implements OnInit {
 	@ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
 
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 	id: number;
 	maxAnnee: number = new Date().getFullYear();
-	timbreModel: TimbreModel = new TimbreModel();
+	timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
-		public dialogRef: MatDialogRef<TimbreModifierComponent>,
-		public timbreService: TimbreService,
+		public dialogRef: MatDialogRef<TimbreModifierBlocComponent>,
 		public timbreBlocService: TimbreBlocService,
 		private uploadService: UploadService
 	) {
 	}
 
 	ngOnInit(): void {
-		//this.timbreBlocService.getBlocs();
 		this.initUpload();
 		this.load$.next(false);
 		if (isNotNullOrUndefined(this.id)) {
-			this.timbreService.getTimbreByIdAsync(this.id).subscribe(timbreModel => {
-				this.timbreModel = timbreModel;
+			this.timbreBlocService.getBlocByIdAsync(this.id).subscribe(timbreBlocModel => {
+				this.timbreBlocModel = timbreBlocModel;
 				this.load$.next(true);
 			});
 		} else {
-			this.timbreModel.setAnnee(new Date().getFullYear());
-			this.timbreModel.setMonnaie('E');
+			this.timbreBlocModel.setAnnee(new Date().getFullYear());
+			this.timbreBlocModel.setMonnaie('E');
 			this.load$.next(true);
 		}
 	}
@@ -59,13 +55,13 @@ export class TimbreModifierComponent implements OnInit {
 		this.fileUploadModel.setNom(new Date().getTime()?.toString());
 
 		const fileDetailUploadModel = new FileDetailUploadModel();
-		fileDetailUploadModel.setMaxWidth(this.timbreService.widthTimbre);
-		fileDetailUploadModel.setMaxHeight(this.timbreService.heightTimbre);
+		fileDetailUploadModel.setMaxWidth(this.timbreBlocService.widthTimbre);
+		fileDetailUploadModel.setMaxHeight(this.timbreBlocService.heightTimbre);
 		fileDetailUploadModel.setDossier('autre');
 
 		const fileDetailUploadModelZoom = new FileDetailUploadModel();
-		fileDetailUploadModelZoom.setMaxWidth(this.timbreService.widthTimbreZoom);
-		fileDetailUploadModelZoom.setMaxHeight(this.timbreService.heightTimbreZoom);
+		fileDetailUploadModelZoom.setMaxWidth(this.timbreBlocService.widthTimbreZoom);
+		fileDetailUploadModelZoom.setMaxHeight(this.timbreBlocService.heightTimbreZoom);
 		fileDetailUploadModelZoom.setDossier('zoom');
 
 		this.fileUploadModel.setDetail([fileDetailUploadModel, fileDetailUploadModelZoom]);
@@ -74,7 +70,7 @@ export class TimbreModifierComponent implements OnInit {
 	valider(formModif: NgForm) {
 		this.messageError$.next(null);
 		if (formModif?.valid) {
-			if (isNotNullOrUndefined(this.timbreModel.getImage())) {
+			if (isNotNullOrUndefined(this.timbreBlocModel.getImage())) {
 				this.saveData();
 			} else {
 				this.messageError$.next('Veuillez sélectionner une image');
@@ -85,7 +81,7 @@ export class TimbreModifierComponent implements OnInit {
 
 	saveData() {
 		this.load$.next(false);
-		if (isNotNullOrUndefined(this.timbreModel.getId())) {
+		if (isNotNullOrUndefined(this.timbreBlocModel.getId())) {
 			this.save();
 		} else {
 			this.addTimbre();
@@ -93,8 +89,8 @@ export class TimbreModifierComponent implements OnInit {
 	}
 
 	addTimbre() {
-		this.timbreService.getMaxIdentAsync().pipe(first()).subscribe(id => {
-			this.timbreModel.setId(id);
+		this.timbreBlocService.getMaxIdentAsync().pipe(first()).subscribe(id => {
+			this.timbreBlocModel.setId(id);
 			this.save(true);
 		});
 	}
@@ -102,23 +98,23 @@ export class TimbreModifierComponent implements OnInit {
 	save(ajout?: boolean) {
 		try {
 			combineLatest([
-				this.uploadService.processAndUploadImageByFile(this.timbreModel?.getImage(), this.timbreService.widthTimbre, this.timbreService.heightTimbre, this.timbreModel?.getId(), this.timbreService.getDossier(this.timbreModel, 'autre')),
-				this.uploadService.processAndUploadImageByFile(this.timbreModel?.getImage(), this.timbreService.widthTimbre * (this.timbreService.heigthTable / this.timbreService.heightTimbre), this.timbreService.heigthTable, this.timbreModel?.getId(), this.timbreService.getDossier(this.timbreModel, 'table')),
-				this.uploadService.processAndUploadImageByFile(this.timbreModel?.getImage(), this.timbreService.widthTimbreZoom, this.timbreService.heightTimbreZoom, this.timbreModel?.getId(), this.timbreService.getDossier(this.timbreModel, 'zoom'))
+				this.uploadService.processAndUploadImageByFile(this.timbreBlocModel?.getImage(), this.timbreBlocService.widthTimbre, this.timbreBlocService.heightTimbre, this.timbreBlocModel?.getId(),  this.timbreBlocService.getDossier(this.timbreBlocModel, "autre")),
+				this.uploadService.processAndUploadImageByFile(this.timbreBlocModel?.getImage(), this.timbreBlocService.widthTimbre * (this.timbreBlocService.heigthTable / this.timbreBlocService.heightTimbre), this.timbreBlocService.heigthTable, this.timbreBlocModel?.getId(), this.timbreBlocService.getDossier(this.timbreBlocModel, "table")),
+				this.uploadService.processAndUploadImageByFile(this.timbreBlocModel?.getImage(), this.timbreBlocService.widthTimbreZoom, this.timbreBlocService.heightTimbreZoom, this.timbreBlocModel?.getId(), this.timbreBlocService.getDossier(this.timbreBlocModel, "zoom"))
 			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
 				if (isNotNullOrUndefined(image) && image != 'nok') {
-					this.timbreModel.setImage(image);
+					this.timbreBlocModel.setImage(image);
 				}
 				if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
-					this.timbreModel.setImageTable(imageTable);
+					this.timbreBlocModel.setImageTable(imageTable);
 				}
 				if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
-					this.timbreModel.setImageZoom(imageZoom);
+					this.timbreBlocModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreService.modifierTimbre(this.timbreModel);
+					this.timbreBlocService.modifierBloc(this.timbreBlocModel);
 				} else {
-					this.timbreService.addTimbre(this.timbreModel);
+					this.timbreBlocService.addBloc(this.timbreBlocModel);
 				}
 				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);
@@ -132,20 +128,5 @@ export class TimbreModifierComponent implements OnInit {
 
 	close() {
 		this.dialogRef.close();
-	}
-
-	changeBloc(timbreBlocModel: TimbreBlocModel) {
-		if (isNotNullOrUndefined(timbreBlocModel)) {
-			this.timbreModel.setIdBloc(timbreBlocModel.getId());
-			this.timbreModel.setTimbreBlocModel(timbreBlocModel);
-			this.timbreModel.setAnnee(null);
-			this.timbreModel.setAnnee(null);
-			this.timbreModel.setMonnaie(null);
-		} else {
-			this.timbreModel.setIdBloc(null);
-			this.timbreModel.setTimbreBlocModel(null);
-			this.timbreModel.setAnnee(new Date().getFullYear());
-			this.timbreModel.setMonnaie('E');
-		}
 	}
 }
