@@ -1,7 +1,7 @@
 import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
 import {TimbreAcquisModel} from "./timbre-acquis.model";
-import { TimbreBlocModel } from './timbre-bloc.model';
+import {TimbreBlocModel} from './timbre-bloc.model';
 
 export class TimbreModel extends ProprieteModel {
 	@Label("Identifiant")

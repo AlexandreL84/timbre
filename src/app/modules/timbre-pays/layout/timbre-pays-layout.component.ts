@@ -3,6 +3,8 @@ import {TimbrePaysService} from "../services/timbre-pays.service";
 import {MatDialog} from "@angular/material/dialog";
 import {TimbrePaysModifierComponent} from "../components/modifier/timbre-pays-modifier.component";
 import {TimbrePaysImporterComponent} from "../components/importer/timbre-pays-importer.component";
+import {first} from "rxjs";
+import {TimbrePaysModel} from "../../../model/timbre-pays.model";
 
 @Component({
 	selector: "app-timbre-pays-layout",
@@ -31,7 +33,11 @@ export class TimbrePaysLayoutComponent implements OnInit {
 	}
 
 	addTimbreBouchon() {
-		this.timbrePaysService.addTimbre(this.timbrePaysService.getBouchon())
+		this.timbrePaysService.getMaxIdentAsync().pipe(first()).subscribe(id => {
+			const timbrePaysModel: TimbrePaysModel = this.timbrePaysService.getBouchon();
+			timbrePaysModel.setId(id);
+			this.timbrePaysService.addTimbre(timbrePaysModel);
+		});
 	}
 
 	importer() {

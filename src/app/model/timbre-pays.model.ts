@@ -15,7 +15,7 @@ export class TimbrePaysModel extends ProprieteModel {
 	libelleLangue: string;
 
 	@Label("Image langue")
-	imageLangue: string;
+	imageLangue: File | string;
 
 	@Label("Image langue")
 	imageLangueZoom: string;
@@ -33,13 +33,13 @@ export class TimbrePaysModel extends ProprieteModel {
 	total: number;
 
 	@Label("Map")
-	map: string;
+	map: File | string;
 
 	@Label("Map")
 	mapZoom: string;
 
 	@Label("Drapeau")
-	drapeau: string;
+	drapeau: File | string;
 
 	@Label("Drapeau")
 	drapeauZoom: string;
@@ -47,7 +47,7 @@ export class TimbrePaysModel extends ProprieteModel {
 	@Label("Visible")
 	visible: boolean;
 
-	constructor(id?: number, code?: string, libelle?: string, libelleLangue?: string, imageLangueZoom?: string, imageLangue?: string, zone?: string, classeur?: number, page?: number, total?: number, map?: string,  mapZoom?: string, drapeau?: string,  drapeauZoom?: string, visible?: boolean) {
+	constructor(id?: number, code?: string, libelle?: string, libelleLangue?: string, imageLangueZoom?: string, imageLangue?: File | string, zone?: string, classeur?: number, page?: number, total?: number, map?: File | string,  mapZoom?: string, drapeau?: File | string,  drapeauZoom?: string, visible?: boolean) {
 		super();
 		this.id = id ? id : null;
 		this.code = code ? code : null;
@@ -98,11 +98,11 @@ export class TimbrePaysModel extends ProprieteModel {
 		this.libelleLangue = value;
 	}
 
-	getImageLangue(): string {
+	getImageLangue(): File | string {
 		return this.imageLangue;
 	}
 
-	setImageLangue(value: string) {
+	setImageLangue(value: File | string) {
 		this.imageLangue = value;
 	}
 
@@ -146,11 +146,11 @@ export class TimbrePaysModel extends ProprieteModel {
 		this.total = value;
 	}
 
-	getMap(): string {
+	getMap(): File | string {
 		return this.map;
 	}
 
-	setMap(value: string) {
+	setMap(value: File | string) {
 		this.map = value;
 	}
 
@@ -162,11 +162,11 @@ export class TimbrePaysModel extends ProprieteModel {
 		this.mapZoom = value;
 	}
 
-	getDrapeau(): string {
+	getDrapeau(): File | string {
 		return this.drapeau;
 	}
 
-	setDrapeau(value: string) {
+	setDrapeau(value: File | string) {
 		this.drapeau = value;
 	}
 

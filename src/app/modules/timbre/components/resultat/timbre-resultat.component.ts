@@ -34,6 +34,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	displayedColumns: string[];
 	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 	public timbre: TimbreModel = new TimbreModel();
+	annees$: Observable<number[]>
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
@@ -46,6 +47,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	}
 
 	ngOnInit(): void {
+		this.annees$ = this.timbreService.getAnneesAsync();
 		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 
 		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type",  "yt",  "acquis", "doublon"];

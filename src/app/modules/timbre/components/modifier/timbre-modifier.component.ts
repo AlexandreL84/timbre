@@ -1,26 +1,25 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { TimbreModel } from '../../../../model/timbre.model';
-import { TimbreService } from '../../services/timbre.service';
-import { BehaviorSubject, first, combineLatest } from 'rxjs';
-import { isNotNullOrUndefined } from '../../../../shared/utils/utils';
-import { NgForm } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { HttpResponseHandlerService } from '../../../../shared/services/httpResponseHandler.service';
-import { NotificationTypeEnum } from '../../../../shared/enum/notification/notification-type.enum';
-import { NotificationMessageEnum } from '../../../../shared/enum/notification/notification-message.enum';
-import { FileUploadModel } from '../../../../model/file/file-upload.model';
-import { FileDetailUploadModel } from '../../../../model/file/file-detail-upload.model';
-import { UploadService } from '../../../../shared/services/upload.service';
-import { TimbreBlocService } from '../../services/timbre-bloc.service';
-import { TimbreBlocModel } from '../../../../model/timbre-bloc.model';
-
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {TimbreModel} from '../../../../model/timbre.model';
+import {TimbreService} from '../../services/timbre.service';
+import {BehaviorSubject, combineLatest, first} from 'rxjs';
+import {isNotNullOrUndefined} from '../../../../shared/utils/utils';
+import {NgForm} from '@angular/forms';
+import {MatDialogRef} from '@angular/material/dialog';
+import {HttpResponseHandlerService} from '../../../../shared/services/httpResponseHandler.service';
+import {NotificationTypeEnum} from '../../../../shared/enum/notification/notification-type.enum';
+import {NotificationMessageEnum} from '../../../../shared/enum/notification/notification-message.enum';
+import {FileUploadModel} from '../../../../model/file/file-upload.model';
+import {FileDetailUploadModel} from '../../../../model/file/file-detail-upload.model';
+import {TimbreBlocService} from '../../services/timbre-bloc.service';
+import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
+import {DossierEnum} from "../../../../shared/enum/dossier.enum";
 
 @Component({
 	selector: 'app-timbre-modifier',
 	templateUrl: './timbre-modifier.component.html',
 })
 export class TimbreModifierComponent implements OnInit {
-	@ViewChild('canvas', { static: false }) canvas!: ElementRef<HTMLCanvasElement>;
+	@ViewChild('canvas', {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
 
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
@@ -34,7 +33,6 @@ export class TimbreModifierComponent implements OnInit {
 		public dialogRef: MatDialogRef<TimbreModifierComponent>,
 		public timbreService: TimbreService,
 		public timbreBlocService: TimbreBlocService,
-		private uploadService: UploadService
 	) {
 	}
 
@@ -102,9 +100,9 @@ export class TimbreModifierComponent implements OnInit {
 	save(ajout?: boolean) {
 		try {
 			combineLatest([
-				this.uploadService.processAndUploadImageByFile(this.timbreModel?.getImage(), this.timbreService.widthTimbre, this.timbreService.heightTimbre, this.timbreModel?.getId(), this.timbreService.getDossier(this.timbreModel, 'autre')),
-				this.uploadService.processAndUploadImageByFile(this.timbreModel?.getImage(), this.timbreService.widthTimbre * (this.timbreService.heigthTable / this.timbreService.heightTimbre), this.timbreService.heigthTable, this.timbreModel?.getId(), this.timbreService.getDossier(this.timbreModel, 'table')),
-				this.uploadService.processAndUploadImageByFile(this.timbreModel?.getImage(), this.timbreService.widthTimbreZoom, this.timbreService.heightTimbreZoom, this.timbreModel?.getId(), this.timbreService.getDossier(this.timbreModel, 'zoom'))
+				this.timbreService.upload(this.timbreModel, DossierEnum.AUTRE),
+				this.timbreService.upload(this.timbreModel, DossierEnum.TABLE),
+				this.timbreService.upload(this.timbreModel, DossierEnum.ZOOM),
 			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
 				if (isNotNullOrUndefined(image) && image != 'nok') {
 					this.timbreModel.setImage(image);

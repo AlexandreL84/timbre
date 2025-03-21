@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, first, map, Observable } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { isNotNullOrUndefined } from '../../../shared/utils/utils';
-import { TimbreCritereModel } from '../../../model/timbre-critere.model';
-import { plainToInstance } from 'class-transformer';
-import { collectionData } from '@angular/fire/firestore';
-import { TimbreBlocModel } from '../../../model/timbre-bloc.model';
-import { TimbreUtilsService } from './timbre-utils.service';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, first, map, Observable} from 'rxjs';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {isNotNullOrUndefined} from '../../../shared/utils/utils';
+import {TimbreCritereModel} from '../../../model/timbre-critere.model';
+import {plainToInstance} from 'class-transformer';
+import {collectionData} from '@angular/fire/firestore';
+import {TimbreBlocModel} from '../../../model/timbre-bloc.model';
+import {TimbreUtilsService} from './timbre-utils.service';
+import {DossierEnum} from "../../../shared/enum/dossier.enum";
+import {UploadService} from "../../../shared/services/upload.service";
 
 interface DocumentData {
 	id: number; // Assurez-vous que vos documents ont une propriété numérique "id"
@@ -24,7 +26,20 @@ export class TimbreBlocService {
 
 	timbresBlocModel$: BehaviorSubject<TimbreBlocModel[]> = new BehaviorSubject<TimbreBlocModel[]>(null);
 
-	constructor(private firestore: AngularFirestore, private timbreUtilsService: TimbreUtilsService) {
+	constructor(private firestore: AngularFirestore, private timbreUtilsService: TimbreUtilsService, private uploadService: UploadService) {
+	}
+
+	upload(timbreBlocModel: TimbreBlocModel, dossier: DossierEnum): Observable<string> {
+		let witdth: number = this.widthTimbre;
+		let height: number = this.heightTimbre;
+		if (dossier == DossierEnum.TABLE) {
+			witdth = witdth * (this.heigthTable / height);
+			height = this.heigthTable;
+		} else if (dossier == DossierEnum.ZOOM) {
+			witdth = witdth * (this.heightTimbreZoom / height);
+			height = this.heightTimbreZoom;
+		}
+		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, "bloc", this.getDossier(timbreBlocModel, dossier));
 	}
 
 	getDossier(timbreBlocModel: TimbreBlocModel, dossier): string {
@@ -46,15 +61,14 @@ export class TimbreBlocService {
 	}
 
 	getBlocsAsync(timbreCritereModel?: TimbreCritereModel) {
-		console.log(timbreCritereModel);
 		return this.firestore.collection(this.basePathBloc, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where('annee', '==', timbreCritereModel.getAnnees()[0]);
+					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
 				}
 			}
-			filteredQuery = filteredQuery.orderBy('id', 'asc');
+			//filteredQuery = filteredQuery.orderBy('id', 'asc');
 
 			return filteredQuery;
 		})
@@ -62,25 +76,6 @@ export class TimbreBlocService {
 					return this.constructBlocs(blocs);
 				}
 			));
-	}
-
-	getBlocs(timbreCritereModel?: TimbreCritereModel) {
-		this.timbresBlocModel$.next(null);
-		this.firestore.collection(this.basePathBloc, ref => {
-			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-			if (isNotNullOrUndefined(timbreCritereModel)) {
-				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where('annee', '==', timbreCritereModel.getAnnees()[0]);
-				}
-			}
-			filteredQuery = filteredQuery.orderBy('id', 'asc');
-
-			return filteredQuery;
-		})
-			.valueChanges().pipe(first())
-			.subscribe(blocs => {
-				this.constructBlocs(blocs);
-			});
 	}
 
 	getMaxIdentAsync(): Observable<number> {
@@ -106,15 +101,18 @@ export class TimbreBlocService {
 		return timbresBlocModel;
 	}
 
-
-	addBloc(timbreBlocModel: TimbreBlocModel) {
+	addBlocSansId(timbreBlocModel: TimbreBlocModel) {
 		this.getMaxIdentAsync().pipe(first()).subscribe(id => {
 			timbreBlocModel.setId(id);
-			this.firestore.collection(this.basePathBloc).add(
-				Object.assign(new Object(), timbreBlocModel)
-			);
-			this.getBlocs();
+			this.addBloc(timbreBlocModel);
 		});
+	}
+
+	addBloc(timbreBlocModel: TimbreBlocModel) {
+		this.firestore.collection(this.basePathBloc).add(
+			Object.assign(new Object(), timbreBlocModel)
+		);
+		this.getBlocsAsync().pipe(first()).subscribe(timbresBlocModel => {});
 	}
 
 	modifierBloc(timbreBlocModel: TimbreBlocModel) {
@@ -124,7 +122,7 @@ export class TimbreBlocService {
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					doc.ref.update(Object.assign(new Object(), timbreBlocModel));
-					this.getBlocs();
+					this.getBlocsAsync().pipe(first()).subscribe(timbresBlocModel => {});
 				});
 			})
 			.catch(error => {
@@ -139,7 +137,7 @@ export class TimbreBlocService {
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					doc.ref.delete();
-					this.getBlocs();
+					this.getBlocsAsync().pipe(first()).subscribe(timbresBlocModel => {});
 				});
 			})
 			.catch(error => {

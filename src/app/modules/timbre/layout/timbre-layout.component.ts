@@ -15,7 +15,7 @@ export class TimbreLayoutComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.timbreService.getTimbres()
+		this.timbreService.getTimbres();
 	}
 
 	addTimbre() {
@@ -25,7 +25,7 @@ export class TimbreLayoutComponent implements OnInit {
 		});
 
 		refDialog.afterClosed().subscribe(() => {
-			refDialog.close()
+			refDialog.close();
 		});
 	}
 
@@ -36,12 +36,12 @@ export class TimbreLayoutComponent implements OnInit {
 		});
 
 		refDialog.afterClosed().subscribe(() => {
-			refDialog.close()
+			refDialog.close();
 		});
 	}
 
 	addTimbreBouchon() {
-		this.timbreService.addTimbre(this.timbreService.getBouchon());
+		this.timbreService.addTimbreSansId(this.timbreService.getBouchon());
 	}
 
 	importer() {
@@ -53,7 +53,7 @@ export class TimbreLayoutComponent implements OnInit {
 		});
 
 		refDialog.afterClosed().subscribe(() => {
-			refDialog.close()
+			refDialog.close();
 		});
 	}
 }

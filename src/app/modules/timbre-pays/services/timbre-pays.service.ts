@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {TimbrePaysModel} from "../../../model/timbre-pays.model";
-import {BehaviorSubject, map, Observable} from "rxjs";
+import {BehaviorSubject, map, Observable, of} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {Utils} from "../../../shared/utils/utils";
+import {isNotNullOrUndefined, Utils} from "../../../shared/utils/utils";
 import {plainToInstance} from "class-transformer";
 import {collectionData} from "@angular/fire/firestore";
+import {DossierEnum} from "../../../shared/enum/dossier.enum";
+import {UploadService} from "../../../shared/services/upload.service";
 
 interface DocumentData {
 	id: number; // Assurez-vous que vos documents ont une propriété numérique "id"
@@ -24,8 +26,53 @@ export class TimbrePaysService {
 	heightMap: number = 220;
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-	constructor(private firestore: AngularFirestore) {
+	constructor(private firestore: AngularFirestore, private uploadService: UploadService) {
 	}
+
+	upload(timbrePaysModel: TimbrePaysModel, dossier: DossierEnum, zoom: boolean): Observable<string> {
+		let witdth: number;
+		let height: number;
+		let image: File | string;
+
+		switch (dossier) {
+			case DossierEnum.DRAPEAU :
+				witdth = this.widthDrapeau;
+				height = this.heightDrapeau;
+				image = timbrePaysModel.getDrapeau();
+				break;
+			case DossierEnum.LANGUE :
+				witdth = this.widthLangue;
+				height = this.heightLangue;
+				image = timbrePaysModel.getImageLangue();
+				break;
+			case DossierEnum.MAP :
+				witdth = this.widthMap;
+				height = this.heightMap;
+				image = timbrePaysModel.getMap();
+				break;
+		}
+		if (dossier == DossierEnum.ZOOM) {
+			witdth = witdth * (height/ height);
+		}
+
+		if (isNotNullOrUndefined(image)) {
+			return this.uploadService.processAndUploadImage(image, witdth, height, timbrePaysModel?.getId(), this.getDossier(dossier, zoom));
+		} else {
+			return of("nok");
+		}
+	}
+
+	getDossier(dossier: DossierEnum, zoom: boolean): string {
+		let dossierImage = this.dossierImage + '/';
+		if (zoom == true) {
+			dossierImage = dossierImage + '/' + DossierEnum.ZOOM;
+		}
+		if (isNotNullOrUndefined(dossier)) {
+			dossierImage = dossierImage + '/' + dossier;
+		}
+		return dossierImage;
+	}
+
 
 	/*getTimbreByIdAsync(id: any): Observable<TimbrePaysModel> {
 		return this.firestore.collection(this.basePath).doc(id).valueChanges().pipe(
@@ -41,7 +88,7 @@ export class TimbrePaysService {
 				.limit(1);
 
 		return collectionData(query).pipe(
-			map((docs: DocumentData[]) => (docs.length > 0 ? docs[0].id  + 1 : 1))
+			map((docs: DocumentData[]) => (docs.length > 0 ? docs[0].id + 1 : 1))
 		);
 	}
 
@@ -122,11 +169,10 @@ export class TimbrePaysService {
 		timbre.setCode("FR");
 		timbre.setLibelle("France " + id);
 		timbre.setLibelleLangue("France " + id);
-		timbre.setDrapeau("FR");
 		timbre.setZone("FR");
-		timbre.setMap("FR");
 		timbre.setClasseur(1);
 		timbre.setPage(1);
+		timbre.setTotal(1);
 		timbre.setVisible(true);
 		return timbre;
 	}

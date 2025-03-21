@@ -44,7 +44,7 @@
 						[(ngModel)]="timbreCritereModel.annees"
 						[placeholder]="'Années'"
 						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" *ngFor="let annee of Utils.generateRange(anneeMin, anneeMax)"
+				<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"
 							[value]="annee">
 					{{ annee }}
 				</mat-option>

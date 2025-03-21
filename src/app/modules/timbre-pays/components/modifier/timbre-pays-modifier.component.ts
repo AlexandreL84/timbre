@@ -9,6 +9,7 @@ import {HttpResponseHandlerService} from "../../../../shared/services/httpRespon
 import {NotificationTypeEnum} from "../../../../shared/enum/notification/notification-type.enum";
 import {NotificationMessageEnum} from "../../../../shared/enum/notification/notification-message.enum";
 import {UploadService} from "../../../../shared/services/upload.service";
+import {DossierEnum} from "../../../../shared/enum/dossier.enum";
 
 @Component({
 	selector: "app-timbre-pays-modifier",
@@ -44,6 +45,7 @@ export class TimbrePaysModifierComponent implements OnInit {
 				this.load$.next(true);
 			});
 		} else {
+			this.timbrePaysModel = this.timbrePaysService.getBouchon();
 			this.load$.next(true);
 		}
 	}
@@ -63,7 +65,7 @@ export class TimbrePaysModifierComponent implements OnInit {
 	saveData() {
 		this.load$.next(false);
 		if (isNotNullOrUndefined(this.timbrePaysModel.getId())) {
-			this.save();
+			this.save(false);
 		} else {
 			this.addTimbrePays();
 		}
@@ -72,39 +74,19 @@ export class TimbrePaysModifierComponent implements OnInit {
 	addTimbrePays() {
 		this.timbrePaysService.getMaxIdentAsync().pipe(first()).subscribe(id => {
 			this.timbrePaysModel.setId(id)
-			this.save2(true);
+			this.save(true);
 		})
 	}
 
 	save(ajout?: boolean) {
 		try {
-			this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getDrapeau(), this.timbrePaysService.widthDrapeau * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightDrapeau), this.timbrePaysService.heigthTable, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "drapeau")
-				.pipe(
-					combineLatestWith(this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getImageLangue(), this.timbrePaysService.widthLangue * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightLangue), this.timbrePaysService.heigthTable, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "langue")),
-					first(([contratModel, clause47]) => isNotNullOrUndefined(contratModel))
-				)
-				.subscribe(([contratModel, clause47]) => {
-
-				});
-
-		} catch (error) {
-			this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, NotificationMessageEnum.TIMBRE_MODIF_NOK);
-			this.load$.next(true);
-		}
-	}
-
-	save2(ajout?: boolean) {
-		try {
 			combineLatest([
-				//this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getDrapeau(), this.timbrePaysService.widthDrapeau * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightDrapeau), this.timbrePaysService.heigthTable, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "drapeau"),
-				//this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getImageLangue(), this.timbrePaysService.widthLangue * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightLangue), this.timbrePaysService.heigthTable, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "langue"),
-				//this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getMap(), this.timbrePaysService.widthMap * (this.timbrePaysService.heigthTable / this.timbrePaysService.heightMap), this.timbrePaysService.heigthTable, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "map"),
-				this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getDrapeau(), this.timbrePaysService.widthDrapeau, this.timbrePaysService.heightDrapeau, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "drapeau", this.timbrePaysService.heigthTable),
-				this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getImageLangue(), this.timbrePaysService.widthLangue, this.timbrePaysService.heightLangue, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "langue", this.timbrePaysService.heigthTable),
-				this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getMap(), this.timbrePaysService.widthMap, this.timbrePaysService.heightMap, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "map", this.timbrePaysService.heigthTable),
-				this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getDrapeau(), this.timbrePaysService.widthDrapeau, this.timbrePaysService.heightDrapeau, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/drapeau"),
-				this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getImageLangue(), this.timbrePaysService.widthLangue, this.timbrePaysService.heightLangue, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/langue"),
-				this.uploadService.processAndUploadImageByFile(this.timbrePaysModel?.getMap(), this.timbrePaysService.widthMap, this.timbrePaysService.heightMap, this.timbrePaysModel?.getCode(), this.timbrePaysService.dossierImage + "zoom/map")
+				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.DRAPEAU, false),
+				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.LANGUE, false),
+				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.MAP, false),
+				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.DRAPEAU, true),
+				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.LANGUE, true),
+				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.MAP, true)
 			]).pipe(first(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => isNotNullOrUndefined(drapeau)
 				&& isNotNullOrUndefined(drapeau) &&
 				isNotNullOrUndefined(langue) &&

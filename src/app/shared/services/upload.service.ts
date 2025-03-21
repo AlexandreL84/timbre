@@ -17,6 +17,23 @@ export class UploadService {
 	}
 
 	processAndUploadImage(
+		image: File | string,
+		width: number,
+		height: number,
+		code: number | string,
+		dossier: string,
+		heigthDiv?: number
+	): Observable<string> {
+		if (isString(image) && image.includes("firebasestorage")) {
+			return of(image);
+		} else if (isNotNullOrUndefined(image) && !isString(image)) {
+			return this.processAndUploadImageByFile(image, width, height, code, dossier, heigthDiv);
+		} else if (isString(image)) {
+			return this.processAndUploadImageByString(image?.toString(), width, height, code, dossier, heigthDiv);
+		}
+	}
+
+	processAndUploadImageByString(
 		imagePath: string,
 		width: number,
 		height: number,
