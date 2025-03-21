@@ -14,9 +14,9 @@ interface DocumentData {
 
 @Injectable()
 export class TimbrePaysService {
-	private basePath: string = '/timbres_pays2';
+	private basePath: string = '/timbres_pays';
 
-	dossierImage: string = "pays2/";
+	dossierImage: string = "pays/";
 	heigthTable: number = 50;
 	widthDrapeau: number = 620;
 	heightDrapeau: number = 430;
@@ -72,14 +72,6 @@ export class TimbrePaysService {
 		}
 		return dossierImage;
 	}
-
-
-	/*getTimbreByIdAsync(id: any): Observable<TimbrePaysModel> {
-		return this.firestore.collection(this.basePath).doc(id).valueChanges().pipe(
-			map((data: any) => {
-				return plainToInstance(TimbrePaysModel, data);
-			}))
-	}*/
 
 	getMaxIdentAsync(): Observable<number> {
 		const query =
