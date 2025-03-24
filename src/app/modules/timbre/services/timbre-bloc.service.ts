@@ -60,22 +60,34 @@ export class TimbreBlocService {
 				}));
 	}
 
-	getBlocsAsync(timbreCritereModel?: TimbreCritereModel) {
+	getBlocsAsync(timbreCritereModel?: TimbreCritereModel): Observable<TimbreBlocModel[]> {
+		this.timbresBlocModel$.next(null);
 		return this.firestore.collection(this.basePathBloc, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
+					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
 				}
 			}
 			//filteredQuery = filteredQuery.orderBy('id', 'asc');
-
 			return filteredQuery;
 		})
 			.valueChanges().pipe(first(), map(blocs => {
 					return this.constructBlocs(blocs);
 				}
 			));
+	}
+
+	constructBlocs(blocs): TimbreBlocModel[] {
+		let timbresBlocModel: TimbreBlocModel[] = [];
+		if (blocs?.length > 0) {
+			blocs.forEach((timbre: any) => {
+				const timbreBlocModel: TimbreBlocModel = plainToInstance(TimbreBlocModel, timbre);
+				timbresBlocModel.push(timbreBlocModel);
+			});
+		}
+		this.timbresBlocModel$.next(timbresBlocModel);
+		return timbresBlocModel;
 	}
 
 	getMaxIdentAsync(): Observable<number> {
@@ -87,18 +99,6 @@ export class TimbreBlocService {
 		return collectionData(query).pipe(
 			map((docs: DocumentData[]) => (docs.length > 0 ? docs[0].id + 1 : 1))
 		);
-	}
-
-	constructBlocs(blocs) {
-		let timbresBlocModel: TimbreBlocModel[] = [];
-		if (blocs?.length > 0) {
-			blocs.forEach((timbre: any) => {
-				const timbreBlocModel: TimbreBlocModel = plainToInstance(TimbreBlocModel, timbre);
-				timbresBlocModel.push(timbreBlocModel);
-			});
-		}
-		this.timbresBlocModel$.next(timbresBlocModel);
-		return timbresBlocModel;
 	}
 
 	addBlocSansId(timbreBlocModel: TimbreBlocModel) {

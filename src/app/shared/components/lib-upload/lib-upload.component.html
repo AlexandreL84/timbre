@@ -6,7 +6,8 @@
 		<img *ngIf="object[key] && !selectedFile"
 			 [src]="object[key]"
 			 class="imgSelect click"
-			 alt="Image actuelle" />
+			 alt="Image actuelle"
+			 (click)="utilsService.zoom(zoom)"/>
 
 		<canvas #canvas *ngIf="selectedFile" ></canvas>
 

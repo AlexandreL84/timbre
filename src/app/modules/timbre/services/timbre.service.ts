@@ -70,7 +70,15 @@ export class TimbreService {
 		}));
 	}
 
+	getNbTimbres(timbreCritereModel?: TimbreCritereModel) {
+		this.total$.next(null);
+		this.getAllTimbres(timbreCritereModel).pipe(first()).subscribe(timbres => {
+			this.total$.next(timbres?.length);
+		});
+	}
+
 	getTimbres(timbreCritereModel?: TimbreCritereModel) {
+		this.getNbTimbres();
 		this.timbres$.next(null);
 		combineLatest([
 			this.getAllTimbres(timbreCritereModel),
@@ -105,7 +113,10 @@ export class TimbreService {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
+					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
+				}
+				if (isNotNullOrUndefined(timbreCritereModel.getBloc()) && timbreCritereModel.getBloc() != 'TOUS') {
+					filteredQuery = filteredQuery.where("idBloc", timbreCritereModel.getBloc() != 'NON'? "!=": "==", null);
 				}
 			}
 			filteredQuery = filteredQuery.orderBy('id', 'asc');
@@ -238,6 +249,10 @@ export class TimbreService {
 	addTimbreSansId(timbreModel: TimbreModel) {
 		this.getMaxIdentAsync().pipe(first()).subscribe(id => {
 			timbreModel.setId(id);
+			if (isNotNullOrUndefined(timbreModel.getIdBloc())) {
+				timbreModel.setAnnee(null);
+				timbreModel.setMonnaie(null);
+			}
 			this.addTimbre(timbreModel);
 		});
 	}

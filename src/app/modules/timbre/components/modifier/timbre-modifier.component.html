@@ -39,41 +39,7 @@
 					/>
 				</div>
 
-				<div fxLayout="column" class="form-input select">
-					<label>
-						<lib-libelle-model [object]="timbreModel" [key]="'timbreBlocModel'"></lib-libelle-model>
-					</label>
-					<mat-select name="bloc"
-								style="width: 120px !important;"
-								[ngModel]="timbreModel.getTimbreBlocModel()"
-								[placeholder]="'Choix bloc'"
-								(ngModelChange)="changeBloc($event)">
-						<mat-option class="selectMin" [value]="null"></mat-option>
-						<mat-option class="selectMin"
-									*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
-									[value]="bloc">
-							{{ bloc.getAnnee() }} - {{ bloc.getId() }}
-						</mat-option>
-					</mat-select>
-				</div>
-
-				<ng-template [ngIf]="timbreModel.getTimbreBlocModel()" [ngIfElse]="noBloc">
-					<div fxLayout="column" class="form-input">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'annee'"></lib-libelle-model>
-						</label>
-						<span><b>{{ timbreModel?.getTimbreBlocModel()?.getAnnee() }}</b></span>
-					</div>
-
-					<div fxLayout="column" class="form-input">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'monnaie'"></lib-libelle-model>
-						</label>
-						<span><b>{{ timbreModel?.getTimbreBlocModel()?.getMonnaie() }}</b></span>
-					</div>
-				</ng-template>
-
-				<ng-template #noBloc>
+				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
 					<div fxLayout="column" class="form-input">
 						<label>
 							<lib-libelle-model [object]="timbreModel" [key]="'annee'"></lib-libelle-model>
@@ -81,6 +47,7 @@
 						<input
 							name="page"
 							[(ngModel)]="timbreModel.annee"
+							(ngModelChange)="changeAnnee($event)"
 							type="number"
 							style="width: 60px !important;"
 							class="annee"
@@ -90,7 +57,52 @@
 							zMin="1900"
 							[max]="maxAnnee"
 							[zMax]="maxAnnee"
+							[disabled]="!!timbreModel?.getId()"
 							required
+							zControl
+						/>
+					</div>
+
+					<div fxLayout="column" class="form-input select">
+						<label>
+							<lib-libelle-model [object]="timbreModel" [key]="'timbreBlocModel'"></lib-libelle-model>
+						</label>
+						<div fxLayout="row" fxLayoutGap="15px">
+						<mat-select name="bloc"
+									style="width: 120px !important;"
+									[ngModel]="timbreModel.getTimbreBlocModel()"
+									[placeholder]="'Choix bloc'"
+									[disabled]="!!timbreModel?.getId() || (timbreBlocService.timbresBlocModel$ | async)?.length <= 0"
+									(ngModelChange)="changeBloc($event)">
+							<mat-option class="selectMin" [value]="null"></mat-option>
+
+							<mat-option class="selectMin"
+										*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
+										[value]="bloc">
+								{{ bloc.getAnnee() }} - {{ bloc.getId() }}
+							</mat-option>
+						</mat-select>
+
+						<img *ngIf="timbreModel?.getTimbreBlocModel()?.getImage()"
+							 [src]="timbreModel?.getTimbreBlocModel()?.getImage()"
+							 style="max-height: 40px"
+							 class="click"
+							 (click)="utilsService.zoom(timbreModel?.getTimbreBlocModel()?.getImageZoom())"
+						/>
+						</div>
+					</div>
+				</div>
+
+				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
+					<div fxLayout="column" class="form-input">
+						<label>
+							<lib-libelle-model [object]="timbreModel" [key]="'type'"></lib-libelle-model>
+						</label>
+						<input
+							name="type"
+							[(ngModel)]="timbreModel.type"
+							type="text"
+							trim
 							zControl
 						/>
 					</div>
@@ -99,6 +111,7 @@
 						<label>
 							<lib-libelle-model [object]="timbreModel" [key]="'monnaie'"></lib-libelle-model>
 						</label>
+
 						<input
 							name="monnaie"
 							[(ngModel)]="timbreModel.monnaie"
@@ -107,39 +120,31 @@
 							trim
 							minlength="1"
 							maxlength="2"
+							[disabled]="!!timbreModel.getTimbreBlocModel()"
 							required
 							zControl
 						/>
 					</div>
-				</ng-template>
-
-				<div fxLayout="column" class="form-input">
-					<label>
-						<lib-libelle-model [object]="timbreModel" [key]="'type'"></lib-libelle-model>
-					</label>
-					<input
-						name="type"
-						[(ngModel)]="timbreModel.type"
-						type="text"
-						trim
-						zControl
-					/>
 				</div>
 
-				<div fxLayout="column" class="form-input">
-					<label>
-						<lib-libelle-model [object]="timbreModel" [key]="'yt'"></lib-libelle-model>
-					</label>
-					<input
-						name="yt"
-						[(ngModel)]="timbreModel.yt"
-						type="text"
-						trim
-						zControl
-					/>
+				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
+					<div fxLayout="column" class="form-input">
+						<label>
+							<lib-libelle-model [object]="timbreModel" [key]="'yt'"></lib-libelle-model>
+						</label>
+						<input
+							name="yt"
+							[(ngModel)]="timbreModel.yt"
+							type="text"
+							trim
+							zControl
+						/>
+					</div>
+					<div fxHide.lt-lg fxLayout="column" class="form-input">
+					</div>
 				</div>
 
-				<lib-upload [object]="timbreModel" [key]="'image'" [maxWidth]="timbreService.widthTimbre"
+				<lib-upload [object]="timbreModel" [key]="'image'" [zoom]="timbreModel.getImageZoom()" [maxWidth]="timbreService.widthTimbre"
 							[maxHeight]="timbreService.heightTimbre" (outPutObject)="timbreModel = $event"></lib-upload>
 			</div>
 

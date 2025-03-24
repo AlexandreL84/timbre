@@ -1,6 +1,7 @@
 import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@angular/core";
 import {FontAwesomeEnum} from "../../enum/font-awesome";
 import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enum";
+import {UtilsService} from "../../services/utils.service";
 
 @Component({
 	selector: "lib-upload",
@@ -12,6 +13,7 @@ export class LibUploadComponent {
 
 	@Input() object;
 	@Input() key: string;
+	@Input() zoom: string;
 	@Input() maxWidth: number = 100;
 	@Input() maxHeight: number = 200
 	@Input() alignLabel: string;
@@ -24,12 +26,16 @@ export class LibUploadComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
+	constructor(public utilsService: UtilsService) {
+	}
+
 	triggerFileInput(): void {
 		const fileInput = document.getElementById(this.id) as HTMLElement;
 		fileInput.click();
 	}
 
 	onFileSelected(event: Event): void {
+		this.zoom = null;
 		this.object[this.key] = ""
 		const file = (event.target as HTMLInputElement).files?.[0];
 		if (file) {

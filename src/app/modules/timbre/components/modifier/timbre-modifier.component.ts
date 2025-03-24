@@ -13,6 +13,8 @@ import {FileDetailUploadModel} from '../../../../model/file/file-detail-upload.m
 import {TimbreBlocService} from '../../services/timbre-bloc.service';
 import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
+import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
+import {UtilsService} from "../../../../shared/services/utils.service";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -33,6 +35,7 @@ export class TimbreModifierComponent implements OnInit {
 		public dialogRef: MatDialogRef<TimbreModifierComponent>,
 		public timbreService: TimbreService,
 		public timbreBlocService: TimbreBlocService,
+		public utilsService: UtilsService
 	) {
 	}
 
@@ -43,6 +46,10 @@ export class TimbreModifierComponent implements OnInit {
 		if (isNotNullOrUndefined(this.id)) {
 			this.timbreService.getTimbreByIdAsync(this.id).subscribe(timbreModel => {
 				this.timbreModel = timbreModel;
+				if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
+					this.timbreModel.setAnnee(timbreModel.getTimbreBlocModel().getAnnee());
+					this.timbreModel.setMonnaie(timbreModel.getTimbreBlocModel().getMonnaie());
+				}
 				this.load$.next(true);
 			});
 		} else {
@@ -50,6 +57,7 @@ export class TimbreModifierComponent implements OnInit {
 			this.timbreModel.setMonnaie('E');
 			this.load$.next(true);
 		}
+		this.changeAnnee(this.timbreModel.getAnnee());
 	}
 
 	initUpload() {
@@ -132,17 +140,25 @@ export class TimbreModifierComponent implements OnInit {
 		this.dialogRef.close();
 	}
 
+	changeAnnee(annee: number) {
+		this.timbreModel.setTimbreBlocModel(null);
+		if (isNotNullOrUndefined(annee)) {
+			const timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
+			timbreCritereModel.setAnnees([annee]);
+			this.timbreBlocService.getBlocsAsync(timbreCritereModel).pipe(first()).subscribe(timbresBlocModel => {
+			});
+		}
+	}
+
 	changeBloc(timbreBlocModel: TimbreBlocModel) {
 		if (isNotNullOrUndefined(timbreBlocModel)) {
 			this.timbreModel.setIdBloc(timbreBlocModel.getId());
 			this.timbreModel.setTimbreBlocModel(timbreBlocModel);
-			this.timbreModel.setAnnee(null);
-			this.timbreModel.setAnnee(null);
-			this.timbreModel.setMonnaie(null);
+			this.timbreModel.setMonnaie(timbreBlocModel.getMonnaie());
 		} else {
 			this.timbreModel.setIdBloc(null);
 			this.timbreModel.setTimbreBlocModel(null);
-			this.timbreModel.setAnnee(new Date().getFullYear());
+			//this.timbreModel.setAnnee(new Date().getFullYear());
 			this.timbreModel.setMonnaie('E');
 		}
 	}

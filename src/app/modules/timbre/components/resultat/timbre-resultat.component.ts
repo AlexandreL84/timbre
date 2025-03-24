@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {TimbreService} from "../../services/timbre.service";
-import {isNotNullOrUndefined, Utils} from "../../../../shared/utils/utils";
+import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {MatDialog} from "@angular/material/dialog";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {MatSort, Sort} from "@angular/material/sort";
@@ -27,6 +27,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	@ViewChild(MatSort) sort: MatSort;
 
 	@Input() timbres$: BehaviorSubject<TimbreModel[]> | Observable<TimbreModel[]>;
+	@Input() total$: BehaviorSubject<number> | Observable<number>;
 	@Input() modif: boolean = true;
 
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -38,9 +39,6 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
-	readonly Utils = Utils;
-	anneeMin: number = 2000;
-	anneeMax: number = new Date().getFullYear();
 
 	constructor(public timbreService: TimbreService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
