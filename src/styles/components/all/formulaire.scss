@@ -8,18 +8,6 @@ $button-height: 30;
 $colorNoValid: #a94442;
 $colorBgNoValid: #ffe8e9;
 
-.formulaire {
-	.titreFormulaire {
-		font-size: 22px;
-		font-weight: bold;
-		@media screen and (max-width: 959px) {
-			font-size: 33px;
-		}
-		@media screen and (max-width: 599px) {
-			font-size: 22px;
-		}
-	}
-}
 
 mat-error {
 	font-size: 1em;
@@ -49,17 +37,6 @@ mat-error {
 			z-datetimepicker.ng-valid input.ng-invalid {
 				border-left: 1px solid !important;
 			}
-
-			/*.ng-invalid:not(section):not(div):not(form):not(input),
-			.mat-radio-outer-circle,
-			z-input.ng-valid,
-			z-input.ng-invalid,
-			z-datepicker.ng-valid,
-			z-datepicker.ng-invalid,
-			z-datetimepicker.ng-valid,
-			z-datetimepicker.ng-invalid, {
-				background-color: transparent !important;
-			}*/
 
 			z-datepicker.ng-valid input,
 			z-datepicker.ng-invalid input,
@@ -120,11 +97,6 @@ mat-error {
 		.mat-form-autocomplete input {
 			border-left: 0px solid !important;
 			background-color: transparent;
-
-			/*input:not(.cdk-text-field-autofill-monitored) {
-				border-left: 1px solid !important;
-				background-color: variable.$color-valid !important;
-			}*/
 		}
 
 		z-datepicker.ng-valid {
@@ -307,13 +279,6 @@ mat-error {
 			margin-bottom: 15px;
 			height: auto !important;
 		}
-	}
-
-	//Intermediaire
-	.box-elevation-height-auto {
-		height: auto !important;
-		background-color: #fffdfb;
-		border: solid 1px #707070;
 	}
 
 	.ng-valid:not(section):not(form):not(div):not(z-datepicker):not(z-input):not(z-datetimepicker):not(mat-checkbox):not(mat-form-field):not(mat-radio-group) {

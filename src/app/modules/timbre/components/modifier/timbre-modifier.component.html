@@ -1,7 +1,7 @@
 <div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
 	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
 		<span>{{ timbreModel?.getId() ? 'MODIFICATION' : 'AJOUT' }} </span>
-		<span>{{ timbreModel?.getId() }}</span>
+		<span *ngIf="timbreModel?.getId()" class="accent"><b>N°{{ timbreModel?.getId() }}</b></span>
 	</div>
 
 	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
@@ -22,6 +22,7 @@
 			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
 				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 
+				<!--
 				<div *ngIf="timbreModel?.getId()" fxLayout="column" class="form-input">
 					<label>
 						<lib-libelle-model [object]="timbreModel" [key]="'id'"></lib-libelle-model>
@@ -38,6 +39,7 @@
 						[disabled]="!!timbreModel?.getId()"
 					/>
 				</div>
+				-->
 
 				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
 					<div fxLayout="column" class="form-input">
