@@ -89,7 +89,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		});
 	}
 
-	deleteTimbre(timbrePaysModel: TimbrePaysModel) {
+	supprimer(timbrePaysModel: TimbrePaysModel) {
 		const dialogModal = this.dialog.open(LibModalComponent, {
 			maxHeight: "95vh",
 			data: {
@@ -102,7 +102,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 
 		dialogModal.afterClosed().subscribe(() => {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
-				this.timbrePaysService.deleteTimbre(timbrePaysModel)
+				this.timbrePaysService.supprimer(timbrePaysModel)
 			}
 		})
 	}

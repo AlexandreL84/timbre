@@ -9,6 +9,8 @@ import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {TimbrePaysService} from "../../services/timbre-pays.service";
 import {UploadService} from "../../../../shared/services/upload.service";
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
+import {UtilsService} from "../../../../shared/services/utils.service";
+import {BaseEnum} from "../../../../shared/enum/base.enum";
 
 @Component({
 	selector: "app-timbre-pays-importer",
@@ -25,6 +27,7 @@ export class TimbrePaysImporterComponent implements OnInit {
 	constructor(
 		private timbrePaysService: TimbrePaysService,
 		private uploadService: UploadService,
+		private utilsService: UtilsService,
 		public dialogRef: MatDialogRef<TimbrePaysImporterComponent>) {
 	}
 
@@ -198,8 +201,8 @@ export class TimbrePaysImporterComponent implements OnInit {
 				timbrePaysModel.setMapZoom(mapZoom);
 			}
 
-			this.timbrePaysService.getMaxIdentAsync().pipe(first()).subscribe(id => {
-				this.timbrePaysService.addTimbre(timbrePaysModel)
+			this.utilsService.getMaxIdentAsync(BaseEnum.PAYS).pipe(first()).subscribe(id => {
+				this.timbrePaysService.ajouter(timbrePaysModel)
 				if (last) {
 					this.load$.next(true);
 					this.close()

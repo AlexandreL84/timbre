@@ -1,28 +1,29 @@
-<app-simple-notification></app-simple-notification>
-<div fxLayout="column" fxLayoutGap="20px">
-	<app-header [titre]="''"></app-header>
-
-	<div fxLayout="row" fxLayoutAlign="space-between stretch">
-		<div fxFlex="5"></div>
-		<div fxFlex fxLayout="column" fxLayoutGap="20px">
-			<div fxLayout="row" fxLayoutGap="20px">
-				<button class="rounded large color-white" mat-raised-button color="primary" (click)="addTimbre()">
-					Ajouter
-				</button>
-				<button class="rounded large color-white" mat-raised-button color="primary" (click)="addBloc()">
-					Ajouter Bloc
-				</button>
-				<button class="rounded large color-white" mat-raised-button color="accent"
-						(click)="addTimbreBouchon()">
-					Bouchon
-				</button>
-				<button class="rounded large color-white" mat-raised-button color="accent"
-						(click)="importer()">
-					Importer
-				</button>
-			</div>
-			<app-timbre-resultat [timbres$]="timbreService.timbres$" [total$]="timbreService.total$"></app-timbre-resultat>
+<div fxLayout="row" fxLayoutAlign="space-between stretch">
+	<div fxFlex="5"></div>
+	<div fxFlex fxLayout="column" fxLayoutGap="20px">
+		<div fxLayout="row" fxLayoutGap="20px">
+			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouter()">
+				Ajouter
+			</button>
+			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
+				Ajouter Bloc
+			</button>
+			<!--
+			<button class="rounded large color-white" mat-raised-button color="accent"
+					(click)="ajouterBouchon()">
+				Bouchon
+			</button>
+			-->
+			<button class="rounded large color-white" mat-raised-button color="accent"
+					(click)="importer()">
+				Importer
+			</button>
 		</div>
-		<div fxFlex="5"></div>
+		<app-timbre-resultat
+			[timbres$]="timbreService.timbres$"
+			[total$]="timbreService.total$"
+		>
+		</app-timbre-resultat>
 	</div>
+	<div fxFlex="5"></div>
 </div>

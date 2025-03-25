@@ -12,6 +12,7 @@ export enum FontAwesomeEnum {
     FILE_EXEL = "fa-file-excel",
     FILE_PDF = "fa-file-pdf",
     FILE_PEN = "fa-file-pen",
+	FOLDER = "fa-folder",
 
     PALETTE = "fa-palette",
     PENCIL = "fa-pencil",

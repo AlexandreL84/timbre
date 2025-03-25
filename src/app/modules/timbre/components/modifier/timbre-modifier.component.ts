@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {TimbreModel} from '../../../../model/timbre.model';
-import {TimbreService} from '../../services/timbre.service';
+import {TimbreService} from '../../../../shared/services/timbre/timbre.service';
 import {BehaviorSubject, combineLatest, first} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../shared/utils/utils';
 import {NgForm} from '@angular/forms';
@@ -10,11 +10,12 @@ import {NotificationTypeEnum} from '../../../../shared/enum/notification/notific
 import {NotificationMessageEnum} from '../../../../shared/enum/notification/notification-message.enum';
 import {FileUploadModel} from '../../../../model/file/file-upload.model';
 import {FileDetailUploadModel} from '../../../../model/file/file-detail-upload.model';
-import {TimbreBlocService} from '../../services/timbre-bloc.service';
+import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
 import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {UtilsService} from "../../../../shared/services/utils.service";
+import {BaseEnum} from "../../../../shared/enum/base.enum";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -94,12 +95,12 @@ export class TimbreModifierComponent implements OnInit {
 		if (isNotNullOrUndefined(this.timbreModel.getId())) {
 			this.save();
 		} else {
-			this.addTimbre();
+			this.ajouter();
 		}
 	}
 
-	addTimbre() {
-		this.timbreService.getMaxIdentAsync().pipe(first()).subscribe(id => {
+	ajouter() {
+		this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE).pipe(first()).subscribe(id => {
 			this.timbreModel.setId(id);
 			this.save(true);
 		});
@@ -122,9 +123,9 @@ export class TimbreModifierComponent implements OnInit {
 					this.timbreModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreService.modifierTimbre(this.timbreModel);
+					this.timbreService.modifier(this.timbreModel);
 				} else {
-					this.timbreService.addTimbre(this.timbreModel);
+					this.timbreService.ajouter(this.timbreModel);
 				}
 				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);

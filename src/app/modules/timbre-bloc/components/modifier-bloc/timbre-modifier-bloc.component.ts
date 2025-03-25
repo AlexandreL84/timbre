@@ -1,16 +1,18 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, first, combineLatest} from 'rxjs';
+import {BehaviorSubject, combineLatest, first} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../shared/utils/utils';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
 import {HttpResponseHandlerService} from '../../../../shared/services/httpResponseHandler.service';
 import {NotificationTypeEnum} from '../../../../shared/enum/notification/notification-type.enum';
 import {NotificationMessageEnum} from '../../../../shared/enum/notification/notification-message.enum';
-import {FileUploadModel} from '../../../../model/file/file-upload.model';
-import {FileDetailUploadModel} from '../../../../model/file/file-detail-upload.model';
-import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
-import {TimbreBlocService} from '../../services/timbre-bloc.service';
+import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
+import {BaseEnum} from "../../../../shared/enum/base.enum";
+import {UtilsService} from "../../../../shared/services/utils.service";
+import {TimbreBlocModel} from "../../../../model/timbre-bloc.model";
+import {FileUploadModel} from "../../../../model/file/file-upload.model";
+import {FileDetailUploadModel} from "../../../../model/file/file-detail-upload.model";
 
 
 @Component({
@@ -30,6 +32,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
 		public dialogRef: MatDialogRef<TimbreModifierBlocComponent>,
+		private utilsService: UtilsService,
 		public timbreBlocService: TimbreBlocService,
 	) {
 	}
@@ -83,12 +86,12 @@ export class TimbreModifierBlocComponent implements OnInit {
 		if (isNotNullOrUndefined(this.timbreBlocModel.getId())) {
 			this.save();
 		} else {
-			this.addTimbre();
+			this.ajouter();
 		}
 	}
 
-	addTimbre() {
-		this.timbreBlocService.getMaxIdentAsync().pipe(first()).subscribe(id => {
+	ajouter() {
+		this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC).pipe(first()).subscribe(id => {
 			this.timbreBlocModel.setId(id);
 			this.save(true);
 		});
@@ -111,9 +114,9 @@ export class TimbreModifierBlocComponent implements OnInit {
 					this.timbreBlocModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreBlocService.modifierBloc(this.timbreBlocModel);
+					this.timbreBlocService.modifier(this.timbreBlocModel);
 				} else {
-					this.timbreBlocService.addBloc(this.timbreBlocModel);
+					this.timbreBlocService.ajouter(this.timbreBlocModel);
 				}
 				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);

@@ -4,19 +4,12 @@ import {BehaviorSubject, map, Observable, of} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {isNotNullOrUndefined, Utils} from "../../../shared/utils/utils";
 import {plainToInstance} from "class-transformer";
-import {collectionData} from "@angular/fire/firestore";
 import {DossierEnum} from "../../../shared/enum/dossier.enum";
 import {UploadService} from "../../../shared/services/upload.service";
-
-interface DocumentData {
-	id: number; // Assurez-vous que vos documents ont une propriété numérique "id"
-}
+import {BaseEnum} from "../../../shared/enum/base.enum";
 
 @Injectable()
 export class TimbrePaysService {
-	private basePath: string = '/timbres_pays';
-
-	dossierImage: string = "pays/";
 	heigthTable: number = 50;
 	widthDrapeau: number = 620;
 	heightDrapeau: number = 430;
@@ -63,7 +56,7 @@ export class TimbrePaysService {
 	}
 
 	getDossier(dossier: DossierEnum, zoom: boolean): string {
-		let dossierImage = this.dossierImage + '/';
+		let dossierImage = DossierEnum.PAYS + '/';
 		if (zoom == true) {
 			dossierImage = dossierImage + '/' + DossierEnum.ZOOM;
 		}
@@ -73,20 +66,8 @@ export class TimbrePaysService {
 		return dossierImage;
 	}
 
-	getMaxIdentAsync(): Observable<number> {
-		const query =
-			this.firestore.collection(this.basePath)
-				.ref.orderBy("id", "desc")
-				.limit(1);
-
-		return collectionData(query).pipe(
-			map((docs: DocumentData[]) => (docs.length > 0 ? docs[0].id + 1 : 1))
-		);
-	}
-
-
 	getTimbreByIdAsync(id: number): Observable<TimbrePaysModel> {
-		return this.firestore.collection(this.basePath, ref => ref.where('id', '==', id))
+		return this.firestore.collection(BaseEnum.PAYS, ref => ref.where('id', '==', id))
 			.valueChanges().pipe(
 				map((data: any) => {
 					return plainToInstance(TimbrePaysModel, data[0]);
@@ -94,7 +75,7 @@ export class TimbrePaysService {
 	}
 
 	getByCodeAsync(code: string): Observable<TimbrePaysModel> {
-		return this.firestore.collection(this.basePath, ref => ref.where('code', '==', code))
+		return this.firestore.collection(BaseEnum.PAYS, ref => ref.where('code', '==', code))
 			.valueChanges().pipe(
 				map((data: any) => {
 					return plainToInstance(TimbrePaysModel, data[0]);
@@ -102,7 +83,7 @@ export class TimbrePaysService {
 	}
 
 	getTimbres(): Observable<TimbrePaysModel[]> {
-		return this.firestore.collection(this.basePath).valueChanges().pipe(
+		return this.firestore.collection(BaseEnum.PAYS).valueChanges().pipe(
 			map((timbres: any) => {
 				let total: number = 0;
 				let timbresPaysModel: TimbrePaysModel[] = [];
@@ -118,14 +99,14 @@ export class TimbrePaysService {
 			}))
 	}
 
-	addTimbre(timbrePaysModel: TimbrePaysModel) {
-		return this.firestore.collection(this.basePath).add(
+	ajouter(timbrePaysModel: TimbrePaysModel) {
+		return this.firestore.collection(BaseEnum.PAYS).add(
 			Object.assign(new Object(), timbrePaysModel)
 		)
 	}
 
-	modifierTimbre(timbrePaysModel: TimbrePaysModel) {
-		this.firestore.collection(this.basePath)
+	modifier(timbrePaysModel: TimbrePaysModel) {
+		this.firestore.collection(BaseEnum.PAYS)
 			.ref.where('id', '==', timbrePaysModel.getId())
 			.get()
 			.then(snapshot => {
@@ -139,8 +120,8 @@ export class TimbrePaysService {
 			});
 	}
 
-	deleteTimbre(timbrePaysModel: TimbrePaysModel) {
-		this.firestore.collection(this.basePath)
+	supprimer(timbrePaysModel: TimbrePaysModel) {
+		this.firestore.collection(BaseEnum.PAYS)
 			.ref.where('id', '==', timbrePaysModel.getId())
 			.get()
 			.then(snapshot => {

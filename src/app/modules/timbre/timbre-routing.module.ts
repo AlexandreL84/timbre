@@ -12,6 +12,10 @@ const routes: Routes = [
 		path: "importer",
 		component: TimbreImporterComponent,
 	},
+	/*{
+		path: "bloc",
+		loadChildren: () => import("./modules/bloc/timbre-bloc.module").then(m => m.TimbreBlocModule),
+	},*/
 ];
 
 @NgModule({

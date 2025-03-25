@@ -5,6 +5,9 @@ import {TimbrePaysModifierComponent} from "../components/modifier/timbre-pays-mo
 import {TimbrePaysImporterComponent} from "../components/importer/timbre-pays-importer.component";
 import {first} from "rxjs";
 import {TimbrePaysModel} from "../../../model/timbre-pays.model";
+import {BaseEnum} from "../../../shared/enum/base.enum";
+import {UtilsService} from "../../../shared/services/utils.service";
+import {HeaderService} from "../../../shared/services/header.service";
 
 @Component({
 	selector: "app-timbre-pays-layout",
@@ -12,16 +15,17 @@ import {TimbrePaysModel} from "../../../model/timbre-pays.model";
 	styleUrls: ["./timbre-pays-layout.component.scss"],
 })
 export class TimbrePaysLayoutComponent implements OnInit {
-	constructor(public timbrePaysService: TimbrePaysService, private dialog: MatDialog) {
+	constructor(private headerService: HeaderService, public timbrePaysService: TimbrePaysService, private dialog: MatDialog, private utilsService: UtilsService) {
 	}
 
 	ngOnInit(): void {
+		this.headerService.titre$.next("TIMBRE PAR PAYS");
 		//this.timbrePaysResultatService.timbres$ = this.timbrePaysService.getTimbres2();
 		//this.timbrePaysService.getTimbres2();
-		//this.timbrePaysService.deleteTimbrebyCode("FR")
+		//this.timbrePaysService.supprimerbyCode("FR")
 	}
 
-	addTimbre() {
+	ajouter() {
 		const refDialog = this.dialog.open(TimbrePaysModifierComponent, {
 			maxHeight: "95vh",
 			width: "30%",
@@ -32,11 +36,11 @@ export class TimbrePaysLayoutComponent implements OnInit {
 		});
 	}
 
-	addTimbreBouchon() {
-		this.timbrePaysService.getMaxIdentAsync().pipe(first()).subscribe(id => {
+	ajouterBouchon() {
+		this.utilsService.getMaxIdentAsync(BaseEnum.PAYS).pipe(first()).subscribe(id => {
 			const timbrePaysModel: TimbrePaysModel = this.timbrePaysService.getBouchon();
 			timbrePaysModel.setId(id);
-			this.timbrePaysService.addTimbre(timbrePaysModel);
+			this.timbrePaysService.ajouter(timbrePaysModel);
 		});
 	}
 

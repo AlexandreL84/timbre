@@ -1,15 +1,16 @@
 import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {TimbrePaysModel} from "../../../../model/timbre-pays.model";
 import {TimbrePaysService} from "../../services/timbre-pays.service";
-import {BehaviorSubject, combineLatest, combineLatestWith, first} from "rxjs";
+import {BehaviorSubject, combineLatest, first} from "rxjs";
 import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {NgForm} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {HttpResponseHandlerService} from "../../../../shared/services/httpResponseHandler.service";
 import {NotificationTypeEnum} from "../../../../shared/enum/notification/notification-type.enum";
 import {NotificationMessageEnum} from "../../../../shared/enum/notification/notification-message.enum";
-import {UploadService} from "../../../../shared/services/upload.service";
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
+import {UtilsService} from "../../../../shared/services/utils.service";
+import {BaseEnum} from "../../../../shared/enum/base.enum";
 
 @Component({
 	selector: "app-timbre-pays-modifier",
@@ -29,7 +30,8 @@ export class TimbrePaysModifierComponent implements OnInit {
 
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
-		public dialogRef: MatDialogRef<TimbrePaysModifierComponent>, public timbrePaysService: TimbrePaysService, private uploadService: UploadService) {
+		public dialogRef: MatDialogRef<TimbrePaysModifierComponent>, public timbrePaysService: TimbrePaysService,
+		private utilsService: UtilsService) {
 	}
 
 	ngOnInit(): void {
@@ -67,12 +69,12 @@ export class TimbrePaysModifierComponent implements OnInit {
 		if (isNotNullOrUndefined(this.timbrePaysModel.getId())) {
 			this.save(false);
 		} else {
-			this.addTimbrePays();
+			this.ajouterPays();
 		}
 	}
 
-	addTimbrePays() {
-		this.timbrePaysService.getMaxIdentAsync().pipe(first()).subscribe(id => {
+	ajouterPays() {
+		this.utilsService.getMaxIdentAsync(BaseEnum.PAYS).pipe(first()).subscribe(id => {
 			this.timbrePaysModel.setId(id)
 			this.save(true);
 		})
@@ -114,9 +116,9 @@ export class TimbrePaysModifierComponent implements OnInit {
 				}
 
 				if (!ajout) {
-					this.timbrePaysService.modifierTimbre(this.timbrePaysModel);
+					this.timbrePaysService.modifier(this.timbrePaysModel);
 				} else {
-					this.timbrePaysService.addTimbre(this.timbrePaysModel);
+					this.timbrePaysService.ajouter(this.timbrePaysModel);
 				}
 				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);

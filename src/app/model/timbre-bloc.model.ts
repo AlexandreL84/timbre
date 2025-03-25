@@ -1,5 +1,6 @@
 import { Label } from './utils/utils-model';
 import { ProprieteModel } from './utils/propriete-model';
+import {TimbreBlocAcquisModel} from "./timbre-bloc-acquis.model";
 
 export class TimbreBlocModel extends ProprieteModel {
 	@Label('Identifiant')
@@ -20,8 +21,11 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label('Image zoom')
 	imageZoom: string;
 
+	@Label("vérif")
+	timbreBlocAcquisModel: TimbreBlocAcquisModel;
 
-	constructor(id?: number, annee?: number, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string) {
+
+	constructor(id?: number, annee?: number, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string,  timbreBlocAcquisModel?: TimbreBlocAcquisModel) {
 		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
@@ -29,6 +33,7 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.image = image ? image : null;
 		this.imageTable = imageTable ? imageTable : null;
 		this.imageZoom = imageZoom ? imageZoom : null;
+		this.timbreBlocAcquisModel = timbreBlocAcquisModel ? timbreBlocAcquisModel : null;
 	}
 
 	getId(): number {
@@ -78,5 +83,13 @@ export class TimbreBlocModel extends ProprieteModel {
 
 	setImageZoom(value: string) {
 		this.imageZoom = value;
+	}
+
+	getTimbreBlocAcquisModel(): TimbreBlocAcquisModel {
+		return this.timbreBlocAcquisModel;
+	}
+
+	setTimbreBlocAcquisModel(value: TimbreBlocAcquisModel) {
+		this.timbreBlocAcquisModel = value;
 	}
 }

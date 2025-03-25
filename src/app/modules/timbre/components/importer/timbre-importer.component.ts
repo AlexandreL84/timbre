@@ -5,7 +5,7 @@ import {MatDialogRef} from "@angular/material/dialog";
 import * as Papa from 'papaparse';
 import {TimbreModel} from "../../../../model/timbre.model";
 import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
-import {TimbreService} from "../../services/timbre.service";
+import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {UploadService} from "../../../../shared/services/upload.service";
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
 
@@ -163,7 +163,7 @@ export class TimbreImporterComponent implements OnInit {
 			if (isNotNullOrUndefined(imageZoom) && imageZoom != "nok") {
 				timbreModel.setImageZoom(imageZoom);
 			}
-			this.timbreService.addTimbreSansId(timbreModel)
+			this.timbreService.ajouterSansId(timbreModel)
 			if (last) {
 				this.load$.next(true);
 				this.close()

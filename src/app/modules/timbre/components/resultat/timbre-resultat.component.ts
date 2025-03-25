@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
-import {TimbreService} from "../../services/timbre.service";
+import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {MatDialog} from "@angular/material/dialog";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
@@ -10,19 +10,21 @@ import {MatPaginator} from "@angular/material/paginator";
 import {TimbreModifierComponent} from "../modifier/timbre-modifier.component";
 import {BehaviorSubject, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
 import {TimbreAcquisModel} from "../../../../model/timbre-acquis.model";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
+import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
+import {BaseEnum} from "../../../../shared/enum/base.enum";
 
 @Component({
 	selector: "app-timbre-resultat",
 	templateUrl: "./timbre-resultat.component.html",
 	styleUrls: ["./timbre-resultat.component.scss"],
 })
-export class TimbreResultatComponent implements OnInit, AfterViewInit  {
+export class TimbreResultatComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
@@ -40,15 +42,15 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public timbreService: TimbreService, private dialog: MatDialog, public utilsService: UtilsService) {
+	constructor(public timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
 	ngOnInit(): void {
-		this.annees$ = this.timbreService.getAnneesAsync();
+		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
 		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type",  "yt",  "acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type", "yt", "acquis", "doublon"];
 		if (this.modif) {
 			this.displayedColumns.push("modifier", "supprimer");
 		}
@@ -93,7 +95,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 		this.timbreService.acquis(timbreModel, true);
 	}
 
-	modifierTimbre(timbreModel: TimbreModel) {
+	modifier(timbreModel: TimbreModel) {
 		const refDialog = this.dialog.open(TimbreModifierComponent, {
 			height: "75vh",
 			maxHeight: "750px",
@@ -106,7 +108,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 		});
 	}
 
-	deleteTimbre(timbreModel: TimbreModel) {
+	supprimer(timbreModel: TimbreModel) {
 		const dialogModal = this.dialog.open(LibModalComponent, {
 			maxHeight: "95vh",
 			data: {
@@ -119,7 +121,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 
 		dialogModal.afterClosed().subscribe(() => {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
-				this.timbreService.deleteTimbre(timbreModel)
+				this.timbreService.supprimer(timbreModel)
 			}
 		})
 	}
@@ -133,8 +135,8 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit  {
 		XLSX.utils.book_append_sheet(wb, ws, 'Données');
 
 		// Générer le fichier Excel et déclencher le téléchargement
-		const excelBuffer: any = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
-		const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+		const excelBuffer: any = XLSX.write(wb, {bookType: 'xlsx', type: 'array'});
+		const data: Blob = new Blob([excelBuffer], {type: 'application/octet-stream'});
 		saveAs(data, 'export_timbres.xlsx');
 	}
 

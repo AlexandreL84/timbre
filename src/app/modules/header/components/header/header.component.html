@@ -9,19 +9,20 @@
 		</span>
 	</div>
 	<div fxLayout="column" fxFlex fxLayoutAlign="center center">
-		<span class="color-white bold titre-main">{{ titre }}</span>
+		<span class="color-white bold titre-main">{{ headerService.titre$ | async }}</span>
 	</div>
 
 	<div fxLayoutAlign="center end" fxLayoutGap="15px">
-		<lib-icon *ngIf="iconAutre?.icone"
-				  [icone]="iconAutre?.icone"
-				  [type]="iconAutre?.type"
-				  style="font-size: 2em"
-				  [color]="'white'"
-				  [info]="iconAutre?.info"
-				  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
-				  (click)="navigate(iconAutre?.lien)">
-		</lib-icon>
+		<ng-container *ngFor="let choixRoute of (headerService.choixRoutes$ |async)">
+			<lib-icon [icone]="choixRoute?.getIcone()"
+					  [type]="choixRoute?.getType()"
+					  style="font-size: 2em"
+					  [color]="'white'"
+					  [info]="choixRoute?.getInfo()"
+					  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+					  (click)="headerService.setRoute(choixRoute.getRoute())">
+			</lib-icon>
+		</ng-container>
 
 		<lib-icon [icone]="FontAwesomeEnum.PALETTE"
 				  style="font-size: 2em"

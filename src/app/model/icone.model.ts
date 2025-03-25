@@ -2,6 +2,7 @@ import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
 import {FontAwesomeEnum} from "../shared/enum/font-awesome";
 import {FontAwesomeTypeEnum} from "../shared/enum/font-awesome/font-awesome-type.enum";
+import {RouteEnum} from "../shared/enum/route.enum";
 
 export class IconeModel extends ProprieteModel {
 
@@ -15,15 +16,15 @@ export class IconeModel extends ProprieteModel {
 	info: string;
 
 	@Label("Lien")
-	lien: string;
+	route: RouteEnum;
 
 
-	constructor(icone?: FontAwesomeEnum, type?: FontAwesomeTypeEnum, info?: string, lien?: string) {
+	constructor(icone?: FontAwesomeEnum, type?: FontAwesomeTypeEnum, info?: string, route?: RouteEnum) {
 		super();
 		this.icone = icone ? icone : null;
 		this.type = type ? type : null;
 		this.info = info ? info : null;
-		this.lien = lien ? lien : null;
+		this.route = route ? route : null;
 	}
 
 	getIcone(): FontAwesomeEnum {
@@ -50,11 +51,11 @@ export class IconeModel extends ProprieteModel {
 		this.info = value;
 	}
 
-	getLien(): string {
-		return this.lien;
+	getRoute(): RouteEnum {
+		return this.route;
 	}
 
-	setLien(value: string) {
-		this.lien = value;
+	setRoute(value: RouteEnum) {
+		this.route = value;
 	}
 }

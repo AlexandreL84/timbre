@@ -8,7 +8,6 @@ import {TimbrePaysLayoutComponent} from "./layout/timbre-pays-layout.component";
 import {TimbrePaysService} from "./services/timbre-pays.service";
 import {TimbrePaysModifierComponent} from "./components/modifier/timbre-pays-modifier.component";
 import {LibSpinnerModule} from "../../shared/components/lib-spinner";
-import {HeaderModule} from "../header/header.module";
 import {DirectiveModule} from "../../shared/directives/directive.module";
 import {ErrorModule} from "../error";
 import {PipeModule} from "../../shared/pipes/pipe.module";
@@ -40,7 +39,6 @@ import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.mod
         LibIconModule,
         LibDialogImageModule,
         LibLibelleModelModule,
-        HeaderModule,
         DirectiveModule,
         ErrorModule,
         PipeModule,
@@ -48,7 +46,7 @@ import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.mod
         LibModalModule,
         LibUploadModule
     ],
-	exports: [TimbrePaysLayoutComponent],
+	exports: [],
 	providers: [UtilsService, TimbrePaysService, UploadService, provideHttpClient()],
 })
 export class TimbrePaysModule {

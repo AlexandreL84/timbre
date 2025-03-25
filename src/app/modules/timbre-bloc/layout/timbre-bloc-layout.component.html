@@ -2,19 +2,16 @@
 	<div fxFlex="5"></div>
 	<div fxFlex fxLayout="column" fxLayoutGap="20px">
 		<div fxLayout="row" fxLayoutGap="20px">
-			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouter()">
+			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
 				Ajouter
 			</button>
+			<!--
 			<button class="rounded large color-white" mat-raised-button color="accent"
 					(click)="ajouterBouchon()">
 				Bouchon
 			</button>
-			<button class="rounded large color-white" mat-raised-button color="accent"
-					(click)="importer()">
-				Importer
-			</button>
+			-->
 		</div>
-		<app-timbre-pays-resultat [timbres$]="timbrePaysService.getTimbres()"></app-timbre-pays-resultat>
+		<app-timbre-bloc-resultat></app-timbre-bloc-resultat>
 	</div>
 	<div fxFlex="5"></div>
-</div>

@@ -2,8 +2,9 @@ import {Component, ViewChild} from '@angular/core';
 import {AuthService} from "../../../../shared/services/auth.service";
 import {BehaviorSubject} from "rxjs";
 import {NgForm} from "@angular/forms";
-import {Router} from "@angular/router";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
+import {HeaderService} from "../../../../shared/services/header.service";
+import {RouteEnum} from "../../../../shared/enum/route.enum";
 
 @Component({
 	selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent {
 	showPswd: boolean = false;
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 
-	constructor(private authService: AuthService, private router: Router) {
+	constructor(private headerService: HeaderService, private authService: AuthService) {
 	}
 
 	onSignIn() {
@@ -29,7 +30,7 @@ export class LoginComponent {
 		if (this.formLogin?.valid) {
 			this.authService.signIn(this.email, this.password)
 				.then((result) => {
-					this.router.navigate(['/pays']);
+					this.headerService.setRoute(RouteEnum.TIMBRE);
 					this.redirection$.next(true);
 				})
 				.catch((error) => {
