@@ -93,7 +93,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="id">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header>
 				<lib-libelle-model [object]="timbre" [key]="'id'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
@@ -101,7 +101,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="annee">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header>
 				<lib-libelle-model [object]="timbre" [key]="'annee'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
@@ -109,7 +109,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="monnaie">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
+			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header class="hide-on-mobile">
 				<lib-libelle-model [object]="timbre" [key]="'monnaie'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
@@ -117,7 +117,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="acquis">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header>
 				<lib-libelle-model [object]="timbre?.getTimbreBlocAcquisModel()"
 								   [key]="'acquis'"></lib-libelle-model>
 			</th>
@@ -135,7 +135,7 @@
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="doublon">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header>
 				<lib-libelle-model [object]="timbre?.getTimbreBlocAcquisModel()"
 								   [key]="'doublon'"></lib-libelle-model>
 			</th>

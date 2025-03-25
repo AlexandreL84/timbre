@@ -146,8 +146,7 @@ export class TimbreModifierComponent implements OnInit {
 		if (isNotNullOrUndefined(annee)) {
 			const timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 			timbreCritereModel.setAnnees([annee]);
-			this.timbreBlocService.getBlocsAsync(timbreCritereModel).pipe(first()).subscribe(timbresBlocModel => {
-			});
+			this.timbreBlocService.getBlocs(timbreCritereModel);
 		}
 	}
 

@@ -5,6 +5,7 @@ import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {TimbreModifierBlocComponent} from "../components/modifier-bloc/timbre-modifier-bloc.component";
 import {TimbreBlocService} from "../../../shared/services/timbre/timbre-bloc.service";
 import {HeaderService} from "../../../shared/services/header.service";
+import {first} from "rxjs";
 
 @Component({
 	selector: "app-timbre-bloc-layout",
@@ -19,7 +20,7 @@ export class TimbreBlocLayoutComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.headerService.titre$.next("TIMBRES - BLOC");
-		this.timbreBlocService.getBlocsAsync();
+		this.timbreBlocService.getBlocs();
 	}
 
 	ajouterBloc() {

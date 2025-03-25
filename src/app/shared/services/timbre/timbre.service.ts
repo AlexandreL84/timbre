@@ -161,7 +161,7 @@ export class TimbreService {
 					.then(snapshot => {
 						snapshot.forEach(doc => {
 							// Mise à jour du document
-							const timbreAcquisModel = timbreModel.getTimbreAcquisModel();
+							const timbreAcquisModel: TimbreAcquisModel = timbreModel.getTimbreAcquisModel();
 							if (doublon) {
 								timbreAcquisModel.setAcquis(true);
 								timbreAcquisModel.setDoublon(!timbreAcquisModel.isDoublon());

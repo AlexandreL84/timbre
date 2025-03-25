@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, first, map, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 'rxjs';
 import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {isNotNullOrUndefined} from '../../utils/utils';
 import {TimbreCritereModel} from '../../../model/timbre-critere.model';
@@ -9,7 +9,8 @@ import {DossierEnum} from "../../enum/dossier.enum";
 import {UploadService} from "../upload.service";
 import {BaseEnum} from "../../enum/base.enum";
 import {UtilsService} from "../utils.service";
-
+import {AuthService} from "../auth.service";
+import {TimbreBlocAcquisModel} from "../../../model/timbre-bloc-acquis.model";
 
 @Injectable()
 export class TimbreBlocService {
@@ -22,7 +23,12 @@ export class TimbreBlocService {
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbresBlocModel$: BehaviorSubject<TimbreBlocModel[]> = new BehaviorSubject<TimbreBlocModel[]>(null);
 
-	constructor(private firestore: AngularFirestore, private uploadService: UploadService, private utilsService:UtilsService) {
+	constructor(
+		private firestore: AngularFirestore,
+		private authService: AuthService,
+		private uploadService: UploadService,
+		private utilsService: UtilsService
+	) {
 	}
 
 	upload(timbreBlocModel: TimbreBlocModel, dossier: DossierEnum): Observable<string> {
@@ -40,13 +46,12 @@ export class TimbreBlocService {
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
-		this.getAllBlocs(timbreCritereModel).pipe(first()).subscribe(timbres => {
-			this.total$.next(timbres?.length);
+		this.getAllBlocs(timbreCritereModel).pipe(first()).subscribe(timbesBloc => {
+			this.total$.next(timbesBloc?.length);
 		});
 	}
 
 	getBlocByIdAsync(id: number): Observable<TimbreBlocModel> {
-		this.getTotal();
 		return this.firestore.collection(BaseEnum.TIMBRE_BLOC, ref => ref.where('id', '==', id))
 			.valueChanges().pipe(
 				map((data: any) => {
@@ -65,27 +70,123 @@ export class TimbreBlocService {
 			//filteredQuery = filteredQuery.orderBy('id', 'asc');
 			return filteredQuery;
 		})
-		.valueChanges();
+			.valueChanges();
+	}
+
+	getTimbreBlocAcquis(): Observable<any> {
+		return this.authService.getUser().pipe(
+			first(),
+			switchMap((user) => {
+				if (isNotNullOrUndefined(user)) {
+					return this.getTimbreBlocAcquisByUser(user.getId()).pipe(first(),
+						map(result => {
+							return result;
+						}));
+				}
+				return null;
+			}));
+	}
+
+	getTimbreBlocAcquisByUser(id): Observable<any> {
+		return this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
+	}
+
+
+	getBlocs(timbreCritereModel?: TimbreCritereModel) {
+		this.getTotal();
+		this.timbresBlocModel$.next(null);
+		combineLatest([
+			this.getAllBlocs(timbreCritereModel),
+			this.getTimbreBlocAcquis(),
+		]).pipe(first()).subscribe(([timbresBloc, timbresBlocAcquis]) => {
+			this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel);
+		});
 	}
 
 	getBlocsAsync(timbreCritereModel?: TimbreCritereModel): Observable<TimbreBlocModel[]> {
+		this.getTotal();
 		this.timbresBlocModel$.next(null);
 		return this.getAllBlocs(timbreCritereModel).pipe(first(), map(blocs => {
-				return this.constructBlocs(blocs);
+				return this.constructBlocs(blocs, null, timbreCritereModel);
 			}
 		));
 	}
 
-	constructBlocs(blocs): TimbreBlocModel[] {
+	constructBloc(bloc: TimbreBlocModel, timbresBlocAcquis): TimbreBlocModel {
+		const timbreBlocModel: TimbreBlocModel = plainToInstance(TimbreBlocModel, bloc);
+		if (isNotNullOrUndefined(timbresBlocAcquis)) {
+			const findTimbreBlocAcquis = timbresBlocAcquis.find(timbre => timbre['idBloc'] == timbreBlocModel.getId());
+			if (isNotNullOrUndefined(findTimbreBlocAcquis)) {
+				timbreBlocModel.setTimbreBlocAcquisModel(plainToInstance(TimbreBlocAcquisModel, findTimbreBlocAcquis));
+			} else {
+				timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
+			}
+		}
+		return timbreBlocModel;
+	}
+
+	constructBlocs(blocs, timbresBlocAcquis, timbreCritereModel: TimbreCritereModel): TimbreBlocModel[] {
 		let timbresBlocModel: TimbreBlocModel[] = [];
 		if (blocs?.length > 0) {
-			blocs.forEach((timbre: any) => {
-				const timbreBlocModel: TimbreBlocModel = plainToInstance(TimbreBlocModel, timbre);
-				timbresBlocModel.push(timbreBlocModel);
+			blocs.forEach((bloc: any) => {
+				const timbreBlocModel: TimbreBlocModel = this.constructBloc(bloc, timbresBlocAcquis);
+
+				let ajout: boolean = true;
+				if (isNotNullOrUndefined(timbreCritereModel)) {
+					if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()))) {
+						ajout = false;
+					}
+					if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isDoublon()))) {
+						ajout = false;
+					}
+				}
+				if (ajout == true) {
+					timbresBlocModel.push(timbreBlocModel);
+				}
 			});
 		}
 		this.timbresBlocModel$.next(timbresBlocModel);
 		return timbresBlocModel;
+	}
+
+	acquis(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
+		return this.authService.getUser().pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (isNotNullOrUndefined(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser())) {
+				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
+					.ref.where('idTimbre', '==', timbreBlocModel.getId()).where('idUser', '==', user.getId())
+					//.limit(1)
+					.get()
+					.then(snapshot => {
+						snapshot.forEach(doc => {
+							// Mise à jour du document
+							const timbreBlocAcquisModel: TimbreBlocAcquisModel = timbreBlocModel.getTimbreBlocAcquisModel();
+							if (doublon) {
+								timbreBlocAcquisModel.setAcquis(true);
+								timbreBlocAcquisModel.setDoublon(!timbreBlocAcquisModel.isDoublon());
+							} else {
+								timbreBlocAcquisModel.setAcquis(!timbreBlocAcquisModel.isAcquis());
+								if (!timbreBlocAcquisModel.isAcquis()) {
+									timbreBlocAcquisModel.setDoublon(false);
+								}
+							}
+							doc.ref.update(Object.assign(new Object(), timbreBlocAcquisModel));
+						});
+					})
+					.catch(error => {
+						console.error('Erreur de mise à jour:', error);
+					});
+			} else {
+				const timbreBlocAcquisModel = new TimbreBlocAcquisModel();
+				timbreBlocAcquisModel.setIdUser(user.getId());
+				timbreBlocAcquisModel.setIdBloc(timbreBlocModel.getId());
+				timbreBlocAcquisModel.setAcquis(true);
+				timbreBlocAcquisModel.setDoublon(doublon);
+				timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
+				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS).add(
+					Object.assign(new Object(), timbreBlocAcquisModel)
+				);
+			}
+		});
 	}
 
 	ajouterSansId(timbreBlocModel: TimbreBlocModel) {
@@ -99,7 +200,7 @@ export class TimbreBlocService {
 		this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
 			Object.assign(new Object(), timbreBlocModel)
 		);
-		this.getBlocsAsync().pipe(first()).subscribe(timbresBlocModel => {});
+		this.getBlocs();
 	}
 
 	modifier(timbreBlocModel: TimbreBlocModel) {
@@ -109,7 +210,7 @@ export class TimbreBlocService {
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					doc.ref.update(Object.assign(new Object(), timbreBlocModel));
-					this.getBlocsAsync().pipe(first()).subscribe(timbresBlocModel => {});
+					this.getBlocs();
 				});
 			})
 			.catch(error => {
@@ -124,7 +225,7 @@ export class TimbreBlocService {
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					doc.ref.delete();
-					this.getBlocsAsync().pipe(first()).subscribe(timbresBlocModel => {});
+					this.getBlocs();
 				});
 			})
 			.catch(error => {

@@ -6,7 +6,7 @@ import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, first, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
@@ -41,7 +41,6 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
 	constructor(public timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
-		//this.timbreBlocService.getBlocsAsync();
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -78,7 +77,7 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 		if (this.timbreCritereModel.getAcquis() == "NON") {
 			this.timbreCritereModel.setDoublon("TOUS");
 		}
-		//this.timbreService.getTimbres(this.timbreCritereModel);
+		this.timbreBlocService.getBlocs(this.timbreCritereModel);
 	}
 
 	applyFilter(event: Event) {
@@ -87,11 +86,11 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	}
 
 	acquis(timbreBlocModel: TimbreBlocModel) {
-		//this.timbreBlocService.acquis(timbreBlocModel, false);
+		this.timbreBlocService.acquis(timbreBlocModel, false);
 	}
 
 	doublon(timbreBlocModel: TimbreBlocModel) {
-		//this.timbreBlocService.acquis(timbreBlocModel, true);
+		this.timbreBlocService.acquis(timbreBlocModel, true);
 	}
 
 	modifier(TimbreBlocModel: TimbreBlocModel) {

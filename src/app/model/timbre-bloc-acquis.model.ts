@@ -30,11 +30,11 @@ export class TimbreBlocAcquisModel extends ProprieteModel {
 		this.idUser = value;
 	}
 
-	getidBloc(): number {
+	getIdBloc(): number {
 		return this.idBloc;
 	}
 
-	setidBloc(value: number) {
+	setIdBloc(value: number) {
 		this.idBloc = value;
 	}
 
