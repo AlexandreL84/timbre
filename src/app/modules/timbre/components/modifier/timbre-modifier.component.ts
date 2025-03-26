@@ -125,7 +125,7 @@ export class TimbreModifierComponent implements OnInit {
 				if (!ajout) {
 					this.timbreService.modifier(this.timbreModel);
 				} else {
-					this.timbreService.ajouter(this.timbreModel);
+					this.timbreService.ajouter(this.timbreModel, true);
 				}
 				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);

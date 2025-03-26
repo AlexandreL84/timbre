@@ -116,7 +116,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 				if (!ajout) {
 					this.timbreBlocService.modifier(this.timbreBlocModel);
 				} else {
-					this.timbreBlocService.ajouter(this.timbreBlocModel);
+					this.timbreBlocService.ajouter(this.timbreBlocModel, true);
 				}
 				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);

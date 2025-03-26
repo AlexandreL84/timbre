@@ -21,7 +21,7 @@
 			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
 				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 				<app-timbre-resultat
-					*ngIf="(timbres$ |async) ?.length > 0"
+					*ngIf="(timbres$ |async)?.length > 0"
 					[timbres$]="timbres$"
 					[modif]="false"
 				>

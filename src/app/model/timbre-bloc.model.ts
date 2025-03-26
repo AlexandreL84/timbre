@@ -27,6 +27,8 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label("Nombre de timbres")
 	nbTimbres: number;
 
+	idOrigine: number;
+
 
 	constructor(id?: number, annee?: number, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
 		this.id = id ? id : null;

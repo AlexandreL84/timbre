@@ -1,19 +1,20 @@
-import {Injectable} from '@angular/core';
-import {TimbreModel} from '../../../model/timbre.model';
-import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 'rxjs';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {isNotNullOrUndefined} from '../../utils/utils';
-import {AuthService} from '../auth.service';
-import {TimbreAcquisModel} from '../../../model/timbre-acquis.model';
-import {TimbreCritereModel} from '../../../model/timbre-critere.model';
-import {plainToInstance} from 'class-transformer';
-import {TimbreBlocModel} from '../../../model/timbre-bloc.model';
-import {TimbreBlocService} from './timbre-bloc.service';
-import {UploadService} from "../upload.service";
-import {DossierEnum} from "../../enum/dossier.enum";
-import {BaseEnum} from "../../enum/base.enum";
-import {UtilsService} from "../utils.service";
-import {TimbreUtilsService} from "./timbre-utils.service";
+import { Injectable } from '@angular/core';
+import { TimbreModel } from '../../../model/timbre.model';
+import { BehaviorSubject, combineLatest, first, map, Observable, switchMap } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { isNotNullOrUndefined, isNullOrUndefined } from '../../utils/utils';
+import { AuthService } from '../auth.service';
+import { TimbreAcquisModel } from '../../../model/timbre-acquis.model';
+import { TimbreCritereModel } from '../../../model/timbre-critere.model';
+import { plainToInstance } from 'class-transformer';
+import { TimbreBlocModel } from '../../../model/timbre-bloc.model';
+import { TimbreBlocService } from './timbre-bloc.service';
+import { UploadService } from '../upload.service';
+import { DossierEnum } from '../../enum/dossier.enum';
+import { BaseEnum } from '../../enum/base.enum';
+import { UtilsService } from '../utils.service';
+import { TimbreUtilsService } from './timbre-utils.service';
+import { UserModel } from '../../../model/user.model';
 
 @Injectable()
 export class TimbreService {
@@ -112,17 +113,21 @@ export class TimbreService {
 						console.error('Erreur de mise à jour:', error);
 					});
 			} else {
-				const timbreAcquisModel = new TimbreAcquisModel();
-				timbreAcquisModel.setIdUser(user.getId());
-				timbreAcquisModel.setIdTimbre(timbreModel.getId());
-				timbreAcquisModel.setAcquis(true);
-				timbreAcquisModel.setDoublon(doublon);
-				timbreModel.setTimbreAcquisModel(timbreAcquisModel);
-				this.firestore.collection(BaseEnum.TIMBRE_ACQUIS).add(
-					Object.assign(new Object(), timbreAcquisModel)
-				);
+				this.addAcquis(user?.getId(), timbreModel, doublon);
 			}
 		});
+	}
+
+	addAcquis(idUser: string, timbreModel: TimbreModel, doublon: boolean) {
+		const timbreAcquisModel = new TimbreAcquisModel();
+		timbreAcquisModel.setIdUser(idUser);
+		timbreAcquisModel.setIdTimbre(timbreModel.getId());
+		timbreAcquisModel.setAcquis(true);
+		timbreAcquisModel.setDoublon(doublon);
+		timbreModel.setTimbreAcquisModel(timbreAcquisModel);
+		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS).add(
+			Object.assign(new Object(), timbreAcquisModel)
+		);
 	}
 
 	ajouterSansId(timbreModel: TimbreModel) {
@@ -132,18 +137,26 @@ export class TimbreService {
 				timbreModel.setAnnee(null);
 				timbreModel.setMonnaie(null);
 			}
-			this.ajouter(timbreModel);
+			this.ajouter(timbreModel, true);
 		});
 	}
 
-	ajouter(timbreModel: TimbreModel) {
-		timbreModel.setTimbreAcquisModel(null);
-		timbreModel.setTimbreBlocModel(null);
+	ajouter(timbreModel: TimbreModel, refresh: boolean) {
+		this.getTimbre(timbreModel.getId()).pipe(first()).subscribe(data => {
+			if (isNullOrUndefined(data) || isNullOrUndefined(data[0]) || (isNotNullOrUndefined(data[0]) && data[0]?.length == 0)) {
+				timbreModel.setTimbreAcquisModel(null);
+				timbreModel.setTimbreBlocModel(null);
 
-		this.firestore.collection(BaseEnum.TIMBRE).add(
-			Object.assign(new Object(), timbreModel)
-		);
-		this.getTimbres();
+				this.firestore.collection(BaseEnum.TIMBRE).add(
+					Object.assign(new Object(), timbreModel)
+				);
+				if (refresh) {
+					this.getTimbres();
+				}
+			} else {
+				console.error('timbre déjà existant');
+			}
+		});
 	}
 
 	modifier(timbreModel: TimbreModel) {
