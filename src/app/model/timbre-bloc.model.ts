@@ -24,9 +24,11 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label("vérif")
 	timbreBlocAcquisModel: TimbreBlocAcquisModel;
 
+	@Label("Nombre de timbres")
+	nbTimbres: number;
 
-	constructor(id?: number, annee?: number, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string,  timbreBlocAcquisModel?: TimbreBlocAcquisModel) {
-		super();
+
+	constructor(id?: number, annee?: number, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
 		this.monnaie = monnaie ? monnaie : null;
@@ -34,6 +36,7 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.imageTable = imageTable ? imageTable : null;
 		this.imageZoom = imageZoom ? imageZoom : null;
 		this.timbreBlocAcquisModel = timbreBlocAcquisModel ? timbreBlocAcquisModel : null;
+		this.nbTimbres = nbTimbres ? nbTimbres : null;
 	}
 
 	getId(): number {
@@ -91,5 +94,13 @@ export class TimbreBlocModel extends ProprieteModel {
 
 	setTimbreBlocAcquisModel(value: TimbreBlocAcquisModel) {
 		this.timbreBlocAcquisModel = value;
+	}
+
+	getNbTimbres(): number {
+		return this.nbTimbres;
+	}
+
+	setNbTimbres(value: number) {
+		this.nbTimbres = value;
 	}
 }

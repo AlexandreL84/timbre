@@ -13,6 +13,7 @@ import {UploadService} from "../upload.service";
 import {DossierEnum} from "../../enum/dossier.enum";
 import {BaseEnum} from "../../enum/base.enum";
 import {UtilsService} from "../utils.service";
+import {TimbreUtilsService} from "./timbre-utils.service";
 
 @Injectable()
 export class TimbreService {
@@ -30,7 +31,8 @@ export class TimbreService {
 		private authService: AuthService,
 		private timbreBlocService: TimbreBlocService,
 		private uploadService: UploadService,
-		private utilsService: UtilsService) {
+		private utilsService: UtilsService,
+		private timbreUtilsService: TimbreUtilsService) {
 	}
 
 	getTimbre(id: number): Observable<any> {
@@ -42,13 +44,13 @@ export class TimbreService {
 			this.getTimbre(id),
 			this.timbreBlocService.getBlocsAsync()
 		]).pipe(map(([data, timbresBlocModel]) => {
-			return this.constructTimbre(data[0], null, timbresBlocModel);
+			return this.timbreUtilsService.constructTimbre(data[0], null, timbresBlocModel);
 		}));
 	}
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
-		this.getAllTimbres(timbreCritereModel).pipe(first()).subscribe(timbres => {
+		this.timbreUtilsService.getAllTimbres(timbreCritereModel).pipe(first()).subscribe(timbres => {
 			this.total$.next(timbres?.length);
 		});
 	}
@@ -57,71 +59,12 @@ export class TimbreService {
 		this.getTotal();
 		this.timbres$.next(null);
 		combineLatest([
-			this.getAllTimbres(timbreCritereModel),
+			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
 			this.getTimbreAcquis(),
 			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
-			this.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel);
+			this.timbres$.next(this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel));
 		});
-	}
-
-	getAllTimbres(timbreCritereModel: TimbreCritereModel) {
-		return this.firestore.collection(BaseEnum.TIMBRE, ref => {
-			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-			if (isNotNullOrUndefined(timbreCritereModel)) {
-				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
-				}
-				if (isNotNullOrUndefined(timbreCritereModel.getBloc()) && timbreCritereModel.getBloc() != 'TOUS') {
-					filteredQuery = filteredQuery.where("idBloc", timbreCritereModel.getBloc() != 'NON' ? "!=" : "==", null);
-				}
-			}
-			filteredQuery = filteredQuery.orderBy('id', 'asc');
-			return filteredQuery;
-		}).valueChanges();
-	}
-
-	constructTimbre(timbre: TimbreModel, timbresAcquis, timbresBlocModel?: TimbreBlocModel[]): TimbreModel {
-		const timbreModel: TimbreModel = plainToInstance(TimbreModel, timbre);
-		if (isNotNullOrUndefined(timbresBlocModel)) {
-			const findTimbreBloc = timbresBlocModel.find(timbreBlocModel => timbreBlocModel.getId() == timbreModel?.getIdBloc());
-			if (isNotNullOrUndefined(findTimbreBloc)) {
-				timbreModel.setTimbreBlocModel(findTimbreBloc);
-			}
-		}
-
-		if (isNotNullOrUndefined(timbresAcquis)) {
-			const findTimbreAcquis = timbresAcquis.find(timbre => timbre['idTimbre'] == timbreModel.getId());
-			if (isNotNullOrUndefined(findTimbreAcquis)) {
-				timbreModel.setTimbreAcquisModel(plainToInstance(TimbreAcquisModel, findTimbreAcquis));
-			} else {
-				timbreModel.setTimbreAcquisModel(new TimbreAcquisModel());
-			}
-		}
-		return timbreModel;
-	}
-
-	constructTimbres(timbres, timbresAcquis, timbresBlocModel?: TimbreBlocModel[], timbreCritereModel?: TimbreCritereModel) {
-		let timbresModel = [];
-		if (timbres?.length > 0) {
-			timbres.forEach((timbre: any) => {
-				const timbreModel: TimbreModel = this.constructTimbre(timbre, timbresAcquis, timbresBlocModel);
-
-				let ajout: boolean = true;
-				if (isNotNullOrUndefined(timbreCritereModel)) {
-					if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreModel.getTimbreAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreModel.getTimbreAcquisModel().isAcquis()))) {
-						ajout = false;
-					}
-					if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreModel.getTimbreAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreModel.getTimbreAcquisModel().isDoublon()))) {
-						ajout = false;
-					}
-				}
-				if (ajout == true) {
-					timbresModel.push(timbreModel);
-				}
-			});
-		}
-		this.timbres$.next(timbresModel);
 	}
 
 	getTimbreAcquis(): Observable<any> {
@@ -140,15 +83,6 @@ export class TimbreService {
 
 	getTimbreAcquisByUser(id): Observable<any> {
 		return this.firestore.collection(BaseEnum.TIMBRE_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
-	}
-
-
-	getTimbreBlocById(id): Observable<TimbreBlocModel> {
-		return this.firestore.collection(BaseEnum.TIMBRE_BLOC, ref => ref.where('id', '==', id))
-			.valueChanges().pipe(
-				map((data: any) => {
-					return plainToInstance(TimbreBlocModel, data[0]);
-				}));
 	}
 
 	acquis(timbreModel: TimbreModel, doublon: boolean) {
@@ -229,31 +163,25 @@ export class TimbreService {
 			});
 	}
 
+	supprimerTimbre(timbreModel: TimbreModel) {
+		this.firestore.collection(BaseEnum.TIMBRE)
+			.ref.where('id', '==', timbreModel.getId())
+			.get()
+			.then(snapshot => {
+				snapshot.forEach(doc => {
+					doc.ref.delete();
+					this.getTimbres();
+				});
+			})
+			.catch(error => {
+				console.error('Erreur de suppression :', error);
+			});
+	}
+
 	supprimer(timbreModel: TimbreModel) {
 		this.authService.getUser().pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
-			if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.getIdUser())) {
-				this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
-					.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', user.getId())
-					.get()
-					.then(snapshot => {
-						snapshot.forEach(doc => {
-							doc.ref.delete();
-						});
-					});
-			}
-
-			this.firestore.collection(BaseEnum.TIMBRE)
-				.ref.where('id', '==', timbreModel.getId())
-				.get()
-				.then(snapshot => {
-					snapshot.forEach(doc => {
-						doc.ref.delete();
-						this.getTimbres();
-					});
-				})
-				.catch(error => {
-					console.error('Erreur de suppression :', error);
-				});
+			this.timbreUtilsService.supprimerTimbreAcquis(timbreModel, user.getId());
+			this.supprimerTimbre(timbreModel);
 		});
 	}
 

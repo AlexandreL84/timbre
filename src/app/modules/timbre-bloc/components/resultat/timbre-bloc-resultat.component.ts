@@ -48,7 +48,7 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 		this.timbre.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "monnaie", "acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "monnaie", "nbTimbres" ,"acquis", "doublon"];
 		if (this.modif) {
 			this.displayedColumns.push("modifier", "supprimer");
 		}
@@ -107,21 +107,37 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	}
 
 	supprimer(timbreBlocModel: TimbreBlocModel) {
-		const dialogModal = this.dialog.open(LibModalComponent, {
-			maxHeight: "95vh",
-			data: {
-				titre: "Confirmation",
-				message: "Souhaitez-vous supprimer le timbre <b>n° " + timbreBlocModel?.getId() + "</b> ?",
-				btnDroite: "Oui",
-				btnGauche: "Non",
-			},
+		this.timbreBlocService.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
+			let message: string = "";
+			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
+				message = "<span class='warn'>Attention <b>" + timbres.length + "</b> timbre";
+				if (timbres?.length > 1) {
+					message += "s sont reliés";
+				} else {
+					message += " est relié";
+				}
+				message += " à ce bloc.</span></br></br>";
+			}
+			message += "Souhaitez-vous supprimer le bloc <b>n° " + timbreBlocModel?.getId() + "</b> ?";
+
+			const dialogModal = this.dialog.open(LibModalComponent, {
+				maxHeight: "95vh",
+				data: {
+					titre: "Confirmation",
+					message: message,
+					btnDroite: "Oui",
+					btnGauche: "Non",
+				},
+			});
+
+			dialogModal.afterClosed().subscribe(() => {
+				if (dialogModal.componentInstance.data.resultat === "valider") {
+					this.timbreBlocService.supprimer(timbreBlocModel)
+				}
+			});
 		});
 
-		dialogModal.afterClosed().subscribe(() => {
-			if (dialogModal.componentInstance.data.resultat === "valider") {
-				this.timbreBlocService.supprimer(timbreBlocModel)
-			}
-		})
+		/**/
 	}
 
 	exportTable(): void {

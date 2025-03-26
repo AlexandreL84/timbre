@@ -11,6 +11,9 @@ export class TimbreCritereModel extends ProprieteModel {
 	@Label("Doublon")
 	doublon: string;
 
+	@Label("Ident bloc")
+	idBloc: number;
+
 	@Label("Bloc")
 	bloc: string;
 
@@ -36,6 +39,14 @@ export class TimbreCritereModel extends ProprieteModel {
 
 	setDoublon(value: string) {
 		this.doublon = value;
+	}
+
+	getIdBloc(): number {
+		return this.idBloc;
+	}
+
+	setIdBloc(value: number) {
+		this.idBloc = value;
 	}
 
 	getBloc(): string {

@@ -108,6 +108,14 @@
 				{{ element?.getAnnee() }}
 			</td>
 		</ng-container>
+		<ng-container matColumnDef="nbTimbres">
+			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header class="hide-on-mobile">
+				<lib-libelle-model [object]="timbre" [key]="'nbTimbres'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
+				{{ element?.getNbTimbres() }}
+			</td>
+		</ng-container>
 		<ng-container matColumnDef="monnaie">
 			<th mat-header-cell *matHeaderCellDef matSort mat-sort-header class="hide-on-mobile">
 				<lib-libelle-model [object]="timbre" [key]="'monnaie'"></lib-libelle-model>
