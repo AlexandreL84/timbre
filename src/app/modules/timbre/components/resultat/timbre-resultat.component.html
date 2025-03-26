@@ -1,94 +1,96 @@
 <lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section [fxHide]="(load$ | async) == false">
-	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
 		<div fxFlex style="font-size: 1.2em">
 			<span>Nombre de timbres : </span>
 			<span class="bold">{{ (total$ | async) ? (total$ | async) : dataSource?.data?.length }}</span>
 		</div>
 
-		<!--
-		<div fxLayout="row" fxLayoutAlign="end center" style="width: 75px">
-			<mat-checkbox color="primary" [(ngModel)]="timbreCritereModel.acquis" (ngModelChange)="filtreByCritere()">
-				<lib-libelle-model [object]="timbreCritereModel" [key]="'acquis'"></lib-libelle-model>
-			</mat-checkbox>
-		</div>
-		-->
+		<ng-container *ngIf="modif">
+			<!--
+			<div fxLayout="row" fxLayoutAlign="end center" style="width: 75px">
+				<mat-checkbox color="primary" [(ngModel)]="timbreCritereModel.acquis" (ngModelChange)="filtreByCritere()">
+					<lib-libelle-model [object]="timbreCritereModel" [key]="'acquis'"></lib-libelle-model>
+				</mat-checkbox>
+			</div>
+			-->
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-			<mat-select name="acquis"
-						[(ngModel)]="timbreCritereModel.acquis"
-						[placeholder]="'Acquis'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-			</mat-select>
-		</div>
+			<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+				<mat-select name="acquis"
+							[(ngModel)]="timbreCritereModel.acquis"
+							[placeholder]="'Acquis'"
+							(ngModelChange)="filtreByCritere()">
+					<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
+					<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
+					<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
+				</mat-select>
+			</div>
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-			<mat-select name="doublon"
-						class="scrollBarAccent"
-						[(ngModel)]="timbreCritereModel.doublon"
-						[placeholder]="'Doublon'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-			</mat-select>
-		</div>
+			<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+				<mat-select name="doublon"
+							class="scrollBarAccent"
+							[(ngModel)]="timbreCritereModel.doublon"
+							[placeholder]="'Doublon'"
+							(ngModelChange)="filtreByCritere()">
+					<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
+					<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
+					<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
+				</mat-select>
+			</div>
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-			<mat-select name="bloc"
-						class="scrollBarAccent"
-						[(ngModel)]="timbreCritereModel.bloc"
-						[placeholder]="'Bloc'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-			</mat-select>
-		</div>
+			<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
+				<mat-select name="bloc"
+							class="scrollBarAccent"
+							[(ngModel)]="timbreCritereModel.bloc"
+							[placeholder]="'Bloc'"
+							(ngModelChange)="filtreByCritere()">
+					<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
+					<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
+					<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
+				</mat-select>
+			</div>
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 150px">
-			<mat-select name="anneeSelect"
-						multiple
-						[(ngModel)]="timbreCritereModel.annees"
-						[placeholder]="'Années'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"
-							[value]="annee">
-					{{ annee }}
-				</mat-option>
-			</mat-select>
-		</div>
+			<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 150px">
+				<mat-select name="anneeSelect"
+							multiple
+							[(ngModel)]="timbreCritereModel.annees"
+							[placeholder]="'Années'"
+							(ngModelChange)="filtreByCritere()">
+					<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"
+								[value]="annee">
+						{{ annee }}
+					</mat-option>
+				</mat-select>
+			</div>
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
-			 style="width: 200px; min-height:55px; height: 55px">
-			<input
-				placeholder="Filtrer les données"
-				type="text"
-				(input)="applyFilter($event)"
-			/>
-		</div>
-		<lib-icon
-			class="primary click"
-			style="font-size: 1.7em"
-			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
-			[info]="'Exporter tableau'"
-			(click)="exportTable()"
-		>
-		</lib-icon>
-		<!--
-		<lib-icon
-			class="primary click"
-			style="font-size: 1.7em"
-			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
-			[info]="'Exporter en pdf'"
-			(click)="generatePDFByImage()"
-		>
-		</lib-icon>
-		-->
+			<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
+				 style="width: 200px; min-height:55px; height: 55px">
+				<input
+					placeholder="Filtrer les données"
+					type="text"
+					(input)="applyFilter($event)"
+				/>
+			</div>
+			<lib-icon
+				class="primary click"
+				style="font-size: 1.7em"
+				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+				[info]="'Exporter tableau'"
+				(click)="exportTable()"
+			>
+			</lib-icon>
+			<!--
+			<lib-icon
+				class="primary click"
+				style="font-size: 1.7em"
+				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+				[info]="'Exporter en pdf'"
+				(click)="generatePDFByImage()"
+			>
+			</lib-icon>
+			-->
+		</ng-container>
 	</div>
 
 	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
@@ -229,7 +231,7 @@
 					style="font-size: 1.2em"
 					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
 					[icone]="FontAwesomeEnum.TRASH"
-					[info]="'Modifier'"
+					[info]="'Supprimer'"
 				></lib-icon>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
