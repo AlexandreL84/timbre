@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {BehaviorSubject, combineLatest, first} from 'rxjs';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -21,7 +21,7 @@ import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.
 	templateUrl: './timbre-importer.component.html',
 	styleUrls: ['./timbre-importer.component.scss']
 })
-export class TimbreImporterComponent implements OnInit {
+export class TimbreImporterComponent {
 	//dossier = "http://www.consdjeunes.123.fr/timbres//images/timbres/zoom/"
 	dossier = '/assets/images/timbres/';
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
@@ -42,10 +42,6 @@ export class TimbreImporterComponent implements OnInit {
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
 		public dialogRef: MatDialogRef<TimbreImporterComponent>) {
-	}
-
-	ngOnInit() {
-
 	}
 
 	triggerFileInput(): void {
@@ -231,6 +227,9 @@ export class TimbreImporterComponent implements OnInit {
 			if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
 				timbreBlocModel.setImageZoom(imageZoom);
 			}
+			if (timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis()) {
+				this.timbreBlocService.addAcquis(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser(), timbreBlocModel, timbreBlocModel?.getTimbreBlocAcquisModel()?.isDoublon());
+			}
 			this.timbreBlocService.ajouter(timbreBlocModel, false);
 		});
 	}
@@ -250,7 +249,7 @@ export class TimbreImporterComponent implements OnInit {
 			if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
 				timbreModel.setImageZoom(imageZoom);
 			}
-			if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.isAcquis())) {
+			if (timbreModel?.getTimbreAcquisModel()?.isAcquis()) {
 				this.timbreService.addAcquis(timbreModel?.getTimbreAcquisModel()?.getIdUser(), timbreModel, timbreModel?.getTimbreAcquisModel()?.isDoublon());
 			}
 			/*if (isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()?.getId())) {

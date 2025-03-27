@@ -183,17 +183,21 @@ export class TimbreBlocService {
 						console.error('Erreur de mise à jour:', error);
 					});
 			} else {
-				const timbreBlocAcquisModel = new TimbreBlocAcquisModel();
-				timbreBlocAcquisModel.setIdUser(user.getId());
-				timbreBlocAcquisModel.setIdBloc(timbreBlocModel.getId());
-				timbreBlocAcquisModel.setAcquis(true);
-				timbreBlocAcquisModel.setDoublon(doublon);
-				timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
-				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS).add(
-					Object.assign(new Object(), timbreBlocAcquisModel)
-				);
+				this.addAcquis(user?.getId(), timbreBlocModel, doublon);
 			}
 		});
+	}
+
+	addAcquis(idUser: string, timbreBlocModel: TimbreBlocModel, doublon: boolean) {
+		const timbreBlocAcquisModel = new TimbreBlocAcquisModel();
+		timbreBlocAcquisModel.setIdUser(idUser);
+		timbreBlocAcquisModel.setIdBloc(timbreBlocModel.getId());
+		timbreBlocAcquisModel.setAcquis(true);
+		timbreBlocAcquisModel.setDoublon(doublon);
+		timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
+		this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS).add(
+			Object.assign(new Object(), timbreBlocAcquisModel)
+		);
 	}
 
 	ajouterSansId(timbreBlocModel: TimbreBlocModel) {
