@@ -210,6 +210,8 @@ export class TimbreBlocService {
 	ajouter(timbreBlocModel: TimbreBlocModel, refresh: boolean) {
 		this.getBloc(timbreBlocModel.getId()).pipe(first()).subscribe(data => {
 			if (isNullOrUndefined(data) || isNullOrUndefined(data[0]) || (isNotNullOrUndefined(data[0]) && data[0]?.length == 0)) {
+				timbreBlocModel.setTimbreBlocAcquisModel(null);
+
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
 					Object.assign(new Object(), timbreBlocModel)
 				);

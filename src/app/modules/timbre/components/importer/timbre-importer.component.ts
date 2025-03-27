@@ -15,6 +15,7 @@ import {UserModel} from '../../../../model/user.model';
 import {BaseEnum} from '../../../../shared/enum/base.enum';
 import {UtilsService} from '../../../../shared/services/utils.service';
 import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
+import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
 
 @Component({
 	selector: 'app-timbre-importer',
@@ -150,6 +151,13 @@ export class TimbreImporterComponent {
 				timbreBlocModel.setAnnee(annee);
 				timbreBlocModel.setMonnaie(monnaie);
 				timbreBlocModel.idOrigine = idBloc;
+
+				const timbreBlocAcquisModel: TimbreBlocAcquisModel = new TimbreBlocAcquisModel();
+				timbreBlocAcquisModel.setIdBloc(this.identBloc);
+				timbreBlocAcquisModel.setIdUser(user.getId());
+				timbreBlocAcquisModel.setAcquis(item["ACQUIS_BLOC"] == "1");
+				timbreBlocAcquisModel.setDoublon(item["DOUBLON_BLOC"] == "1");
+				timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
 
 				this.uploadService.checkIfImageExists(imageBloc).pipe(first()).subscribe(
 					exists => {
