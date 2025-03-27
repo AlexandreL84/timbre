@@ -1,20 +1,17 @@
-import { Injectable } from '@angular/core';
-import { TimbreModel } from '../../../model/timbre.model';
-import { BehaviorSubject, combineLatest, first, map, Observable, switchMap } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { isNotNullOrUndefined, isNullOrUndefined } from '../../utils/utils';
-import { AuthService } from '../auth.service';
-import { TimbreAcquisModel } from '../../../model/timbre-acquis.model';
-import { TimbreCritereModel } from '../../../model/timbre-critere.model';
-import { plainToInstance } from 'class-transformer';
-import { TimbreBlocModel } from '../../../model/timbre-bloc.model';
-import { TimbreBlocService } from './timbre-bloc.service';
-import { UploadService } from '../upload.service';
-import { DossierEnum } from '../../enum/dossier.enum';
-import { BaseEnum } from '../../enum/base.enum';
-import { UtilsService } from '../utils.service';
-import { TimbreUtilsService } from './timbre-utils.service';
-import { UserModel } from '../../../model/user.model';
+import {Injectable} from '@angular/core';
+import {TimbreModel} from '../../../model/timbre.model';
+import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 'rxjs';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
+import {AuthService} from '../auth.service';
+import {TimbreAcquisModel} from '../../../model/timbre-acquis.model';
+import {TimbreCritereModel} from '../../../model/timbre-critere.model';
+import {TimbreBlocService} from './timbre-bloc.service';
+import {UploadService} from '../upload.service';
+import {DossierEnum} from '../../enum/dossier.enum';
+import {BaseEnum} from '../../enum/base.enum';
+import {UtilsService} from '../utils.service';
+import {TimbreUtilsService} from './timbre-utils.service';
 
 @Injectable()
 export class TimbreService {
@@ -95,7 +92,6 @@ export class TimbreService {
 					.get()
 					.then(snapshot => {
 						snapshot.forEach(doc => {
-							// Mise à jour du document
 							const timbreAcquisModel: TimbreAcquisModel = timbreModel.getTimbreAcquisModel();
 							if (doublon) {
 								timbreAcquisModel.setAcquis(true);

@@ -1,21 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, first } from 'rxjs';
-import { NgForm } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import {Component, OnInit} from '@angular/core';
+import {BehaviorSubject, combineLatest, first} from 'rxjs';
+import {NgForm} from '@angular/forms';
+import {MatDialogRef} from '@angular/material/dialog';
 import * as Papa from 'papaparse';
-import { TimbreModel } from '../../../../model/timbre.model';
-import { isNotNullOrUndefined, isNullOrUndefined } from '../../../../shared/utils/utils';
-import { TimbreService } from '../../../../shared/services/timbre/timbre.service';
-import { UploadService } from '../../../../shared/services/upload.service';
-import { DossierEnum } from '../../../../shared/enum/dossier.enum';
-import { TimbreBlocModel } from '../../../../model/timbre-bloc.model';
-import { TimbreAcquisModel } from '../../../../model/timbre-acquis.model';
-import { AuthService } from '../../../../shared/services/auth.service';
-import { UserModel } from '../../../../model/user.model';
-import { BaseEnum } from '../../../../shared/enum/base.enum';
-import { UtilsService } from '../../../../shared/services/utils.service';
-import { TimbreBlocService } from '../../../../shared/services/timbre/timbre-bloc.service';
-import cloneDeep from "lodash/cloneDeep";
+import {TimbreModel} from '../../../../model/timbre.model';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../shared/utils/utils';
+import {TimbreService} from '../../../../shared/services/timbre/timbre.service';
+import {UploadService} from '../../../../shared/services/upload.service';
+import {DossierEnum} from '../../../../shared/enum/dossier.enum';
+import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
+import {TimbreAcquisModel} from '../../../../model/timbre-acquis.model';
+import {AuthService} from '../../../../shared/services/auth.service';
+import {UserModel} from '../../../../model/user.model';
+import {BaseEnum} from '../../../../shared/enum/base.enum';
+import {UtilsService} from '../../../../shared/services/utils.service';
+import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
 
 @Component({
 	selector: 'app-timbre-importer',
@@ -119,24 +118,24 @@ export class TimbreImporterComponent implements OnInit {
 
 	setTimbre(item, user: UserModel): TimbreModel {
 		const timbreModel: TimbreModel = new TimbreModel();
-		const id: number = item['CODE'] != 'NULL' && item['CODE'] != '' ? Number(item['CODE']) : null;
-		const idBloc: number = item['IDENT_BLOC'] != 'NULL' && item['IDENT_BLOC'] != '' ? Number(item['IDENT_BLOC']) : null;
-		const annee: number = item['ANNEE'] != 'NULL' && item['ANNEE'] != '' ? Number(item['ANNEE']) : null;
-		const monnaie = item['MONNAIE'] != 'NULL' && item['MONNAIE'] != '' ? item['MONNAIE'] : null;
+		const id: number = item["CODE"] != 'NULL' && item["CODE"] != '' ? Number(item["CODE"]) : null;
+		const idBloc: number = item["IDENT_BLOC"] != 'NULL' && item["IDENT_BLOC"] != '' ? Number(item["IDENT_BLOC"]) : null;
+		const annee: number = item["ANNEE"] != 'NULL' && item["ANNEE"] != '' ? Number(item["ANNEE"]) : null;
+		const monnaie = item["MONNAIE"] != 'NULL' && item["MONNAIE"] != '' ? item["MONNAIE"] : null;
 
 
 		timbreModel.setId(this.identTimbre);
 		//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
 		//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);
 		//timbreModel.setIdBloc(item["IDENT_BLOC"] != "NULL" && item["IDENT_BLOC"] != "" ? Number(item["IDENT_BLOC"]) : null);
-		timbreModel.setType(item['TYPE'] != 'NULL' && item['TYPE'] != '' ? item['TYPE'] : null);
-		timbreModel.setYt(item['YT'] != 'NULL' && item['YT'] != '' ? item['YT'] : null);
+		timbreModel.setType(item["TYPE"] != 'NULL' && item["TYPE"] != '' ? item["TYPE"] : null);
+		timbreModel.setYt(item["YT"] != 'NULL' && item["YT"] != '' ? item["YT"] : null);
 
 		const timbreAcquisModel: TimbreAcquisModel = new TimbreAcquisModel();
 		timbreAcquisModel.setIdTimbre(timbreModel.getId());
 		timbreAcquisModel.setIdUser(user.getId());
-		timbreAcquisModel.setAcquis(item['ACQUIS'] == '1');
-		timbreAcquisModel.setDoublon(item['DOUBLON'] == '1');
+		timbreAcquisModel.setAcquis(item["ACQUIS"] == "1");
+		timbreAcquisModel.setDoublon(item["DOUBLON"] == "1");
 		timbreModel.setTimbreAcquisModel(timbreAcquisModel);
 
 		let image: string = this.dossier + annee + '/';

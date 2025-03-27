@@ -64,13 +64,14 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
-		this.sort.active = 'idBloc';
+		/*this.sort.active = 'idBloc';
 		this.sort.direction = 'asc';
-		this.dataSource.sort = this.sort;
+		this.dataSource.sort = this.sort;*/
 	}
 
 	sortData(sort: Sort) {
 		if (isNotNullOrUndefined(sort)) {
+			console.log(sort)
 			this.dataSource.sort = this.sort;
 		}
 	}

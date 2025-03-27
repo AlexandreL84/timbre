@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, first, map, Observable, switchMap } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { isNotNullOrUndefined, isNullOrUndefined } from '../../utils/utils';
-import { TimbreCritereModel } from '../../../model/timbre-critere.model';
-import { plainToInstance } from 'class-transformer';
-import { TimbreBlocModel } from '../../../model/timbre-bloc.model';
-import { DossierEnum } from '../../enum/dossier.enum';
-import { UploadService } from '../upload.service';
-import { BaseEnum } from '../../enum/base.enum';
-import { UtilsService } from '../utils.service';
-import { AuthService } from '../auth.service';
-import { TimbreBlocAcquisModel } from '../../../model/timbre-bloc-acquis.model';
-import { TimbreUtilsService } from './timbre-utils.service';
-import { TimbreModel } from '../../../model/timbre.model';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 'rxjs';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
+import {TimbreCritereModel} from '../../../model/timbre-critere.model';
+import {plainToInstance} from 'class-transformer';
+import {TimbreBlocModel} from '../../../model/timbre-bloc.model';
+import {DossierEnum} from '../../enum/dossier.enum';
+import {UploadService} from '../upload.service';
+import {BaseEnum} from '../../enum/base.enum';
+import {UtilsService} from '../utils.service';
+import {AuthService} from '../auth.service';
+import {TimbreBlocAcquisModel} from '../../../model/timbre-bloc-acquis.model';
+import {TimbreUtilsService} from './timbre-utils.service';
 
 @Injectable()
 export class TimbreBlocService {
@@ -61,9 +60,9 @@ export class TimbreBlocService {
 
 	getBlocByIdAsync(id: number): Observable<TimbreBlocModel> {
 		return this.getBloc(id).pipe(
-				map((data: any) => {
-					return plainToInstance(TimbreBlocModel, data[0]);
-				}));
+			map((data: any) => {
+				return plainToInstance(TimbreBlocModel, data[0]);
+			}));
 	}
 
 	getAllBlocs(timbreCritereModel: TimbreCritereModel): Observable<any> {
@@ -140,7 +139,7 @@ export class TimbreBlocService {
 				});
 
 				let ajout: boolean = true;
-				if (isNotNullOrUndefined(timbreCritereModel)) {
+				if (isNotNullOrUndefined(timbreCritereModel) && isNotNullOrUndefined(timbreBlocModel.getTimbreBlocAcquisModel())) {
 					if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()))) {
 						ajout = false;
 					}

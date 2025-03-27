@@ -33,7 +33,7 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	dataSource: MatTableDataSource<TimbreBlocModel> = new MatTableDataSource<TimbreBlocModel>();
 	displayedColumns: string[];
 	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
-	public timbre: TimbreBlocModel = new TimbreBlocModel();
+	public timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 	annees$: Observable<number[]>;
 	modif: boolean = true;
 
@@ -46,7 +46,7 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 
 	ngOnInit(): void {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
-		this.timbre.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
+		this.timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
 
 		this.displayedColumns = ["image", "id", "annee", "monnaie", "nbTimbres" ,"acquis", "doublon"];
 		if (this.modif) {
@@ -62,9 +62,9 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
-		this.sort.active = 'id';
+		/*this.sort.active = 'id';
 		this.sort.direction = 'asc';
-		this.dataSource.sort = this.sort;
+		this.dataSource.sort = this.sort;*/
 	}
 
 	sortData(sort: Sort) {

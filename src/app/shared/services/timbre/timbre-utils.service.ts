@@ -60,7 +60,7 @@ export class TimbreUtilsService {
 				const timbreModel: TimbreModel = this.constructTimbre(timbre, timbresAcquis, timbresBlocModel);
 
 				let ajout: boolean = true;
-				if (isNotNullOrUndefined(timbreCritereModel)) {
+				if (isNotNullOrUndefined(timbreCritereModel) && isNotNullOrUndefined(timbreModel.getTimbreAcquisModel())) {
 					if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreModel.getTimbreAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreModel.getTimbreAcquisModel().isAcquis()))) {
 						ajout = false;
 					}
