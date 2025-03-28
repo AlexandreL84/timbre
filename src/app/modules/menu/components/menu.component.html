@@ -1,0 +1,39 @@
+<div fxLayout="row" fxLayoutGap="20px">
+	<ng-container *ngIf="(headerService.choixRoutesTimbre$ |async)?.length > 0">
+		<ng-container *ngFor="let choixRoute of (headerService.choixRoutesTimbre$ |async)">
+			<lib-icon [icone]="choixRoute?.getIcone()"
+					  [type]="choixRoute?.getType()"
+					  class="primary click"
+					  style="font-size: 2em"
+					  [info]="choixRoute?.getInfo()"
+					  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+					  (click)="headerService.setRoute(choixRoute.getRoute())">
+			</lib-icon>
+		</ng-container>
+	</ng-container>
+
+	<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white"
+			mat-raised-button color="primary" (click)="ajouter()">
+		Ajouter
+	</button>
+
+	<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
+		Ajouter
+		<ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
+	</button>
+	<!--
+	<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="accent"
+			(click)="ajouterBouchon()">
+		Bouchon
+	</button>
+	-->
+	<lib-icon *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE"
+			  [icone]="FontAwesomeEnum.UPLOAD"
+			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+			  class="accent click"
+			  style="font-size: 2em"
+			  [info]="'Importer les timbres'"
+			  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+			  (click)="importer()">
+	</lib-icon>
+</div>

@@ -5,17 +5,20 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
 import {DirectiveModule} from "../../shared/directives/directive.module";
-import {HeaderComponent} from "./components/header.component";
+import {MenuComponent} from "./components/menu.component";
 import {MatIcon} from "@angular/material/icon";
-import {MatIconButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {LibIconModule} from "../../shared/components/lib-icon";
+import {TimbreService} from "../../shared/services/timbre/timbre.service";
 
 
 @NgModule({
-    declarations: [HeaderComponent],
-    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule],
-    exports: [
-        HeaderComponent
-    ]
+	declarations: [MenuComponent],
+	imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton],
+	exports: [
+		MenuComponent
+	],
+	providers: [TimbreService]
 })
-export class HeaderModule {}
+export class MenuModule {
+}

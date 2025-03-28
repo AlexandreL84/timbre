@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {FlexModule} from "@angular/flex-layout";
-import {HeaderModule} from "./modules/header/header.module";
 import {SimpleNotificationModule} from "./modules/simple-notification/simple-notification.module";
+import {HeaderModule} from "./modules/header/header.module";
 
 @Component({
 	selector: 'app-root',

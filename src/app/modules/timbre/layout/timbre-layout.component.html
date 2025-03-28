@@ -1,24 +1,8 @@
 <div fxLayout="row" fxLayoutAlign="space-between stretch">
 	<div fxFlex="5"></div>
 	<div fxFlex fxLayout="column" fxLayoutGap="20px">
-		<div fxLayout="row" fxLayoutGap="20px">
-			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouter()">
-				Ajouter
-			</button>
-			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
-				Ajouter Bloc
-			</button>
-			<!--
-			<button class="rounded large color-white" mat-raised-button color="accent"
-					(click)="ajouterBouchon()">
-				Bouchon
-			</button>
-			-->
-			<button class="rounded large color-white" mat-raised-button color="accent"
-					(click)="importer()">
-				Importer
-			</button>
-		</div>
+		<app-menu></app-menu>
+
 		<app-timbre-resultat
 			[timbres$]="timbreService.timbres$"
 			[total$]="timbreService.total$"

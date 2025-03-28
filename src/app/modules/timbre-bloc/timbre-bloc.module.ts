@@ -17,6 +17,7 @@ import {TimbreUtilsService} from "../../shared/services/timbre/timbre-utils.serv
 import {UploadService} from "../../shared/services/upload.service";
 import {TimbreBlocLayoutComponent} from "./layout/timbre-bloc-layout.component";
 import {SimpleNotificationModule} from "../simple-notification/simple-notification.module";
+import {MenuModule} from "../menu/menu.module";
 
 @NgModule({
 	declarations: [
@@ -24,20 +25,21 @@ import {SimpleNotificationModule} from "../simple-notification/simple-notificati
 		TimbreBlocResultatComponent,
 		TimbreModifierBlocComponent
 	],
-	imports: [
-		TimbreBlocRoutingModule,
-		MaterialModule,
-		CommonModule,
-		FlexModule,
-		FlexLayoutModule,
-		FormsModule,
-		LibIconModule,
-		LibLibelleModelModule,
-		LibSpinnerModule,
-		DirectiveModule,
-		LibUploadModule,
-		SimpleNotificationModule,
-	],
+    imports: [
+        TimbreBlocRoutingModule,
+        MaterialModule,
+        CommonModule,
+        FlexModule,
+        FlexLayoutModule,
+        FormsModule,
+        LibIconModule,
+        LibLibelleModelModule,
+        LibSpinnerModule,
+        DirectiveModule,
+        LibUploadModule,
+        SimpleNotificationModule,
+        MenuModule,
+    ],
 	exports: [],
 	providers: [TimbreBlocService, TimbreUtilsService, UploadService, provideHttpClient()]
 })

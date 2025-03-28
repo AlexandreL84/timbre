@@ -11,24 +11,32 @@ import {isNotNullOrUndefined, isNullOrUndefined} from "../utils/utils";
 @Injectable()
 export class HeaderService {
 	titre$: BehaviorSubject<string> = new BehaviorSubject<string>("");
+	route$: BehaviorSubject<RouteEnum> = new BehaviorSubject<RouteEnum>(null);
 	choixRoutes$: BehaviorSubject<IconeModel[]> = new BehaviorSubject<IconeModel[]>(null);
+	choixRoutesTimbre$: BehaviorSubject<IconeModel[]> = new BehaviorSubject<IconeModel[]>(null);
 
 	constructor(private router: Router) {
 	}
 
 	changeIcones(route: RouteEnum) {
 		this.choixRoutes$.next(null);
+		this.choixRoutesTimbre$.next(null);
+		const iconeModelsTimbre: IconeModel[] = [];
 		const iconeModels: IconeModel[] = [];
 		if (route == RouteEnum.BLOC) {
-			iconeModels.push(this.iconeTimbre());
+			iconeModelsTimbre.push(this.iconeTimbre());
 			iconeModels.push(this.iconePays());
 		} else if (route == RouteEnum.TIMBRE) {
-			iconeModels.push(this.iconeBloc());
+			iconeModelsTimbre.push(this.iconeBloc());
 			iconeModels.push(this.iconePays());
 		} else if (route == RouteEnum.PAYS) {
 			iconeModels.push(this.iconeTimbre());
 		}
 		this.choixRoutes$.next(iconeModels);
+		this.route$.next(route);
+		if (iconeModelsTimbre?.length > 0) {
+			this.choixRoutesTimbre$.next(iconeModelsTimbre);
+		}
 	}
 
 	iconeTimbre(): IconeModel {

@@ -1,17 +1,16 @@
 import {Component} from '@angular/core';
-import {StyleManagerService} from "../../../../shared/services/style-manager.service";
-import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
-import {AuthService} from "../../../../shared/services/auth.service";
+import {StyleManagerService} from "../../../shared/services/style-manager.service";
+import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
+import {AuthService} from "../../../shared/services/auth.service";
 import {Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {UserModel} from "../../../../model/user.model";
-import {HeaderService} from "../../../../shared/services/header.service";
-import {RouteEnum} from "../../../../shared/enum/route.enum";
+import {UserModel} from "../../../model/user.model";
+import {HeaderService} from "../../../shared/services/header.service";
+import {RouteEnum} from "../../../shared/enum/route.enum";
 
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
-	styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
@@ -31,5 +30,6 @@ export class HeaderComponent {
 		this.authService.signOut();
 		this.router.navigate(["/" + RouteEnum.LOGIN]);
 		this.headerService.choixRoutes$.next([]);
+		this.headerService.choixRoutesTimbre$.next([]);
 	}
 }

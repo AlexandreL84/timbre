@@ -20,5 +20,7 @@ export enum FontAwesomeEnum {
 
     TRASH = "fa-trash",
 
+	UPLOAD = "fa-upload",
+
     XMARK = "fa-xmark",
 }

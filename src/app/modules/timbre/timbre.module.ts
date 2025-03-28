@@ -24,6 +24,7 @@ import {LibLibelleModelModule} from '../../shared/components/lib-libelle-model';
 import {LibUploadModule} from '../../shared/components/lib-upload/lib-upload.module';
 import {TimbreBlocService} from '../../shared/services/timbre/timbre-bloc.service';
 import {TimbreUtilsService} from '../../shared/services/timbre/timbre-utils.service';
+import {MenuModule} from "../menu/menu.module";
 
 @NgModule({
 	declarations: [
@@ -47,6 +48,7 @@ import {TimbreUtilsService} from '../../shared/services/timbre/timbre-utils.serv
 		LibModalModule,
 		LibUploadModule,
 		SimpleNotificationModule,
+		MenuModule
 	],
 	exports: [],
 	providers: [UtilsService, TimbreUtilsService, TimbreService, TimbreBlocService, UploadService, provideHttpClient()]
