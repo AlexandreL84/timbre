@@ -1,0 +1,74 @@
+<lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+
+<section [fxHide]="(load$ | async) == false">
+	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+		<ng-container matColumnDef="annee">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'annee'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getAnnee() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef> </td>
+		</ng-container>
+		<ng-container matColumnDef="nombre">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombre'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getNombre() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombre() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="acquis">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'acquis'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getAcquis() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquis() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="doublon">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'doublon'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getDoublon() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublon() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="nombreBloc">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreBloc'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getNombreBloc() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreBloc() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="acquisBloc">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'acquisBloc'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getAcquisBloc() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisBloc() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="doublonBloc">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'doublonBloc'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getDoublonBloc() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonBloc() }} </b></td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary color-white"></tr>
+		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row" (click)="filtreParAnnee(element)"></tr>
+		<tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+	</table>
+	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+</section>

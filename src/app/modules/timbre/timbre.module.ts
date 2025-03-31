@@ -25,10 +25,12 @@ import {LibUploadModule} from '../../shared/components/lib-upload/lib-upload.mod
 import {TimbreBlocService} from '../../shared/services/timbre/timbre-bloc.service';
 import {TimbreUtilsService} from '../../shared/services/timbre/timbre-utils.service';
 import {MenuModule} from "../menu/menu.module";
+import {TimbreResumeComponent} from "./components/resume/timbre-resume.component";
+import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.service";
 
 @NgModule({
 	declarations: [
-		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatComponent
+		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatComponent, TimbreResumeComponent
 	],
 	imports: [
 		MaterialModule,
@@ -51,7 +53,7 @@ import {MenuModule} from "../menu/menu.module";
 		MenuModule
 	],
 	exports: [],
-	providers: [UtilsService, TimbreUtilsService, TimbreService, TimbreBlocService, UploadService, provideHttpClient()]
+	providers: [UtilsService, TimbreUtilsService, TimbreService, TimbreBlocService, TimbreResumeService, UploadService, provideHttpClient()]
 })
 export class TimbreModule {
 }

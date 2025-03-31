@@ -11,6 +11,8 @@ import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
 
 @Injectable()
 export class TimbreUtilsService {
+	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
+
 	constructor(private firestore: AngularFirestore) {
 	}
 

@@ -14,10 +14,11 @@ import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
 import {TimbreAcquisModel} from "../../../../model/timbre-acquis.model";
-import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
+import {TimbreResumeComponent} from "../resume/timbre-resume.component";
+import {RouteEnum} from "../../../../shared/enum/route.enum";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -35,14 +36,13 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreModel> = new MatTableDataSource<TimbreModel>();
 	displayedColumns: string[];
-	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 	public timbre: TimbreModel = new TimbreModel();
 	annees$: Observable<number[]>
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
+	constructor(public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -77,15 +77,26 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 	}
 
 	filtreByCritere() {
-		if (this.timbreCritereModel.getAcquis() == "NON") {
-			this.timbreCritereModel.setDoublon("TOUS");
+		if (this.timbreUtilsService.timbreCritereModel.getAcquis() == "NON") {
+			this.timbreUtilsService.timbreCritereModel.setDoublon("TOUS");
 		}
-		this.timbreService.getTimbres(this.timbreCritereModel);
+		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
 	}
 
 	applyFilter(event: Event) {
 		const filterValue = (event.target as HTMLInputElement).value;
 		this.dataSource.filter = filterValue.trim().toLowerCase();
+	}
+
+	resume() {
+		const refDialog = this.dialog.open(TimbreResumeComponent, {
+			height: "auto",
+			maxHeight: "750px",
+			width: "30%",
+		});
+		refDialog.afterClosed().subscribe(() => {
+			refDialog.close();
+		});
 	}
 
 	acquis(timbreModel: TimbreModel) {
@@ -190,4 +201,6 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 		doc.save('document.pdf');*/
 	}
+
+	protected readonly RouteEnum = RouteEnum;
 }
