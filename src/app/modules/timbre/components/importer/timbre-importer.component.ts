@@ -94,10 +94,13 @@ export class TimbreImporterComponent {
 						this.timbresBlocsModel = [];
 
 						result.data.forEach((item, index) => {
-							this.timbresModel.push(this.setTimbre(item, user));
-							this.identTimbre++;
+							const timbre: TimbreModel = this.setTimbre(item, user);
+							if (isNotNullOrUndefined(timbre?.getId())) {
+								this.timbresModel.push(timbre);
+								this.identTimbre++;
+							}
 							if (index == result.data.length - 1) {
-								this.timbres$.next(this.timbresModel);
+								this.timbres$.next(this.timbresModel)
 								this.load$.next(true);
 								/*this.timbres$.pipe(first()).subscribe(timbresModel => {
 									console.log(timbresModel);
@@ -116,81 +119,83 @@ export class TimbreImporterComponent {
 	setTimbre(item, user: UserModel): TimbreModel {
 		const timbreModel: TimbreModel = new TimbreModel();
 		const id: number = item["CODE"] != 'NULL' && item["CODE"] != '' ? Number(item["CODE"]) : null;
-		const idBloc: number = item["IDENT_BLOC"] != 'NULL' && item["IDENT_BLOC"] != '' ? Number(item["IDENT_BLOC"]) : null;
+		const idBloc: number = item["IDENT_BLOC"] != 'NULL' && item["IDENT_BLOC"] != '' && isNotNullOrUndefined(item["IDENT_BLOC"]) ? Number(item["IDENT_BLOC"]) : null;
 		const annee: number = item["ANNEE"] != 'NULL' && item["ANNEE"] != '' ? Number(item["ANNEE"]) : null;
 		const monnaie = item["MONNAIE"] != 'NULL' && item["MONNAIE"] != '' ? item["MONNAIE"] : null;
 
 
-		timbreModel.setId(this.identTimbre);
-		//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
-		//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);
-		//timbreModel.setIdBloc(item["IDENT_BLOC"] != "NULL" && item["IDENT_BLOC"] != "" ? Number(item["IDENT_BLOC"]) : null);
-		timbreModel.setType(item["TYPE"] != 'NULL' && item["TYPE"] != '' ? item["TYPE"] : null);
-		timbreModel.setYt(item["YT"] != 'NULL' && item["YT"] != '' ? item["YT"] : null);
+		if (annee == 2024) {
+			timbreModel.setId(this.identTimbre);
+			//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
+			//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);
+			//timbreModel.setIdBloc(item["IDENT_BLOC"] != "NULL" && item["IDENT_BLOC"] != "" ? Number(item["IDENT_BLOC"]) : null);
+			timbreModel.setType(item["TYPE"] != 'NULL' && item["TYPE"] != '' ? item["TYPE"] : null);
+			timbreModel.setYt(item["YT"] != 'NULL' && item["YT"] != '' ? item["YT"] : null);
 
-		const timbreAcquisModel: TimbreAcquisModel = new TimbreAcquisModel();
-		timbreAcquisModel.setIdTimbre(timbreModel.getId());
-		timbreAcquisModel.setIdUser(user.getId());
-		timbreAcquisModel.setAcquis(item["ACQUIS"] == "1");
-		timbreAcquisModel.setDoublon(item["DOUBLON"] == "1");
-		timbreModel.setTimbreAcquisModel(timbreAcquisModel);
+			const timbreAcquisModel: TimbreAcquisModel = new TimbreAcquisModel();
+			timbreAcquisModel.setIdTimbre(timbreModel.getId());
+			timbreAcquisModel.setIdUser(user.getId());
+			timbreAcquisModel.setAcquis(item["ACQUIS"] == "1");
+			timbreAcquisModel.setDoublon(item["DOUBLON"] == "1");
+			timbreModel.setTimbreAcquisModel(timbreAcquisModel);
 
-		let image: string = this.dossier + annee + '/';
-		let imageBloc: string = '';
+			let image: string = this.dossier + annee + '/';
+			let imageBloc: string = '';
 
-		if (isNotNullOrUndefined(idBloc)) {
-			image += 'bloc/' + idBloc;
-			imageBloc = image + '.png';
-			image += '-';
+			if (isNotNullOrUndefined(idBloc)) {
+				image += 'bloc/' + idBloc;
+				imageBloc = image + '.png';
+				image += '-';
 
-			timbreModel.setTimbreBlocModel(this.timbresBlocsModel.find(bloc => bloc.getAnnee() == annee && bloc.idOrigine == idBloc));
-			if (isNullOrUndefined(timbreModel.getTimbreBlocModel())) {
-				const timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
-				//timbreBlocModel.setId(timbreModel.getIdBloc());
-				timbreBlocModel.setId(this.identBloc);
-				timbreBlocModel.setAnnee(annee);
-				timbreBlocModel.setMonnaie(monnaie);
-				timbreBlocModel.idOrigine = idBloc;
+				timbreModel.setTimbreBlocModel(this.timbresBlocsModel.find(bloc => bloc.getAnnee() == annee && bloc.idOrigine == idBloc));
+				if (isNullOrUndefined(timbreModel.getTimbreBlocModel())) {
+					const timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
+					//timbreBlocModel.setId(timbreModel.getIdBloc());
+					timbreBlocModel.setId(this.identBloc);
+					timbreBlocModel.setAnnee(annee);
+					timbreBlocModel.setMonnaie(monnaie);
+					timbreBlocModel.idOrigine = idBloc;
 
-				const timbreBlocAcquisModel: TimbreBlocAcquisModel = new TimbreBlocAcquisModel();
-				timbreBlocAcquisModel.setIdBloc(this.identBloc);
-				timbreBlocAcquisModel.setIdUser(user.getId());
-				timbreBlocAcquisModel.setAcquis(item["ACQUIS_BLOC"] == "1");
-				timbreBlocAcquisModel.setDoublon(item["DOUBLON_BLOC"] == "1");
-				timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
+					const timbreBlocAcquisModel: TimbreBlocAcquisModel = new TimbreBlocAcquisModel();
+					timbreBlocAcquisModel.setIdBloc(this.identBloc);
+					timbreBlocAcquisModel.setIdUser(user.getId());
+					timbreBlocAcquisModel.setAcquis(item["ACQUIS_BLOC"] == "1");
+					timbreBlocAcquisModel.setDoublon(item["DOUBLON_BLOC"] == "1");
+					timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
 
-				this.uploadService.checkIfImageExists(imageBloc).pipe(first()).subscribe(
-					exists => {
-						if (exists) {
-							timbreBlocModel.setImage(imageBloc);
-							timbreBlocModel.setImageTable(imageBloc);
-							timbreBlocModel.setImageZoom(imageBloc);
+					this.uploadService.checkIfImageExists(imageBloc).pipe(first()).subscribe(
+						exists => {
+							if (exists) {
+								timbreBlocModel.setImage(imageBloc);
+								timbreBlocModel.setImageTable(imageBloc);
+								timbreBlocModel.setImageZoom(imageBloc);
+							}
 						}
-					}
-				);
+					);
 
-				this.timbresBlocsModel.push(timbreBlocModel);
-				timbreModel.setTimbreBlocModel(timbreBlocModel);
-				this.identBloc++;
-			}
-
-			timbreModel.setIdBloc(timbreModel.getTimbreBlocModel()?.getId());
-
-		} else {
-			timbreModel.setAnnee(annee);
-			timbreModel.setMonnaie(monnaie);
-		}
-
-		image += id + '.png';
-		this.uploadService.checkIfImageExists(image).pipe(first()).subscribe(
-			exists => {
-				if (exists) {
-					timbreModel.setImage(image);
-					timbreModel.setImageTable(image);
-					timbreModel.setImageZoom(image);
+					this.timbresBlocsModel.push(timbreBlocModel);
+					timbreModel.setTimbreBlocModel(timbreBlocModel);
+					this.identBloc++;
 				}
+
+				timbreModel.setIdBloc(timbreModel.getTimbreBlocModel()?.getId());
+
+			} else {
+				timbreModel.setAnnee(annee);
+				timbreModel.setMonnaie(monnaie);
 			}
-		);
+
+			image += id + '.png';
+			this.uploadService.checkIfImageExists(image).pipe(first()).subscribe(
+				exists => {
+					if (exists) {
+						timbreModel.setImage(image);
+						timbreModel.setImageTable(image);
+						timbreModel.setImageZoom(image);
+					}
+				}
+			);
+		}
 		return timbreModel;
 	}
 
