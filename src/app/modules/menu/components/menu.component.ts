@@ -15,6 +15,8 @@ import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesom
 })
 export class MenuComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly RouteEnum = RouteEnum;
+	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
 	constructor(public headerService: HeaderService, private timbreService: TimbreService, private dialog: MatDialog) {
 	}
@@ -58,6 +60,7 @@ export class MenuComponent {
 		});
 	}
 
-	protected readonly RouteEnum = RouteEnum;
-	protected readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+	supprimer() {
+
+	}
 }

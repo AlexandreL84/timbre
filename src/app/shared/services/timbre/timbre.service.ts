@@ -130,7 +130,7 @@ export class TimbreService {
 		this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE).pipe(first()).subscribe(id => {
 			timbreModel.setId(id);
 			if (isNotNullOrUndefined(timbreModel.getIdBloc())) {
-				timbreModel.setAnnee(null);
+				//timbreModel.setAnnee(null);
 				timbreModel.setMonnaie(null);
 			}
 			this.ajouter(timbreModel, true);

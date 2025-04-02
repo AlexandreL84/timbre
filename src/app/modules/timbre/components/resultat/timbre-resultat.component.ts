@@ -18,7 +18,6 @@ import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awe
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TimbreResumeComponent} from "../resume/timbre-resume.component";
-import {RouteEnum} from "../../../../shared/enum/route.enum";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -201,6 +200,4 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 		doc.save('document.pdf');*/
 	}
-
-	protected readonly RouteEnum = RouteEnum;
 }

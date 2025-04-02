@@ -155,6 +155,7 @@ export class TimbreModifierComponent implements OnInit {
 			this.timbreModel.setIdBloc(timbreBlocModel.getId());
 			this.timbreModel.setTimbreBlocModel(timbreBlocModel);
 			this.timbreModel.setMonnaie(timbreBlocModel.getMonnaie());
+			this.timbreModel.setAnnee(timbreBlocModel.getAnnee());
 		} else {
 			this.timbreModel.setIdBloc(null);
 			this.timbreModel.setTimbreBlocModel(null);

@@ -124,13 +124,14 @@ export class TimbreImporterComponent {
 		const monnaie = item["MONNAIE"] != 'NULL' && item["MONNAIE"] != '' ? item["MONNAIE"] : null;
 
 
-		if (annee == 2024) {
+		if (annee >= 2020) {
 			timbreModel.setId(this.identTimbre);
 			//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
 			//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);
 			//timbreModel.setIdBloc(item["IDENT_BLOC"] != "NULL" && item["IDENT_BLOC"] != "" ? Number(item["IDENT_BLOC"]) : null);
 			timbreModel.setType(item["TYPE"] != 'NULL' && item["TYPE"] != '' ? item["TYPE"] : null);
 			timbreModel.setYt(item["YT"] != 'NULL' && item["YT"] != '' ? item["YT"] : null);
+			timbreModel.setAnnee(annee);
 
 			const timbreAcquisModel: TimbreAcquisModel = new TimbreAcquisModel();
 			timbreAcquisModel.setIdTimbre(timbreModel.getId());
@@ -181,7 +182,6 @@ export class TimbreImporterComponent {
 				timbreModel.setIdBloc(timbreModel.getTimbreBlocModel()?.getId());
 
 			} else {
-				timbreModel.setAnnee(annee);
 				timbreModel.setMonnaie(monnaie);
 			}
 
