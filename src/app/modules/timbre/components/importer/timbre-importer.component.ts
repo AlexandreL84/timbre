@@ -35,6 +35,8 @@ export class TimbreImporterComponent {
 	identBloc = 1;
 	timbresModel: TimbreModel[] = [];
 	timbresBlocsModel: TimbreBlocModel[] = [];
+	maxAnnee: number = new Date().getFullYear();
+	annee: number = new Date().getFullYear();
 
 	constructor(
 		private authService: AuthService,
@@ -124,7 +126,7 @@ export class TimbreImporterComponent {
 		const monnaie = item["MONNAIE"] != 'NULL' && item["MONNAIE"] != '' ? item["MONNAIE"] : null;
 
 
-		if (annee >= 2020) {
+		if (annee == this.annee) {
 			timbreModel.setId(this.identTimbre);
 			//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
 			//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);

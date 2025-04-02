@@ -28,14 +28,32 @@
 				</app-timbre-resultat>
 			</div>
 
-			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
+			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="end end">
+				<div fxLayout="column" fxFlex="20"  fxLayoutAlign="end end" class="form-input noError">
+					<input
+						name="annee"
+						[(ngModel)]="annee"
+						type="number"
+						style="width: 60px !important;"
+						minlength="4"
+						maxlength="4"
+						min="1900"
+						zMin="1900"
+						[max]="maxAnnee"
+						[zMax]="maxAnnee"
+						required
+						zControl
+					/>
+				</div>
+
 				<button
 					type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">
 					Annuler
 				</button>
 				<input id="{{idFile}}" type="file" (change)="onFileChange($event)" accept=".xls, .xlsx, .csv" hidden
-					   required/>
-				<button type="button" class="rounded large color-white" mat-raised-button color="accent" (click)="triggerFileInput()">
+					   required />
+				<button type="button" class="rounded large color-white" mat-raised-button color="accent"
+						(click)="triggerFileInput()">
 					Choisir un fichier
 				</button>
 				<button
