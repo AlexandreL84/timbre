@@ -21,7 +21,7 @@ export class TimbreLayoutComponent implements OnInit {
 	ngOnInit(): void {
 		this.headerService.titre$.next("TIMBRES");
 		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
-		this.timbreUtilsService.timbreCritereModel.setAnnees([new Date().getFullYear() - 1]);
+		this.timbreUtilsService.timbreCritereModel.setAnnees([new Date().getFullYear()]);
 		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
 	}
 }

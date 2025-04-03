@@ -1,0 +1,20 @@
+<lib-icon *ngIf="(timbreSupprimService.load$ | async) == false"
+		  [icone]="FontAwesomeEnum.ROTATE"
+		  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+		  [attribs]="[FontAwesomeAttributEnum.SPIN]"
+		  class="warn click"
+		  style="font-size: 2em"
+		  [info]="'Supprimer en cours'"
+		  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+		  (click)="supprimer()">
+</lib-icon>
+
+<lib-icon *ngIf="(timbreSupprimService.load$ | async) == true"
+		  [icone]="FontAwesomeEnum.TRASH"
+		  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+		  class="warn click"
+		  style="font-size: 2em"
+		  [info]="'Supprimer les timbres'"
+		  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
+		  (click)="supprimer()">
+</lib-icon>

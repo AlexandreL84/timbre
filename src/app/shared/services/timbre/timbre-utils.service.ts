@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {first, map, Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {isNotNullOrUndefined} from "../../utils/utils";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {BaseEnum} from "../../enum/base.enum";

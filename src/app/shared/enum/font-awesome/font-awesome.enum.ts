@@ -19,7 +19,9 @@ export enum FontAwesomeEnum {
     PENCIL = "fa-pencil",
     POWER_OFF = "fa-power-off",
 
-    TRASH = "fa-trash",
+	ROTATE = "fa-rotate",
+
+	TRASH = "fa-trash",
 
 	UPLOAD = "fa-upload",
 

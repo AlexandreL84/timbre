@@ -59,8 +59,4 @@ export class MenuComponent {
 			refDialog.close();
 		});
 	}
-
-	supprimer() {
-
-	}
 }

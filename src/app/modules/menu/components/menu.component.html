@@ -37,15 +37,5 @@
 			  (click)="importer()">
 	</lib-icon>
 
-	<!--
-	<lib-icon *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE"
-			  [icone]="FontAwesomeEnum.TRASH"
-			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
-			  class="primary click"
-			  style="font-size: 2em"
-			  [info]="'Supprimer les timbres'"
-			  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
-			  (click)="supprimer()">
-	</lib-icon>
-	-->
+	<app-timbre-supprim-tout *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE"></app-timbre-supprim-tout>
 </div>

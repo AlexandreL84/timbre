@@ -10,11 +10,12 @@ import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {LibIconModule} from "../../shared/components/lib-icon";
 import {TimbreService} from "../../shared/services/timbre/timbre.service";
+import {TimbreSupprimToutModule} from "../timbre/components/supprim-tout/timbre-supprim-tout.module";
 
 
 @NgModule({
 	declarations: [MenuComponent],
-	imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton],
+    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton, TimbreSupprimToutModule],
 	exports: [
 		MenuComponent
 	],
