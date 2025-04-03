@@ -33,6 +33,8 @@ export class TimbreImporterComponent {
 
 	identTimbre = 1;
 	identBloc = 1;
+	identTimbreAnnee = 1;
+	identBlocAnnee = 1;
 	timbresModel: TimbreModel[] = [];
 	timbresBlocsModel: TimbreBlocModel[] = [];
 	maxAnnee: number = new Date().getFullYear();
@@ -76,13 +78,22 @@ export class TimbreImporterComponent {
 		combineLatest([
 			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE),
 			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC),
+			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE, this.annee),
+			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC, this.annee),
 			this.authService.getUser()
-		]).pipe(first(([maxIdentTimbre, maxIdentBloc, user]) => isNotNullOrUndefined(user))).subscribe(([maxIdentTimbre, maxIdentBloc, user]) => {
+		]).pipe(first(([maxIdentTimbre, maxIdentBloc, user]) => isNotNullOrUndefined(user))).subscribe(([maxIdentTimbre, maxIdentBloc, maxIdentTimbreByAnnee, maxIdentBlocByAnnee, user]) => {
 			if (isNotNullOrUndefined(maxIdentTimbre) && maxIdentTimbre > 1) {
 				this.identTimbre = maxIdentTimbre + 1;
 			}
 			if (isNotNullOrUndefined(maxIdentBloc) && maxIdentBloc > 1) {
 				this.identBloc = maxIdentBloc + 1;
+			}
+
+			if (isNotNullOrUndefined(maxIdentTimbreByAnnee) && maxIdentTimbreByAnnee > 1) {
+				this.identTimbreAnnee= maxIdentTimbreByAnnee + 1;
+			}
+			if (isNotNullOrUndefined(maxIdentBlocByAnnee) && maxIdentBlocByAnnee > 1) {
+				this.identBlocAnnee = maxIdentBlocByAnnee + 1;
 			}
 
 			this.timbresModel = [];
@@ -100,6 +111,7 @@ export class TimbreImporterComponent {
 							if (isNotNullOrUndefined(timbre?.getId())) {
 								this.timbresModel.push(timbre);
 								this.identTimbre++;
+								this.identTimbreAnnee++;
 							}
 							if (index == result.data.length - 1) {
 								this.timbres$.next(this.timbresModel)
