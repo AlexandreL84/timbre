@@ -21,7 +21,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
-	displayedColumns: string[] = ["annee", "nombre", "acquis", "doublon", "nombreBloc", "acquisBloc", "doublonBloc"];
+	displayedColumns: string[] = ["annee", "nombre", "acquis", "doublon", "nombreCarnet", "nombreBloc", "acquisBloc", "doublonBloc"];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
 	constructor(public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
@@ -47,7 +47,6 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 
 	sortData(sort: Sort) {
 		if (isNotNullOrUndefined(sort)) {
-			console.log(sort)
 			this.dataSource.sort = this.sort;
 		}
 	}
@@ -56,6 +55,5 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
 		this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
 		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
-
 	}
 }

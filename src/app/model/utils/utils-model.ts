@@ -6,6 +6,6 @@ export function Label(label: any) {
             libelle: label,
         });
     } catch (e) {
-        console.log(e);
+        console.error(e);
     }
 }

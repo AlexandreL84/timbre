@@ -9,6 +9,9 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label('Année')
 	annee: number;
 
+	@Label('Carnet')
+	carnet: boolean;
+
 	@Label('Monnaie')
 	monnaie: string;
 
@@ -30,9 +33,10 @@ export class TimbreBlocModel extends ProprieteModel {
 	idOrigine: number;
 
 
-	constructor(id?: number, annee?: number, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
+	constructor(id?: number, annee?: number, carnet?: boolean, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
+		this.carnet = carnet ? carnet : false;
 		this.monnaie = monnaie ? monnaie : null;
 		this.image = image ? image : null;
 		this.imageTable = imageTable ? imageTable : null;
@@ -57,6 +61,13 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.annee = value;
 	}
 
+	isCarnet(): boolean {
+		return this.carnet;
+	}
+
+	setCarnet(value: boolean) {
+		this.carnet = value;
+	}
 
 	getMonnaie(): string {
 		return this.monnaie;

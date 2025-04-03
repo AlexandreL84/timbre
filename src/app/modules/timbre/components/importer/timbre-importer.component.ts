@@ -104,9 +104,6 @@ export class TimbreImporterComponent {
 							if (index == result.data.length - 1) {
 								this.timbres$.next(this.timbresModel)
 								this.load$.next(true);
-								/*this.timbres$.pipe(first()).subscribe(timbresModel => {
-									console.log(timbresModel);
-								});*/
 							}
 						});
 					}
@@ -157,6 +154,7 @@ export class TimbreImporterComponent {
 					timbreBlocModel.setId(this.identBloc);
 					timbreBlocModel.setAnnee(annee);
 					timbreBlocModel.setMonnaie(monnaie);
+					timbreBlocModel.setCarnet(item["CARNET"] == "1");
 					timbreBlocModel.idOrigine = idBloc;
 
 					const timbreBlocAcquisModel: TimbreBlocAcquisModel = new TimbreBlocAcquisModel();

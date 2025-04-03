@@ -70,12 +70,14 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 	sortData(sort: Sort) {
 		if (isNotNullOrUndefined(sort)) {
-			console.log(sort)
 			this.dataSource.sort = this.sort;
 		}
 	}
 
 	filtreByCritere() {
+		if (this.timbreUtilsService.timbreCritereModel.getCarnet() == "OUI") {
+			this.timbreUtilsService.timbreCritereModel.setBloc("OUI");
+		}
 		if (this.timbreUtilsService.timbreCritereModel.getAcquis() == "NON") {
 			this.timbreUtilsService.timbreCritereModel.setDoublon("TOUS");
 		}
@@ -91,7 +93,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		const refDialog = this.dialog.open(TimbreResumeComponent, {
 			height: "auto",
 			maxHeight: "750px",
-			width: "30%",
+			width: "700px",
 		});
 		refDialog.afterClosed().subscribe(() => {
 			refDialog.close();

@@ -3,6 +3,8 @@ import {TimbreService} from "../../../shared/services/timbre/timbre.service";
 import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {HeaderService} from "../../../shared/services/header.service";
+import {TimbreCritereModel} from "../../../model/timbre-critere.model";
+import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.service";
 
 @Component({
 	selector: "app-timbre-layout",
@@ -13,11 +15,13 @@ export class TimbreLayoutComponent implements OnInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 
-	constructor(private headerService: HeaderService, public timbreService: TimbreService) {
+	constructor(private headerService: HeaderService, public timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
 	}
 
 	ngOnInit(): void {
 		this.headerService.titre$.next("TIMBRES");
-		this.timbreService.getTimbres();
+		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
+		this.timbreUtilsService.timbreCritereModel.setAnnees([new Date().getFullYear() - 1]);
+		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
 	}
 }

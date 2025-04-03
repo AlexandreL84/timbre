@@ -45,7 +45,7 @@ export class TimbreUtilsService {
 					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
 				}
 				if (isNotNullOrUndefined(timbreCritereModel.getBloc()) && timbreCritereModel.getBloc() != 'TOUS') {
-					filteredQuery = filteredQuery.where("idBloc", timbreCritereModel.getBloc() != 'NON' ? "!=" : "==", null);
+					filteredQuery = filteredQuery.where("idBloc", timbreCritereModel.getBloc() != "OUI" ? "==" : "!=", null);
 				} else if (isNotNullOrUndefined(timbreCritereModel.getIdBloc())) {
 					filteredQuery = filteredQuery.where("idBloc", "==", timbreCritereModel.getIdBloc());
 				}

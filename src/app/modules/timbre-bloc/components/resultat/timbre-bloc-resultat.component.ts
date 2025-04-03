@@ -48,7 +48,7 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 		this.timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "monnaie", "nbTimbres" ,"acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "carnet", "monnaie", "nbTimbres" ,"acquis", "doublon"];
 		if (this.modif) {
 			this.displayedColumns.push("modifier", "supprimer");
 		}

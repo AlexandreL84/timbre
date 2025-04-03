@@ -14,6 +14,9 @@ export class TimbreResumeModel extends ProprieteModel {
 	@Label("Doublon")
 	doublon: number;
 
+	@Label("Total carnet")
+	nombreCarnet: number;
+
 	@Label("Total bloc")
 	nombreBloc: number;
 
@@ -24,12 +27,13 @@ export class TimbreResumeModel extends ProprieteModel {
 	doublonBloc: number;
 
 
-	constructor(annee?: number, nombre?: number, acquis?: number, doublon?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number ) {
+	constructor(annee?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number ) {
 		super();
 		this.annee = annee ? annee : null;
 		this.nombre = nombre ? nombre : 0;
 		this.acquis = acquis ? acquis : 0;
 		this.doublon = doublon ? doublon : 0;
+		this.nombreCarnet = nombreCarnet ? nombreCarnet : 0;
 		this.nombreBloc = nombreBloc ? nombreBloc : 0;
 		this.acquisBloc = acquisBloc ? acquisBloc : 0;
 		this.doublonBloc = doublonBloc ? doublonBloc : 0;
@@ -66,6 +70,14 @@ export class TimbreResumeModel extends ProprieteModel {
 
 	setDoublon(value: number) {
 		this.doublon = value;
+	}
+
+	getNombreCarnet(): number {
+		return this.nombreCarnet;
+	}
+
+	setNombreCarnet(value: number) {
+		this.nombreCarnet = value;
 	}
 
 	getNombreBloc(): number {

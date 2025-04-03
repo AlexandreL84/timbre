@@ -17,6 +17,9 @@ export class TimbreCritereModel extends ProprieteModel {
 	@Label("Bloc")
 	bloc: string;
 
+	@Label("Carnet")
+	carnet: string;
+
 	getAnnees(): number[] {
 		return this.annees;
 	}
@@ -47,6 +50,14 @@ export class TimbreCritereModel extends ProprieteModel {
 
 	setIdBloc(value: number) {
 		this.idBloc = value;
+	}
+
+	getCarnet(): string {
+		return this.carnet;
+	}
+
+	setCarnet(value: string) {
+		this.carnet = value;
 	}
 
 	getBloc(): string {

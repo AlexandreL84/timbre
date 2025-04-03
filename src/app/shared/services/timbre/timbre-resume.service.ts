@@ -69,15 +69,18 @@ export class TimbreResumeService {
 			});
 
 
-			timbresBloc.forEach((bloc: any) => {
+			timbresBloc.forEach(bloc => {
 				let timbreResumeModel: TimbreResumeModel = timbreResumeModels.find(timbreResumeModel => timbreResumeModel.getAnnee() == bloc["annee"])
-				if (isNotNullOrUndefined(timbreResumeModel)) {
-					timbreResumeModel.setNombreBloc(timbreResumeModel.getNombreBloc() + 1);
-				} else {
+				if (isNullOrUndefined(timbreResumeModel)) {
 					timbreResumeModel = new TimbreResumeModel();
 					timbreResumeModel.setAnnee(bloc["annee"]);
-					timbreResumeModel.setNombreBloc(1);
 					timbreResumeModels.push(timbreResumeModel);
+				}
+
+				if (bloc["carnet"]) {
+					timbreResumeModel.setNombreCarnet(timbreResumeModel.getNombreCarnet() + 1);
+				} else {
+					timbreResumeModel.setNombreBloc(timbreResumeModel.getNombreBloc() + 1);
 				}
 
 				if (isNotNullOrUndefined(timbresBlocAcquis)) {
@@ -93,13 +96,15 @@ export class TimbreResumeService {
 				}
 			});
 		}
+
 		if (isNotNullOrUndefined(timbreResumeModels) && timbreResumeModels?.length > 0) {
 			const totalTimbreResume = new TimbreResumeModel();
 			timbreResumeModels.forEach(timbreResumeModel => {
 				totalTimbreResume.setNombre(totalTimbreResume.getNombre() + timbreResumeModel.getNombre());
 				totalTimbreResume.setAcquis(totalTimbreResume.getAcquis() + timbreResumeModel.getAcquis());
 				totalTimbreResume.setDoublon(totalTimbreResume.getDoublon() + timbreResumeModel.getDoublon());
-				totalTimbreResume.setNombreBloc(totalTimbreResume.getNombre() + timbreResumeModel.getNombre());
+				totalTimbreResume.setNombreCarnet(totalTimbreResume.getNombreCarnet() + timbreResumeModel.getNombreCarnet());
+				totalTimbreResume.setNombreBloc(totalTimbreResume.getNombreBloc() + timbreResumeModel.getNombreBloc());
 				totalTimbreResume.setAcquisBloc(totalTimbreResume.getAcquisBloc() + timbreResumeModel.getAcquisBloc());
 				totalTimbreResume.setDoublonBloc(totalTimbreResume.getDoublonBloc() + timbreResumeModel.getDoublonBloc());
 			})

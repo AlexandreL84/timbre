@@ -67,7 +67,6 @@ export class UploadService {
 		heigthDiv?: number
 	): Observable<string> {
 		return new Observable((observer) => {
-			//console.log(file)
 			if (isNotNullOrUndefined(file) && !isString(file)) {
 				const img = new Image();
 				const reader: FileReader = new FileReader();
@@ -77,14 +76,13 @@ export class UploadService {
 					img.src = event.target?.result as string;
 					//const resizedBlob = await this.resizeImage(img, width, isNotNullOrUndefined(heigthDiv) ? heigthDiv : height);
 					const resizedBlob = await this.getBlob(img, width, height, heigthDiv);
-					//console.log(this.getFileRetour(dossier, code))
 
 					return this.uploadImageToFirebase(resizedBlob, this.getFileRetour(dossier, code))
 						.then((result) => {
 							observer.next(result);
 						})
 						.catch((error) => {
-							console.log(error);
+							console.error(error);
 						});
 				};
 			} else {

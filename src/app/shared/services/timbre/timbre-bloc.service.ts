@@ -70,7 +70,10 @@ export class TimbreBlocService {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
+					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
+				}
+				if (isNotNullOrUndefined(timbreCritereModel.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
+					filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", null);
 				}
 			}
 			//filteredQuery = filteredQuery.orderBy('id', 'asc');
