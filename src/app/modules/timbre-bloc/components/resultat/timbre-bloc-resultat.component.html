@@ -128,11 +128,11 @@
 			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<lib-icon
 					class="click"
-					[classIcone]="element?.getTimbreBlocAcquisModel()?.isCarnet() ? 'accent' : 'primary'"
+					[classIcone]="element?.isCarnet() ? 'accent' : 'primary'"
 					style="font-size: 1.2em"
 					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="element?.getTimbreBlocAcquisModel()?.isCarnet() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
-					[info]="element?.getTimbreBlocAcquisModel()?.isCarnet() ? 'pas acquis' : 'acquis'"
+					[icone]="element?.isCarnet() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="element?.isCarnet() ? 'pas acquis' : 'acquis'"
 					(click)="acquis(element)"
 				>
 				</lib-icon>

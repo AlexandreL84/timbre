@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {getDownloadURL, getStorage, ref, uploadBytes} from "@angular/fire/storage";
-import {HttpClient} from "@angular/common/http";
-import {catchError, from, map, Observable, of, switchMap} from "rxjs";
-import {isNotNullOrUndefined, isString} from "../utils/utils";
+import { Injectable } from '@angular/core';
+import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
+import { HttpClient } from '@angular/common/http';
+import { catchError, from, map, Observable, of, switchMap } from 'rxjs';
+import { isNotNullOrUndefined, isString } from '../utils/utils';
 
 @Injectable()
 export class UploadService {
@@ -10,7 +10,7 @@ export class UploadService {
 	}
 
 	checkIfImageExists(imagePath: string) {
-		return this.http.head(imagePath, {observe: 'response'}).pipe(
+		return this.http.head(imagePath, { observe: 'response' }).pipe(
 			map(response => response.status === 200), // Si l'image existe
 			catchError(() => of(false)) // Si l'image n'existe pas
 		);
@@ -24,7 +24,7 @@ export class UploadService {
 		dossier: string,
 		heigthDiv?: number
 	): Observable<string> {
-		if (isString(image) && image.includes("firebasestorage")) {
+		if (isString(image) && image.includes('firebasestorage')) {
 			return of(image);
 		} else if (isNotNullOrUndefined(image) && !isString(image)) {
 			return this.processAndUploadImageByFile(image, width, height, code, dossier, heigthDiv);
@@ -43,16 +43,16 @@ export class UploadService {
 	): Observable<string> {
 		return from(fetch(imagePath)).pipe(
 			switchMap(async (response) => {
-				if (isNotNullOrUndefined(imagePath) && imagePath != "") {
+				if (isNotNullOrUndefined(imagePath) && imagePath != '') {
 					if (isNotNullOrUndefined(heigthDiv)) {
 						width = width * (heigthDiv / height);
 					}
 					//const blob = await response.blob();
 					const img = await this.loadImageFromAssets(imagePath);
-					const resizedBlob = await this.getBlob(img, width, height, heigthDiv)
+					const resizedBlob = await this.getBlob(img, width, height, heigthDiv);
 					return this.uploadImageToFirebase(resizedBlob, this.getFileRetour(dossier, code));
 				} else {
-					return "nok";
+					return 'nok';
 				}
 			})
 		);
@@ -86,7 +86,7 @@ export class UploadService {
 						});
 				};
 			} else {
-				observer.next("nok");
+				observer.next('nok');
 			}
 		});
 	}
@@ -101,11 +101,11 @@ export class UploadService {
 	}
 
 	getFileRetour(dossier: string, code: number | string): string {
-		let fileRetour = "images/";
+		let fileRetour = 'images/';
 		if (isNotNullOrUndefined(dossier)) {
-			fileRetour = fileRetour + dossier + "/";
+			fileRetour = fileRetour + dossier + '/';
 		}
-		return fileRetour + code + '.png';
+		return fileRetour + code?.toString() + '.png';
 	}
 
 	// Charger une image depuis le dossier assets
@@ -159,6 +159,6 @@ export class UploadService {
 			await uploadBytes(storageRef, blob);
 			return await getDownloadURL(storageRef);
 		}
-		return null
+		return null;
 	}
 }

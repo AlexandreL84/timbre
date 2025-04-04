@@ -33,7 +33,7 @@ export class TimbreBlocService {
 	) {
 	}
 
-	upload(timbreBlocModel: TimbreBlocModel, dossier: DossierEnum): Observable<string> {
+	upload(timbreBlocModel: TimbreBlocModel, dossier: DossierEnum, ident?: number): Observable<string> {
 		let witdth: number = this.widthTimbre;
 		let height: number = this.heightTimbre;
 		if (dossier == DossierEnum.TABLE) {
@@ -43,7 +43,7 @@ export class TimbreBlocService {
 			witdth = witdth * (this.heightTimbreZoom / height);
 			height = this.heightTimbreZoom;
 		}
-		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, 'bloc', this.getDossier(timbreBlocModel, dossier));
+		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, ('bloc-' + timbreBlocModel.getId()) , this.getDossier(timbreBlocModel, dossier, ident));
 	}
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
@@ -222,7 +222,7 @@ export class TimbreBlocService {
 					this.getBlocs();
 				}
 			} else {
-				console.error('bloc déjà existant');
+				console.error("bloc " + timbreBlocModel.getId() + " déjà existant");
 			}
 		});
 	}
@@ -284,12 +284,12 @@ export class TimbreBlocService {
 		});
 	}
 
-	getDossier(timbreBlocModel: TimbreBlocModel, dossier): string {
+	getDossier(timbreBlocModel: TimbreBlocModel, dossier, ident: number): string {
 		let dossierImage = DossierEnum.TIMBRE + '/' + timbreBlocModel.getAnnee();
 		if (isNotNullOrUndefined(dossier)) {
 			dossierImage = dossierImage + '/' + dossier;
 		}
-		dossierImage = dossierImage + '/bloc/' + timbreBlocModel.getId();
+		dossierImage = dossierImage + '/bloc/' + (isNotNullOrUndefined(ident)? ident: timbreBlocModel.getId());
 		return dossierImage;
 	}
 

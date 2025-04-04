@@ -1,17 +1,17 @@
-import {Injectable} from '@angular/core';
-import {TimbreModel} from '../../../model/timbre.model';
-import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 'rxjs';
-import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
-import {AuthService} from '../auth.service';
-import {TimbreAcquisModel} from '../../../model/timbre-acquis.model';
-import {TimbreCritereModel} from '../../../model/timbre-critere.model';
-import {TimbreBlocService} from './timbre-bloc.service';
-import {UploadService} from '../upload.service';
-import {DossierEnum} from '../../enum/dossier.enum';
-import {BaseEnum} from '../../enum/base.enum';
-import {UtilsService} from '../utils.service';
-import {TimbreUtilsService} from './timbre-utils.service';
+import { Injectable } from '@angular/core';
+import { TimbreModel } from '../../../model/timbre.model';
+import { BehaviorSubject, combineLatest, first, map, Observable, switchMap } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { isNotNullOrUndefined, isNullOrUndefined } from '../../utils/utils';
+import { AuthService } from '../auth.service';
+import { TimbreAcquisModel } from '../../../model/timbre-acquis.model';
+import { TimbreCritereModel } from '../../../model/timbre-critere.model';
+import { TimbreBlocService } from './timbre-bloc.service';
+import { UploadService } from '../upload.service';
+import { DossierEnum } from '../../enum/dossier.enum';
+import { BaseEnum } from '../../enum/base.enum';
+import { UtilsService } from '../utils.service';
+import { TimbreUtilsService } from './timbre-utils.service';
 
 @Injectable()
 export class TimbreService {
@@ -150,7 +150,7 @@ export class TimbreService {
 					this.getTimbres();
 				}
 			} else {
-				console.error('timbre déjà existant');
+				console.error("timbre " + timbreModel.getId() + " déjà existant");
 			}
 		});
 	}
@@ -203,7 +203,7 @@ export class TimbreService {
 		return timbre;
 	}
 
-	upload(timbreModel: TimbreModel, dossier: DossierEnum): Observable<string> {
+	upload(timbreModel: TimbreModel, dossier: DossierEnum, ident?: number): Observable<string> {
 		let witdth: number = this.widthTimbre;
 		let height: number = this.heightTimbre;
 		if (dossier == DossierEnum.TABLE) {
@@ -213,7 +213,7 @@ export class TimbreService {
 			witdth = witdth * (this.heightTimbreZoom / height);
 			height = this.heightTimbreZoom;
 		}
-		return this.uploadService.processAndUploadImage(timbreModel?.getImage(), witdth, height, timbreModel?.getId(), this.getDossier(timbreModel, dossier));
+		return this.uploadService.processAndUploadImage(timbreModel?.getImage(), witdth, height, isNotNullOrUndefined(ident) ? ident : timbreModel?.getId(), this.getDossier(timbreModel, dossier));
 	}
 
 	getDossier(timbreModel: TimbreModel, dossier: string): string {
