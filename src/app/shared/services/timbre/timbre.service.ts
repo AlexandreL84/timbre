@@ -54,7 +54,6 @@ export class TimbreService {
 	}
 
 	getTimbres(timbreCritereModel?: TimbreCritereModel) {
-		this.getTotal();
 		this.timbres$.next(null);
 		combineLatest([
 			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
@@ -62,6 +61,7 @@ export class TimbreService {
 			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			this.timbres$.next(this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel));
+			this.getTotal();
 		});
 	}
 

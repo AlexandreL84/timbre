@@ -9,6 +9,7 @@ import {TimbreResumeModel} from "../../../../model/timbre-resume.model";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
 	selector: "app-timbre-resume",
@@ -19,22 +20,19 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
-	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
 	displayedColumns: string[] = ["annee", "nombre", "acquis", "doublon", "nombreCarnet", "nombreBloc", "acquisBloc", "doublonBloc"];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
-	constructor(public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
+	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
 	ngOnInit(): void {
 		this.timbreResumeService.getResume();
 
-		this.load$.next(false);
 		this.timbreResumeService.timbresResume$.subscribe(timbresResume => {
 			this.dataSource.data = timbresResume;
-			this.load$.next(true);
 		});
 	}
 
@@ -55,5 +53,6 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
 		this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
 		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+		this.dialogRef.close();
 	}
 }

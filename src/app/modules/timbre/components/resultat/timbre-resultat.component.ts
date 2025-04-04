@@ -90,13 +90,10 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 	}
 
 	resume() {
-		const refDialog = this.dialog.open(TimbreResumeComponent, {
+		this.dialog.open(TimbreResumeComponent, {
 			height: "auto",
 			maxHeight: "750px",
 			width: "700px",
-		});
-		refDialog.afterClosed().subscribe(() => {
-			refDialog.close();
 		});
 	}
 

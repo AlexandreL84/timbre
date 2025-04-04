@@ -78,13 +78,9 @@ export class TimbreImporterComponent {
 			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC),
 			this.authService.getUser()
 		]).pipe(first(([maxIdentTimbre, maxIdentBloc, user]) => isNotNullOrUndefined(user))).subscribe(([maxIdentTimbre, maxIdentBloc, user]) => {
-			if (isNotNullOrUndefined(maxIdentTimbre) && maxIdentTimbre > 1) {
-				this.identTimbre = maxIdentTimbre + 1;
-			}
-			if (isNotNullOrUndefined(maxIdentBloc) && maxIdentBloc > 1) {
-				this.identBloc = maxIdentBloc + 1;
-			}
-			console.log(this.identTimbre)
+
+			this.identTimbre = maxIdentTimbre;
+			this.identBloc = maxIdentBloc;
 
 			this.timbresModel = [];
 			this.timbres$.next(null);
@@ -206,6 +202,8 @@ export class TimbreImporterComponent {
 		if (formModif?.valid) {
 			this.load$.next(false);
 			this.messageLoad$.next('Import en cours ...');
+			/*console.log(this.timbresBlocsModel);
+			return*/
 
 			if (isNotNullOrUndefined(this.timbresBlocsModel) && this.timbresBlocsModel?.length > 0) {
 				this.timbresBlocsModel.forEach((timbreBlocModel, index) => {

@@ -9,6 +9,7 @@ import {TimbreResumeModel} from "../../../model/timbre-resume.model";
 
 @Injectable()
 export class TimbreResumeService {
+	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	timbresResume$: BehaviorSubject<TimbreResumeModel[]> = new BehaviorSubject<TimbreResumeModel[]>(null);
 	totalTimbreResume$: BehaviorSubject<TimbreResumeModel> = new BehaviorSubject<TimbreResumeModel>(null);
 
@@ -19,6 +20,7 @@ export class TimbreResumeService {
 	}
 
 	getResume(timbreCritereModel?: TimbreCritereModel) {
+		this.load$.next(false);
 		this.timbresResume$.next(null);
 		this.totalTimbreResume$.next(null);
 		combineLatest([
@@ -110,6 +112,7 @@ export class TimbreResumeService {
 			})
 			this.totalTimbreResume$.next(totalTimbreResume);
 		}
+		this.load$.next(true);
 		return timbreResumeModels;
 	}
 }

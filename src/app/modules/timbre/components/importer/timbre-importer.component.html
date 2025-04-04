@@ -29,7 +29,8 @@
 			</div>
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="end end">
-				<div fxLayout="column" fxFlex="20"  fxLayoutAlign="end end" class="form-input noError">
+				<div *ngIf="!(timbres$ |async) || (timbres$ |async)?.length == 0" fxLayout="column" fxFlex="20"
+					 fxLayoutAlign="end end" class="form-input noError">
 					<input
 						name="annee"
 						[(ngModel)]="annee"
@@ -51,13 +52,13 @@
 					Annuler
 				</button>
 				<input id="{{idFile}}" type="file" (change)="onFileChange($event)" accept=".xls, .xlsx, .csv" hidden
-					   required />
+					   required/>
 				<button type="button" class="rounded large color-white" mat-raised-button color="accent"
 						(click)="triggerFileInput()">
 					Choisir un fichier
 				</button>
 				<button
-					*ngIf="(timbres$ |async) ?.length > 0"
+					*ngIf="(timbres$ |async)?.length > 0"
 					type="submit" class="rounded large color-white" mat-raised-button color="accent">
 					Enregistrer
 				</button>
