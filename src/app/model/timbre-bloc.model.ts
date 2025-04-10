@@ -24,6 +24,9 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label('Image zoom')
 	imageZoom: string;
 
+	@Label("Réference")
+	yt: string;
+
 	@Label("vérif")
 	timbreBlocAcquisModel: TimbreBlocAcquisModel;
 
@@ -33,7 +36,7 @@ export class TimbreBlocModel extends ProprieteModel {
 	idOrigine: number;
 
 
-	constructor(id?: number, annee?: number, carnet?: boolean, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
+	constructor(id?: number, annee?: number, carnet?: boolean, monnaie?: string, image?: string | File, imageTable?: string, imageZoom?: string, yt?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
 		this.carnet = carnet ? carnet : false;
@@ -41,6 +44,7 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.image = image ? image : null;
 		this.imageTable = imageTable ? imageTable : null;
 		this.imageZoom = imageZoom ? imageZoom : null;
+		this.yt = yt ? yt : null;
 		this.timbreBlocAcquisModel = timbreBlocAcquisModel ? timbreBlocAcquisModel : null;
 		this.nbTimbres = nbTimbres ? nbTimbres : null;
 	}
@@ -99,6 +103,14 @@ export class TimbreBlocModel extends ProprieteModel {
 
 	setImageZoom(value: string) {
 		this.imageZoom = value;
+	}
+
+	getYt(): string {
+		return this.yt;
+	}
+
+	setYt(value: string) {
+		this.yt = value;
 	}
 
 	getTimbreBlocAcquisModel(): TimbreBlocAcquisModel {

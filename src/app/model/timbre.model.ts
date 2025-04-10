@@ -19,7 +19,7 @@ export class TimbreModel extends ProprieteModel {
 	@Label("Type")
 	type: string;
 
-	@Label("Réference Yvert Tellier")
+	@Label("Réference")
 	yt: string;
 
 	@Label("Image")

@@ -163,6 +163,14 @@
 				{{ element?.getMonnaie() == "E" ? "€" : "Francs" }}
 			</td>
 		</ng-container>
+		<ng-container matColumnDef="yt">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
+				<lib-libelle-model [object]="timbreBlocModel" [key]="'yt'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
+				{{ element?.getYt() }}
+			</td>
+		</ng-container>
 		<ng-container matColumnDef="acquis">
 			<th mat-header-cell *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreBlocModel?.getTimbreBlocAcquisModel()"

@@ -96,6 +96,23 @@
 					/>
 				</div>
 
+				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
+					<div fxLayout="column" class="form-input">
+						<label>
+							<lib-libelle-model [object]="timbreBlocModel" [key]="'yt'"></lib-libelle-model>
+						</label>
+						<input
+							name="yt"
+							[(ngModel)]="timbreBlocModel.yt"
+							type="text"
+							trim
+							zControl
+						/>
+					</div>
+					<div fxHide.lt-lg fxLayout="column" class="form-input">
+					</div>
+				</div>
+
 				<lib-upload [object]="timbreBlocModel" [key]="'image'" [maxWidth]="timbreBlocService.widthTimbre" [maxHeight]="timbreBlocService.heightTimbre" (outPutObject)="timbreBlocModel = $event"></lib-upload>
 			</div>
 

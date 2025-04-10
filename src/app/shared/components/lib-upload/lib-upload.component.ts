@@ -2,6 +2,8 @@ import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from "@an
 import {FontAwesomeEnum} from "../../enum/font-awesome";
 import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enum";
 import {UtilsService} from "../../services/utils.service";
+import {TimbreModel} from "../../../model/timbre.model";
+import {TimbreBlocModel} from "../../../model/timbre-bloc.model";
 
 @Component({
 	selector: "lib-upload",
@@ -82,6 +84,9 @@ export class LibUploadComponent {
 
 	saveFile() {
 		this.object[this.key] = this.selectedFile;
+		if (this.object instanceof TimbreModel || this.object instanceof TimbreBlocModel) {
+			this.object.setYt(this.selectedFile?.name?.replace(/\.([a-z]+)$/, ''));
+		}
 		this.outPutObject.emit(this.object)
 	}
 }
