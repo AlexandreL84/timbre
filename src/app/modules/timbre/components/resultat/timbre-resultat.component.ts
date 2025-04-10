@@ -81,7 +81,9 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		if (this.timbreUtilsService.timbreCritereModel.getAcquis() == "NON") {
 			this.timbreUtilsService.timbreCritereModel.setDoublon("TOUS");
 		}
-		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
+			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+		}
 	}
 
 	applyFilter(event: Event) {
@@ -93,7 +95,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		this.dialog.open(TimbreResumeComponent, {
 			height: "auto",
 			maxHeight: "750px",
-			width: "700px",
+			width: "900px",
 		});
 	}
 

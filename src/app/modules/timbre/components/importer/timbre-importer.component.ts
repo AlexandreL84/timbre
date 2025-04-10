@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, first} from 'rxjs';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -16,13 +16,14 @@ import {BaseEnum} from '../../../../shared/enum/base.enum';
 import {UtilsService} from '../../../../shared/services/utils.service';
 import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
 import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
+import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 
 @Component({
 	selector: 'app-timbre-importer',
 	templateUrl: './timbre-importer.component.html',
 	styleUrls: ['./timbre-importer.component.scss']
 })
-export class TimbreImporterComponent {
+export class TimbreImporterComponent implements OnInit {
 	//dossier = "http://www.consdjeunes.123.fr/timbres//images/timbres/zoom/"
 	dossier = '/assets/images/timbres/';
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
@@ -35,16 +36,29 @@ export class TimbreImporterComponent {
 	identBloc = 1;
 	timbresModel: TimbreModel[] = [];
 	timbresBlocsModel: TimbreBlocModel[] = [];
-	maxAnnee: number = new Date().getFullYear();
-	annee: number = new Date().getFullYear();
+	anneesDispo: number[] = [];
+	annees: number[] = [new Date().getFullYear()];
 
 	constructor(
 		private authService: AuthService,
 		private timbreService: TimbreService,
 		private timbreBlocService: TimbreBlocService,
+		private timbreUtilsService: TimbreUtilsService,
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
 		public dialogRef: MatDialogRef<TimbreImporterComponent>) {
+	}
+
+	ngOnInit() {
+		/*this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
+			for (let i = annees[0] - 1; i >= 1849; i--) {
+				this.anneesDispo.push(i);
+			}
+		});*/
+
+		for (let i = new Date().getFullYear(); i >= 1900; i--) {
+			this.anneesDispo.push(i);
+		}
 	}
 
 	triggerFileInput(): void {
@@ -73,43 +87,44 @@ export class TimbreImporterComponent {
 
 
 	parseCsv(csvData: string): void {
-		combineLatest([
-			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE),
-			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC),
-			this.authService.getUser()
-		]).pipe(first(([maxIdentTimbre, maxIdentBloc, user]) => isNotNullOrUndefined(user))).subscribe(([maxIdentTimbre, maxIdentBloc, user]) => {
+		if (isNotNullOrUndefined(this.annees) && this.annees.length > 0) {
+			combineLatest([
+				this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE),
+				this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC),
+				this.authService.getUser()
+			]).pipe(first(([maxIdentTimbre, maxIdentBloc, user]) => isNotNullOrUndefined(user))).subscribe(([maxIdentTimbre, maxIdentBloc, user]) => {
+				this.identTimbre = maxIdentTimbre;
+				this.identBloc = maxIdentBloc;
 
-			this.identTimbre = maxIdentTimbre;
-			this.identBloc = maxIdentBloc;
+				this.timbresModel = [];
+				this.timbres$.next(null);
 
-			this.timbresModel = [];
-			this.timbres$.next(null);
+				Papa.parse(csvData, {
+					header: true, // Pour transformer chaque ligne en un objet basé sur les en-têtes
+					skipEmptyLines: true,
+					complete: (result) => {
+						if (isNotNullOrUndefined(result.data) && result.data?.length > 0) {
+							this.timbresBlocsModel = [];
 
-			Papa.parse(csvData, {
-				header: true, // Pour transformer chaque ligne en un objet basé sur les en-têtes
-				skipEmptyLines: true,
-				complete: (result) => {
-					if (isNotNullOrUndefined(result.data) && result.data?.length > 0) {
-						this.timbresBlocsModel = [];
-
-						result.data.forEach((item, index) => {
-							const timbre: TimbreModel = this.setTimbre(item, user);
-							if (isNotNullOrUndefined(timbre?.getId())) {
-								this.timbresModel.push(timbre);
-								this.identTimbre++;
-							}
-							if (index == result.data.length - 1) {
-								this.timbres$.next(this.timbresModel)
-								this.load$.next(true);
-							}
-						});
+							result.data.forEach((item, index) => {
+								const timbre: TimbreModel = this.setTimbre(item, user);
+								if (isNotNullOrUndefined(timbre?.getId())) {
+									this.timbresModel.push(timbre);
+									this.identTimbre++;
+								}
+								if (index == result.data.length - 1) {
+									this.timbres$.next(this.timbresModel)
+									this.load$.next(true);
+								}
+							});
+						}
+					},
+					error: (error) => {
+						console.error('Erreur lors du parsing du CSV :', error);
 					}
-				},
-				error: (error) => {
-					console.error('Erreur lors du parsing du CSV :', error);
-				}
+				});
 			});
-		});
+		}
 	}
 
 	setTimbre(item, user: UserModel): TimbreModel {
@@ -119,8 +134,7 @@ export class TimbreImporterComponent {
 		const annee: number = item["ANNEE"] != 'NULL' && item["ANNEE"] != '' ? Number(item["ANNEE"]) : null;
 		const monnaie = item["MONNAIE"] != 'NULL' && item["MONNAIE"] != '' ? item["MONNAIE"] : null;
 
-
-		if (annee == this.annee) {
+		if (this.annees.includes(annee)) {
 			timbreModel.setId(this.identTimbre);
 			//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
 			//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);

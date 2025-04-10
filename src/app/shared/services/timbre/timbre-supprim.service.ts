@@ -6,6 +6,7 @@ import {BaseEnum} from "../../enum/base.enum";
 
 @Injectable()
 export class TimbreSupprimService {
+	loadGlob$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
 	constructor(private firestore: AngularFirestore) {
@@ -44,14 +45,14 @@ export class TimbreSupprimService {
 			}
 		});}
 
-	supprimerTimbres() {
+	supprimerTimbres(annee: number) {
 		this.load$.next(false);
 		this.firestore.collection(BaseEnum.TIMBRE,
-			/*ref => {
+			ref => {
 				let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-				filteredQuery = filteredQuery.where("idTimbre", "<=", 1000);
+				filteredQuery = filteredQuery.where("annee", "==", annee);
 				return filteredQuery;
-			}*/)
+			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
 				console.log(timbres)
@@ -62,6 +63,7 @@ export class TimbreSupprimService {
 						.then(snapshot => {
 							snapshot.forEach(doc => {
 								console.log(doc.ref)
+								this.supprimerAcquis(timbre["id"]);
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
 									this.load$.next(true);
@@ -78,14 +80,14 @@ export class TimbreSupprimService {
 		});
 	}
 
-	supprimerAcquis() {
+	supprimerAcquis(idTimbre: number) {
 		this.load$.next(false);
 		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS,
-			/*ref => {
+			ref => {
 				let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-				filteredQuery = filteredQuery.where("idTimbre", "<=", 1000);
+				filteredQuery = filteredQuery.where("idTimbre", "==", idTimbre);
 				return filteredQuery;
-			}*/)
+			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
 				console.log(timbres)
@@ -113,24 +115,25 @@ export class TimbreSupprimService {
 	}
 
 
-	supprimerBlocs() {
+	supprimerBlocs(annee: number) {
 		this.load$.next(false);
-		this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS,
-			/*ref => {
+		this.firestore.collection(BaseEnum.TIMBRE_BLOC,
+			ref => {
 				let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-				filteredQuery = filteredQuery.where("idTimbre", "<=", 1000);
+				filteredQuery = filteredQuery.where("annee", "==", annee);
 				return filteredQuery;
-			}*/)
+			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
 				console.log(timbres)
 				timbres.forEach((timbre, index) => {
-					this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
-						.ref.where('idBloc', '==', timbre["idBloc"])
+					this.firestore.collection(BaseEnum.TIMBRE_BLOC)
+						.ref.where('id', '==', timbre["id"])
 						.get()
 						.then(snapshot => {
 							snapshot.forEach(doc => {
 								console.log(doc.ref)
+								this.supprimerBlocsAcquis(timbre["id"]);
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
 									this.load$.next(true);
@@ -147,19 +150,19 @@ export class TimbreSupprimService {
 		});
 	}
 
-	supprimerBlocsAcquis() {
+	supprimerBlocsAcquis(idBloc: number) {
 		this.load$.next(false);
-		this.firestore.collection(BaseEnum.TIMBRE_BLOC,
-			/*ref => {
+		this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS,
+			ref => {
 				let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-				filteredQuery = filteredQuery.where("idTimbre", "<=", 1000);
+				filteredQuery = filteredQuery.where("idBloc", "==", idBloc);
 				return filteredQuery;
-			}*/)
+			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
 				console.log(timbres)
 				timbres.forEach((timbre, index) => {
-					this.firestore.collection(BaseEnum.TIMBRE_BLOC)
+					this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
 						.ref.where('id', '==', timbre["id"])
 						.get()
 						.then(snapshot => {

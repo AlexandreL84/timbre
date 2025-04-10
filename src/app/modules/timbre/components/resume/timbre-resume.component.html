@@ -46,7 +46,25 @@
 			<td mat-cell *matCellDef="let element; let i = index">
 				{{ element?.getNombreCarnet() }}
 			</td>
-			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreBloc() }} </b></td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreCarnet() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="acquisCarnet">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'acquisCarnet'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getAcquisCarnet() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisCarnet() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="doublonCarnet">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'doublonCarnet'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getDoublonCarnet() }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef class="accent"><b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonCarnet() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="nombreBloc">
 			<th mat-header-cell *matHeaderCellDef mat-sort-header>

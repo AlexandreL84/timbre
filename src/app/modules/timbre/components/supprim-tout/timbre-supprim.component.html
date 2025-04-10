@@ -1,4 +1,4 @@
-<lib-icon *ngIf="(timbreSupprimService.load$ | async) == false"
+<lib-icon *ngIf="(timbreSupprimService.loadGlob$ | async) == false"
 		  [icone]="FontAwesomeEnum.ROTATE"
 		  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
 		  [attribs]="[FontAwesomeAttributEnum.SPIN]"
@@ -9,7 +9,7 @@
 		  (click)="supprimer()">
 </lib-icon>
 
-<lib-icon *ngIf="(timbreSupprimService.load$ | async) == true"
+<lib-icon *ngIf="(timbreSupprimService.loadGlob$ | async) == true"
 		  [icone]="FontAwesomeEnum.TRASH"
 		  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
 		  class="warn click"

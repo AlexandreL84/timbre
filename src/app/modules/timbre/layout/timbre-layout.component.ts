@@ -5,6 +5,9 @@ import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {HeaderService} from "../../../shared/services/header.service";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";
 import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.service";
+import {BaseEnum} from "../../../shared/enum/base.enum";
+import {first} from "rxjs";
+import {isNotNullOrUndefined} from "../../../shared/utils/utils";
 
 @Component({
 	selector: "app-timbre-layout",
@@ -21,7 +24,9 @@ export class TimbreLayoutComponent implements OnInit {
 	ngOnInit(): void {
 		this.headerService.titre$.next("TIMBRES");
 		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
-		this.timbreUtilsService.timbreCritereModel.setAnnees([new Date().getFullYear()]);
-		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+		this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
+			this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
+			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+		});
 	}
 }

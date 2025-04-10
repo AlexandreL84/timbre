@@ -89,10 +89,18 @@ export class TimbreResumeService {
 					const findTimbreBlocAcquis = timbresBlocAcquis.find(timbreBlocAcquis => timbreBlocAcquis['idBloc'] == bloc["id"]);
 					if (isNotNullOrUndefined(findTimbreBlocAcquis)) {
 						if (findTimbreBlocAcquis["acquis"] == true) {
-							timbreResumeModel.setAcquisBloc(timbreResumeModel.getAcquisBloc() + 1);
+							if (bloc["carnet"]) {
+								timbreResumeModel.setAcquisCarnet(timbreResumeModel.getAcquisCarnet() + 1);
+							} else {
+								timbreResumeModel.setAcquisBloc(timbreResumeModel.getAcquisBloc() + 1);
+							}
 						}
 						if (findTimbreBlocAcquis["doublon"] == true) {
-							timbreResumeModel.setDoublonBloc(timbreResumeModel.getDoublonBloc() + 1);
+							if (bloc["carnet"]) {
+								timbreResumeModel.setDoublonCarnet(timbreResumeModel.getDoublonCarnet() + 1);
+							} else {
+								timbreResumeModel.setDoublonBloc(timbreResumeModel.getDoublonBloc() + 1);
+							}
 						}
 					}
 				}

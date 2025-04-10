@@ -17,6 +17,12 @@ export class TimbreResumeModel extends ProprieteModel {
 	@Label("Total carnet")
 	nombreCarnet: number;
 
+	@Label("Acquis")
+	acquisCarnet: number;
+
+	@Label("Doublon")
+	doublonCarnet: number;
+
 	@Label("Total bloc")
 	nombreBloc: number;
 
@@ -27,13 +33,15 @@ export class TimbreResumeModel extends ProprieteModel {
 	doublonBloc: number;
 
 
-	constructor(annee?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number ) {
+	constructor(annee?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, acquisCarnet?: number, doublonCarnet?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number) {
 		super();
 		this.annee = annee ? annee : null;
 		this.nombre = nombre ? nombre : 0;
 		this.acquis = acquis ? acquis : 0;
 		this.doublon = doublon ? doublon : 0;
 		this.nombreCarnet = nombreCarnet ? nombreCarnet : 0;
+		this.acquisCarnet = acquisCarnet ? acquisCarnet : 0;
+		this.doublonCarnet = doublonCarnet ? doublonCarnet : 0;
 		this.nombreBloc = nombreBloc ? nombreBloc : 0;
 		this.acquisBloc = acquisBloc ? acquisBloc : 0;
 		this.doublonBloc = doublonBloc ? doublonBloc : 0;
@@ -78,6 +86,22 @@ export class TimbreResumeModel extends ProprieteModel {
 
 	setNombreCarnet(value: number) {
 		this.nombreCarnet = value;
+	}
+
+	getAcquisCarnet(): number {
+		return this.acquisCarnet;
+	}
+
+	setAcquisCarnet(value: number) {
+		this.acquisCarnet = value;
+	}
+
+	getDoublonCarnet(): number {
+		return this.doublonCarnet;
+	}
+
+	setDoublonCarnet(value: number) {
+		this.doublonCarnet = value;
 	}
 
 	getNombreBloc(): number {

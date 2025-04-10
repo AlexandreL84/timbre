@@ -77,7 +77,9 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 		if (this.timbreCritereModel.getAcquis() == "NON") {
 			this.timbreCritereModel.setDoublon("TOUS");
 		}
-		this.timbreBlocService.getBlocs(this.timbreCritereModel);
+		if (isNotNullOrUndefined(this.timbreCritereModel.getAnnees()) && this.timbreCritereModel.getAnnees().length > 0) {
+			this.timbreBlocService.getBlocs(this.timbreCritereModel);
+		}
 	}
 
 	applyFilter(event: Event) {

@@ -21,7 +21,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
-	displayedColumns: string[] = ["annee", "nombre", "acquis", "doublon", "nombreCarnet", "nombreBloc", "acquisBloc", "doublonBloc"];
+	displayedColumns: string[] = ["annee", "nombre", "acquis", "doublon", "nombreCarnet", "acquisCarnet", "doublonCarnet", "nombreBloc", "acquisBloc", "doublonBloc"];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
 	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {

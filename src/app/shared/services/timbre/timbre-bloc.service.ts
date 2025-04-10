@@ -22,6 +22,7 @@ export class TimbreBlocService {
 	heightTimbreZoom: number = 500;
 
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+	totalCarnet$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbresBlocModel$: BehaviorSubject<TimbreBlocModel[]> = new BehaviorSubject<TimbreBlocModel[]>(null);
 
 	constructor(
@@ -48,8 +49,10 @@ export class TimbreBlocService {
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
-		this.getAllBlocs(timbreCritereModel).pipe(first()).subscribe(timbesBloc => {
-			this.total$.next(timbesBloc?.length);
+		this.totalCarnet$.next(null);
+		this.getAllBlocs(timbreCritereModel).pipe(first(timbesBloc => isNotNullOrUndefined(timbesBloc) && timbesBloc?.length > 0)).subscribe(timbesBloc => {
+			this.total$.next(timbesBloc?.filter(timbesBloc => !timbesBloc["carnet"])?.length);
+			this.totalCarnet$.next(timbesBloc?.filter(timbesBloc => timbesBloc["carnet"])?.length);
 		});
 	}
 
@@ -101,13 +104,13 @@ export class TimbreBlocService {
 	}
 
 	getBlocs(timbreCritereModel?: TimbreCritereModel) {
-		this.getTotal();
 		this.timbresBlocModel$.next(null);
 		combineLatest([
 			this.getAllBlocs(timbreCritereModel),
 			this.getTimbreBlocAcquis()
 		]).pipe(first()).subscribe(([timbresBloc, timbresBlocAcquis]) => {
 			this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel);
+			this.getTotal();
 		});
 	}
 

@@ -29,22 +29,18 @@
 			</div>
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="end end">
-				<div *ngIf="!(timbres$ |async) || (timbres$ |async)?.length == 0" fxLayout="column" fxFlex="20"
-					 fxLayoutAlign="end end" class="form-input noError">
-					<input
-						name="annee"
-						[(ngModel)]="annee"
-						type="number"
-						style="width: 60px !important;"
-						minlength="4"
-						maxlength="4"
-						min="1900"
-						zMin="1900"
-						[max]="maxAnnee"
-						[zMax]="maxAnnee"
-						required
-						zControl
-					/>
+				<div *ngIf="!(timbres$ |async) || (timbres$ |async)?.length == 0"
+					 fxLayout="row" fxLayoutAlign="end center" class="form-input select noError" style="width: 150px">
+					<mat-select name="anneeSelect"
+								multiple
+								[(ngModel)]="annees"
+								[placeholder]="'Années'"
+					>
+						<mat-option class="selectMin" *ngFor="let annee of anneesDispo"
+									[value]="annee">
+							{{ annee }}
+						</mat-option>
+					</mat-select>
 				</div>
 
 				<button
