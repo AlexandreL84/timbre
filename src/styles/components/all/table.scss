@@ -6,13 +6,31 @@
 
 	$primary-palette: map.get($color-config, "primary");
 	$primary: mat.m2-get-color-from-palette($primary-palette);
+	$primary25: mat.m2-get-color-from-palette($primary-palette, 25);
 	$primary50: mat.m2-get-color-from-palette($primary-palette, 50);
 
 	$accent-palette: map.get($color-config, "accent");
 	$accent: mat.m2-get-color-from-palette($accent-palette);
+	$accent50: mat.m2-get-color-from-palette($accent-palette, 50);
+	$accent100: mat.m2-get-color-from-palette($accent-palette, 100);
 
 	tr.mat-mdc-row:hover {
 		background-color: $primary50;
+		td {
+			background-color: $primary50;
+		}
+	}
+
+	td.primary25 {
+		background-color: $primary25;
+	}
+
+	td.accent50 {
+		background-color: $accent50;
+	}
+
+	td.accent100 {
+		background-color: $accent100;
 	}
 
 	.mat-sort-header-arrow {
