@@ -95,7 +95,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		this.dialog.open(TimbreResumeComponent, {
 			height: "auto",
 			maxHeight: "750px",
-			width: "900px",
+			width: "1000px",
 		});
 	}
 

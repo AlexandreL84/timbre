@@ -46,24 +46,49 @@ export class TimbreResumeService {
 					}
 				}
 
-				let timbreResumeModel: TimbreResumeModel = timbreResumeModels.find(timbreResumeModel => timbreResumeModel.getAnnee() == annee)
-				if (isNotNullOrUndefined(timbreResumeModel)) {
-					timbreResumeModel.setNombre(timbreResumeModel.getNombre() + 1);
-				} else {
+				let timbreResumeModel: TimbreResumeModel = timbreResumeModels.find(timbreResumeModel => timbreResumeModel.getAnnee() == annee);
+				if (isNullOrUndefined(timbreResumeModel)) {
 					timbreResumeModel = new TimbreResumeModel();
 					timbreResumeModel.setAnnee(annee);
-					timbreResumeModel.setNombre(1);
 					timbreResumeModels.push(timbreResumeModel);
+				}
+				timbreResumeModel.setTotal(timbreResumeModel.getTotal() + 1);
+
+				const findBloc = isNotNullOrUndefined(timbre["idBloc"])? timbresBloc.find(timbreBloc => timbreBloc["id"] == timbre["idBloc"]): null;
+				if (isNotNullOrUndefined(timbre["idBloc"])) {
+					if (isNotNullOrUndefined(findBloc) && findBloc["carnet"]) {
+						timbreResumeModel.setNombreTimbresCarnet(timbreResumeModel.getNombreTimbresCarnet() + 1);
+					} else {
+						timbreResumeModel.setNombreTimbresBloc(timbreResumeModel.getNombreTimbresBloc() + 1);
+					}
+				} else {
+					timbreResumeModel.setNombre(timbreResumeModel.getNombre() + 1);
 				}
 
 				if (isNotNullOrUndefined(timbresAcquis)) {
 					const findTimbreAcquis = timbresAcquis.find(timbreAcquis => timbreAcquis['idTimbre'] == timbre["id"]);
 					if (isNotNullOrUndefined(findTimbreAcquis)) {
 						if (findTimbreAcquis["acquis"] == true) {
-							timbreResumeModel.setAcquis(timbreResumeModel.getAcquis() + 1);
+							if (isNotNullOrUndefined(timbre["idBloc"])) {
+								if (isNotNullOrUndefined(findBloc) && findBloc["carnet"]) {
+									timbreResumeModel.setAcquisTimbresCarnet(timbreResumeModel.getAcquisTimbresCarnet() + 1);
+								} else {
+									timbreResumeModel.setAcquisTimbresBloc(timbreResumeModel.getAcquisTimbresBloc() + 1);
+								}
+							} else {
+								timbreResumeModel.setAcquis(timbreResumeModel.getAcquis() + 1);
+							}
 						}
 						if (findTimbreAcquis["doublon"] == true) {
-							timbreResumeModel.setDoublon(timbreResumeModel.getDoublon() + 1);
+							if (isNotNullOrUndefined(timbre["idBloc"])) {
+								if (isNotNullOrUndefined(findBloc) && findBloc["carnet"]) {
+									timbreResumeModel.setDoublonTimbresCarnet(timbreResumeModel.getDoublonTimbresCarnet() + 1);
+								} else {
+									timbreResumeModel.setDoublonTimbresBloc(timbreResumeModel.getDoublonTimbresBloc() + 1);
+								}
+							} else {
+								timbreResumeModel.setDoublon(timbreResumeModel.getDoublon() + 1);
+							}
 						}
 					}
 				}
@@ -89,16 +114,12 @@ export class TimbreResumeService {
 					const findTimbreBlocAcquis = timbresBlocAcquis.find(timbreBlocAcquis => timbreBlocAcquis['idBloc'] == bloc["id"]);
 					if (isNotNullOrUndefined(findTimbreBlocAcquis)) {
 						if (findTimbreBlocAcquis["acquis"] == true) {
-							if (bloc["carnet"]) {
-								timbreResumeModel.setAcquisCarnet(timbreResumeModel.getAcquisCarnet() + 1);
-							} else {
+							if (!bloc["carnet"]) {
 								timbreResumeModel.setAcquisBloc(timbreResumeModel.getAcquisBloc() + 1);
 							}
 						}
 						if (findTimbreBlocAcquis["doublon"] == true) {
-							if (bloc["carnet"]) {
-								timbreResumeModel.setDoublonCarnet(timbreResumeModel.getDoublonCarnet() + 1);
-							} else {
+							if (!bloc["carnet"]) {
 								timbreResumeModel.setDoublonBloc(timbreResumeModel.getDoublonBloc() + 1);
 							}
 						}
@@ -110,13 +131,18 @@ export class TimbreResumeService {
 		if (isNotNullOrUndefined(timbreResumeModels) && timbreResumeModels?.length > 0) {
 			const totalTimbreResume = new TimbreResumeModel();
 			timbreResumeModels.forEach(timbreResumeModel => {
+				totalTimbreResume.setTotal(totalTimbreResume.getTotal() + timbreResumeModel.getTotal());
 				totalTimbreResume.setNombre(totalTimbreResume.getNombre() + timbreResumeModel.getNombre());
 				totalTimbreResume.setAcquis(totalTimbreResume.getAcquis() + timbreResumeModel.getAcquis());
 				totalTimbreResume.setDoublon(totalTimbreResume.getDoublon() + timbreResumeModel.getDoublon());
 				totalTimbreResume.setNombreCarnet(totalTimbreResume.getNombreCarnet() + timbreResumeModel.getNombreCarnet());
+				totalTimbreResume.setNombreTimbresCarnet(totalTimbreResume.getNombreTimbresCarnet() + timbreResumeModel.getNombreTimbresCarnet());
 				totalTimbreResume.setNombreBloc(totalTimbreResume.getNombreBloc() + timbreResumeModel.getNombreBloc());
 				totalTimbreResume.setAcquisBloc(totalTimbreResume.getAcquisBloc() + timbreResumeModel.getAcquisBloc());
 				totalTimbreResume.setDoublonBloc(totalTimbreResume.getDoublonBloc() + timbreResumeModel.getDoublonBloc());
+				totalTimbreResume.setNombreTimbresBloc(totalTimbreResume.getNombreTimbresBloc() + timbreResumeModel.getNombreTimbresBloc());
+				totalTimbreResume.setAcquisTimbresBloc(totalTimbreResume.getAcquisTimbresBloc() + timbreResumeModel.getAcquisTimbresBloc());
+				totalTimbreResume.setDoublonTimbresBloc(totalTimbreResume.getDoublonTimbresBloc() + timbreResumeModel.getDoublonTimbresBloc());
 			})
 			this.totalTimbreResume$.next(totalTimbreResume);
 		}

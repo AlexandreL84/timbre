@@ -20,7 +20,6 @@
 						  style="font-size: 2em"
 						  [color]="'white'"
 						  [info]="choixRoute?.getInfo()"
-						  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
 						  (click)="headerService.setRoute(choixRoute.getRoute())">
 				</lib-icon>
 			</ng-container>
@@ -30,7 +29,6 @@
 				  style="font-size: 2em"
 				  [color]="'white'"
 				  [info]="'Changer couleur'"
-				  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
 				  (click)="toggleDarkTheme()">
 		</lib-icon>
 
@@ -38,7 +36,6 @@
 				  style="font-size: 2em"
 				  [color]="'white'"
 				  [info]="'Déconnexion'"
-				  [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"
 				  (click)="logout()">
 		</lib-icon>
 	</div>

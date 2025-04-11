@@ -1,5 +1,6 @@
 @use "sass:map";
 @use "../../../../node_modules/@angular/material/index" as mat;
+@use "../../palette/gray" as gray-palette;
 
 @mixin color($theme) {
 	$color-config: mat.m2-get-color-config($theme);
@@ -14,15 +15,27 @@
 	$accent50: mat.m2-get-color-from-palette($accent-palette, 50);
 	$accent100: mat.m2-get-color-from-palette($accent-palette, 100);
 
+	$gray: mat.m2-define-palette(gray-palette.$gray-theme);
+	$gray25: mat.m2-get-color-from-palette($gray, 25);
+
 	tr.mat-mdc-row:hover {
 		background-color: $primary50;
 		td {
 			background-color: $primary50;
+
+			&.accent50 {
+				background-color: $accent100;
+			}
 		}
 	}
 
+
 	td.primary25 {
 		background-color: $primary25;
+	}
+
+	td.primary50 {
+		background-color: $primary50;
 	}
 
 	td.accent50 {
@@ -31,6 +44,10 @@
 
 	td.accent100 {
 		background-color: $accent100;
+	}
+
+	td.gray25 {
+		background-color: $gray25;
 	}
 
 	.mat-sort-header-arrow {

@@ -9,7 +9,6 @@ import {TimbreSupprimService} from "../../../../../shared/services/timbre/timbre
 @Component({
 	selector: "app-timbre-supprim-choix-annee",
 	templateUrl: "./timbre-supprim-choix-annee.component.html",
-	styleUrls: ["./timbre-supprim-choix-annee.component.scss"],
 })
 export class TimbreSupprimChoixAnneeComponent {
 	maxAnnee: number = new Date().getFullYear();

@@ -12,7 +12,7 @@
                     class="iconInfo {{ classIcone }}"
                     [icone]="FontAwesomeEnum.CIRCLE_INFO"
                     [info]="info ? info : object?.getPropertyLibelle(key, 'info')"
-                    [classInfo]="'tooltiptextDescription tooltiptextBgWhite widthAuto'"></lib-icon>
+				></lib-icon>
             </ng-container>
         </ng-container>
         <span *ngIf="showQuestion && object?.getPropertyLibelle(key, 'question')">{{ object?.getPropertyLibelle(key, "question") }}</span>

@@ -17,7 +17,7 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
     @Input() info: string;
     @Input() infoPosition: TooltipPosition;
     @Input() size: "sm" | "lg" | "2x" | "3x" | "5x" | "6x" | "7x" | "10x";
-    @Input() classInfo: string = "tooltiptextDescription";
+    @Input() classInfo: string = "tooltiptextDescription tooltiptextBgWhite widthAuto";
     @Input() matBadgeHidden: boolean;
     @Input() matBadgeColor;
     @Input() matBadgeClass: string = null;

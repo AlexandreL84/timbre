@@ -10,6 +10,8 @@ import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {MatDialogRef} from "@angular/material/dialog";
+import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
+import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 
 @Component({
 	selector: "app-timbre-resume",
@@ -21,7 +23,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
-	displayedColumns: string[] = ["annee", "nombre", "acquis", "doublon", "nombreCarnet", "acquisCarnet", "doublonCarnet", "nombreBloc", "acquisBloc", "doublonBloc"];
+	displayedColumns: string[] = ["annee", "total", "nombre", "acquis", "doublon", "nombreCarnet", "nombreTimbresCarnet",  "acquisTimbresCarnet", "doublonTimbresCarnet", "nombreBloc", "acquisBloc", "doublonBloc", "nombreTimbresBloc", "acquisTimbresBloc", "doublonTimbresBloc"];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
 	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
@@ -55,4 +57,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
 		this.dialogRef.close();
 	}
+
+	protected readonly FontAwesomeEnum = FontAwesomeEnum;
+	protected readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 }

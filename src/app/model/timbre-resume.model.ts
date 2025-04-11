@@ -6,45 +6,65 @@ export class TimbreResumeModel extends ProprieteModel {
 	annee: number;
 
 	@Label("Total")
+	total: number;
+
+	@Label("Nombre timbres")
 	nombre: number;
 
-	@Label("Acquis")
+	@Label("Total de timbres acquis")
 	acquis: number;
 
-	@Label("Doublon")
+	@Label("Total de timbres en doublon")
 	doublon: number;
 
-	@Label("Total carnet")
+	@Label("Carnet")
 	nombreCarnet: number;
 
-	@Label("Acquis")
-	acquisCarnet: number;
+	@Label("Timbres carnet")
+	nombreTimbresCarnet: number;
 
-	@Label("Doublon")
-	doublonCarnet: number;
+	@Label("Total timbres carnet acquis")
+	acquisTimbresCarnet: number;
 
-	@Label("Total bloc")
+	@Label("Total timbres carnet en doublon")
+	doublonTimbresCarnet: number;
+
+	@Label("Bloc")
 	nombreBloc: number;
 
-	@Label("Acquis")
+	@Label("Total bloc acquis")
 	acquisBloc: number;
 
-	@Label("Doublon")
+	@Label("Total bloc en doublon")
 	doublonBloc: number;
 
+	@Label("Timbres bloc")
+	nombreTimbresBloc: number;
 
-	constructor(annee?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, acquisCarnet?: number, doublonCarnet?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number) {
+	@Label("Total timbres bloc acquis")
+	acquisTimbresBloc: number;
+
+	@Label("Total timbres bloc en doublon")
+	doublonTimbresBloc: number;
+
+
+	constructor(annee?: number, total?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, nombreTimbresCarnet?: number, acquisTimbresCarnet?: number, doublonTimbresCarnet?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number, nombreTimbresBloc?: number, acquisTimbresBloc?: number, doublonTimbresBloc?: number) {
 		super();
 		this.annee = annee ? annee : null;
+		this.total = total ? total : 0;
 		this.nombre = nombre ? nombre : 0;
 		this.acquis = acquis ? acquis : 0;
 		this.doublon = doublon ? doublon : 0;
 		this.nombreCarnet = nombreCarnet ? nombreCarnet : 0;
-		this.acquisCarnet = acquisCarnet ? acquisCarnet : 0;
-		this.doublonCarnet = doublonCarnet ? doublonCarnet : 0;
+		this.nombreTimbresCarnet = nombreTimbresCarnet ? nombreTimbresCarnet : 0;
+		this.acquisTimbresCarnet = acquisTimbresCarnet ? acquisTimbresCarnet : 0;
+		this.doublonTimbresCarnet = doublonTimbresCarnet ? doublonTimbresCarnet : 0;
 		this.nombreBloc = nombreBloc ? nombreBloc : 0;
 		this.acquisBloc = acquisBloc ? acquisBloc : 0;
 		this.doublonBloc = doublonBloc ? doublonBloc : 0;
+		this.nombreTimbresBloc = nombreTimbresBloc ? nombreTimbresBloc : 0;
+		this.acquisTimbresBloc = acquisTimbresBloc ? acquisTimbresBloc : 0;
+		this.doublonTimbresBloc = doublonTimbresBloc ? doublonTimbresBloc : 0;
 
 	}
 
@@ -54,6 +74,14 @@ export class TimbreResumeModel extends ProprieteModel {
 
 	setAnnee(value: number) {
 		this.annee = value;
+	}
+
+	getTotal(): number {
+		return this.total;
+	}
+
+	setTotal(value: number) {
+		this.total = value;
 	}
 
 	getNombre(): number {
@@ -88,20 +116,28 @@ export class TimbreResumeModel extends ProprieteModel {
 		this.nombreCarnet = value;
 	}
 
-	getAcquisCarnet(): number {
-		return this.acquisCarnet;
+	getNombreTimbresCarnet(): number {
+		return this.nombreTimbresCarnet;
 	}
 
-	setAcquisCarnet(value: number) {
-		this.acquisCarnet = value;
+	setNombreTimbresCarnet(value: number) {
+		this.nombreTimbresCarnet = value;
 	}
 
-	getDoublonCarnet(): number {
-		return this.doublonCarnet;
+	getAcquisTimbresCarnet(): number {
+		return this.acquisTimbresCarnet;
 	}
 
-	setDoublonCarnet(value: number) {
-		this.doublonCarnet = value;
+	setAcquisTimbresCarnet(value: number) {
+		this.acquisTimbresCarnet = value;
+	}
+
+	getDoublonTimbresCarnet(): number {
+		return this.doublonTimbresCarnet;
+	}
+
+	setDoublonTimbresCarnet(value: number) {
+		this.doublonTimbresCarnet = value;
 	}
 
 	getNombreBloc(): number {
@@ -126,5 +162,29 @@ export class TimbreResumeModel extends ProprieteModel {
 
 	setDoublonBloc(value: number) {
 		this.doublonBloc = value;
+	}
+
+	getNombreTimbresBloc(): number {
+		return this.nombreTimbresBloc;
+	}
+
+	setNombreTimbresBloc(value: number) {
+		this.nombreTimbresBloc = value;
+	}
+
+	getAcquisTimbresBloc(): number {
+		return this.acquisTimbresBloc;
+	}
+
+	setAcquisTimbresBloc(value: number) {
+		this.acquisTimbresBloc = value;
+	}
+
+	getDoublonTimbresBloc(): number {
+		return this.doublonTimbresBloc;
+	}
+
+	setDoublonTimbresBloc(value: number) {
+		this.doublonTimbresBloc = value;
 	}
 }
