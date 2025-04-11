@@ -4,7 +4,7 @@
 <ng-template #load>
 	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 		<ng-container matColumnDef="annee" sticky>
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell mat-sort-header *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'annee'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="primary50">
@@ -13,7 +13,7 @@
 			<td mat-footer-cell *matFooterCellDef></td>
 		</ng-container>
 		<ng-container matColumnDef="total" sticky>
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell mat-sort-header *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'total'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="primary50">
@@ -24,7 +24,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="nombre">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombre'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index">
@@ -34,7 +34,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombre() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="acquis">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -52,7 +52,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquis() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="doublon">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -71,7 +71,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="nombreCarnet">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreCarnet'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index"
@@ -82,7 +82,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreCarnet() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="nombreTimbresCarnet">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreTimbresCarnet'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index"
@@ -93,7 +93,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreTimbresCarnet() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="acquisTimbresCarnet">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -112,7 +112,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisTimbresCarnet() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="doublonTimbresCarnet">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -132,7 +132,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="nombreBloc">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreBloc'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index"
@@ -143,7 +143,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreBloc() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="acquisBloc">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -162,7 +162,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisBloc() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="doublonBloc">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -182,7 +182,7 @@
 		</ng-container>
 
 		<ng-container matColumnDef="nombreTimbresBloc">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreTimbresBloc'"></lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index"
@@ -193,7 +193,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreTimbresBloc() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="acquisTimbresBloc">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
@@ -212,7 +212,7 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisTimbresBloc() }} </b></td>
 		</ng-container>
 		<ng-container matColumnDef="doublonTimbresBloc">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+			<th mat-header-cell *matHeaderCellDef>
 				<lib-icon
 					class="click"
 					style="font-size: 1.2em"
