@@ -1,5 +1,6 @@
 import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
+import {UserModel} from "./user.model";
 
 export class TimbreCritereModel extends ProprieteModel {
 	@Label("Année")
@@ -19,6 +20,9 @@ export class TimbreCritereModel extends ProprieteModel {
 
 	@Label("Carnet")
 	carnet: string;
+
+	@Label("User")
+	user: UserModel;
 
 	getAnnees(): number[] {
 		return this.annees;
@@ -66,5 +70,13 @@ export class TimbreCritereModel extends ProprieteModel {
 
 	setBloc(value: string) {
 		this.bloc = value;
+	}
+
+	getUser(): UserModel {
+		return this.user;
+	}
+
+	setUser(value: UserModel) {
+		this.user = value;
 	}
 }

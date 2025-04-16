@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {AsyncPipe, CommonModule} from '@angular/common';
 import {FlexLayoutModule, FlexModule} from '@angular/flex-layout';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TimbreRoutingModule} from './timbre-routing.module';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {TimbreLayoutComponent} from './layout/timbre-layout.component';
@@ -32,26 +32,27 @@ import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.se
 	declarations: [
 		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatComponent, TimbreResumeComponent
 	],
-	imports: [
-		MaterialModule,
-		TimbreRoutingModule,
-		CommonModule,
-		FlexModule,
-		FlexLayoutModule,
-		FormsModule,
-		AsyncPipe,
-		LibSpinnerModule,
-		LibIconModule,
-		LibDialogImageModule,
-		LibLibelleModelModule,
-		DirectiveModule,
-		ErrorModule,
-		PipeModule,
-		LibModalModule,
-		LibUploadModule,
-		SimpleNotificationModule,
-		MenuModule
-	],
+    imports: [
+        MaterialModule,
+        TimbreRoutingModule,
+        CommonModule,
+        FlexModule,
+        FlexLayoutModule,
+        FormsModule,
+        AsyncPipe,
+        LibSpinnerModule,
+        LibIconModule,
+        LibDialogImageModule,
+        LibLibelleModelModule,
+        DirectiveModule,
+        ErrorModule,
+        PipeModule,
+        LibModalModule,
+        LibUploadModule,
+        SimpleNotificationModule,
+        MenuModule,
+        ReactiveFormsModule
+    ],
 	exports: [],
 	providers: [UtilsService, TimbreUtilsService, TimbreService, TimbreBlocService, TimbreResumeService, UploadService, provideHttpClient()]
 })

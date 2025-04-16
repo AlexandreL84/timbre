@@ -4,6 +4,7 @@
 		<app-menu></app-menu>
 
 		<app-timbre-resultat
+			[load$]="timbreService.load$"
 			[timbres$]="timbreService.timbres$"
 			[total$]="timbreService.total$"
 		>

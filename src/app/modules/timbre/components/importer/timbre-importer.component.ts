@@ -91,7 +91,7 @@ export class TimbreImporterComponent implements OnInit {
 			combineLatest([
 				this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE),
 				this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE_BLOC),
-				this.authService.getUser()
+				this.authService.userSelect$
 			]).pipe(first(([maxIdentTimbre, maxIdentBloc, user]) => isNotNullOrUndefined(user))).subscribe(([maxIdentTimbre, maxIdentBloc, user]) => {
 				this.identTimbre = maxIdentTimbre;
 				this.identBloc = maxIdentBloc;

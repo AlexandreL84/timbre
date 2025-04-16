@@ -3,10 +3,9 @@ import {StyleManagerService} from "../../../shared/services/style-manager.servic
 import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {AuthService} from "../../../shared/services/auth.service";
 import {Router} from "@angular/router";
-import {Observable} from "rxjs";
-import {UserModel} from "../../../model/user.model";
 import {HeaderService} from "../../../shared/services/header.service";
 import {RouteEnum} from "../../../shared/enum/route.enum";
+import {DroitEnum} from "../../../shared/enum/droit.enum";
 
 @Component({
 	selector: 'app-header',
@@ -14,11 +13,9 @@ import {RouteEnum} from "../../../shared/enum/route.enum";
 })
 export class HeaderComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
-	user$: Observable<UserModel>;
+	readonly DroitEnum = DroitEnum;
 
-
-	constructor(public headerService: HeaderService, public styleManagerService: StyleManagerService, private authService: AuthService, private router: Router) {
-		this.user$ = this.authService.getUser();
+	constructor(public headerService: HeaderService, public styleManagerService: StyleManagerService, public authService: AuthService, private router: Router) {
 	}
 
 	toggleDarkTheme() {

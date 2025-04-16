@@ -12,10 +12,11 @@ import {LibIconModule} from "../../shared/components/lib-icon";
 
 
 @NgModule({
-    declarations: [HeaderComponent],
-    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule],
-    exports: [
-        HeaderComponent
-    ]
+	declarations: [HeaderComponent],
+	imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule],
+	exports: [
+		HeaderComponent
+	],
 })
-export class HeaderModule {}
+export class HeaderModule {
+}

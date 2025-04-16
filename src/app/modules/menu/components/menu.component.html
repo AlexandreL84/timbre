@@ -11,22 +11,24 @@
 		</ng-container>
 	</ng-container>
 
-	<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white"
-			mat-raised-button color="primary" (click)="ajouter()">
-		Ajouter
-	</button>
+	<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
+		<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white"
+				mat-raised-button color="primary" (click)="ajouter()">
+			Ajouter
+		</button>
 
-	<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
-		Ajouter
-		<ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
-	</button>
+		<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
+			Ajouter
+			<ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
+		</button>
+	</ng-container>
 	<!--
 	<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="accent"
 			(click)="ajouterBouchon()">
 		Bouchon
 	</button>
 	-->
-	<lib-icon *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE"
+	<lib-icon *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
 			  [icone]="FontAwesomeEnum.UPLOAD"
 			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
 			  class="accent click"
@@ -35,5 +37,5 @@
 			  (click)="importer()">
 	</lib-icon>
 
-	<app-timbre-supprim *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE"></app-timbre-supprim>
+	<app-timbre-supprim *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"></app-timbre-supprim>
 </div>

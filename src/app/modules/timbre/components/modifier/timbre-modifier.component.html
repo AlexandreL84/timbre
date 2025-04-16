@@ -71,7 +71,7 @@
 						</label>
 						<div fxLayout="row" fxLayoutGap="15px">
 						<mat-select name="bloc"
-									style="width: 120px !important;"
+									style="width: 180px !important;"
 									[ngModel]="timbreModel.getTimbreBlocModel()"
 									[placeholder]="'Choix bloc'"
 									[disabled]="!!timbreModel?.getId() || (timbreBlocService.timbresBlocModel$ | async)?.length <= 0"
@@ -81,7 +81,7 @@
 							<mat-option class="selectMin"
 										*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
 										[value]="bloc">
-								{{ bloc.getAnnee() }} - {{ bloc.getId() }}
+								{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc.isCarnet()? " (carnet)": "" }}
 							</mat-option>
 						</mat-select>
 

@@ -23,6 +23,7 @@ export class TimbreService {
 
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
+	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		private firestore: AngularFirestore,
@@ -55,6 +56,7 @@ export class TimbreService {
 
 	getTimbres(timbreCritereModel?: TimbreCritereModel) {
 		this.timbres$.next(null);
+		this.load$.next(false);
 		combineLatest([
 			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
 			this.getTimbreAcquis(),
@@ -62,12 +64,13 @@ export class TimbreService {
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			this.timbres$.next(this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel));
 			this.getTotal();
+			this.load$.next(true);
 		});
 	}
 
 	getTimbreAcquis(): Observable<any> {
-		return this.authService.getUser().pipe(
-			first(),
+		return this.authService.userSelect$.pipe(
+			first(userSelect => isNotNullOrUndefined(userSelect)),
 			switchMap((user) => {
 				if (isNotNullOrUndefined(user)) {
 					return this.getTimbreAcquisByUser(user.getId()).pipe(first(),
@@ -84,7 +87,7 @@ export class TimbreService {
 	}
 
 	acquis(timbreModel: TimbreModel, doublon: boolean) {
-		return this.authService.getUser().pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+		return this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.getIdUser())) {
 				this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
 					.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', user.getId())
@@ -188,7 +191,7 @@ export class TimbreService {
 	}
 
 	supprimer(timbreModel: TimbreModel) {
-		this.authService.getUser().pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			this.timbreUtilsService.supprimerTimbreAcquis(timbreModel, user.getId());
 			this.supprimerTimbre(timbreModel);
 		});

@@ -8,6 +8,8 @@ import {TimbreService} from "../../../shared/services/timbre/timbre.service";
 import {MatDialog} from "@angular/material/dialog";
 import {RouteEnum} from "../../../shared/enum/route.enum";
 import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
+import {AuthService} from "../../../shared/services/auth.service";
+import {DroitEnum} from "../../../shared/enum/droit.enum";
 
 @Component({
 	selector: 'app-menu',
@@ -17,8 +19,9 @@ export class MenuComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly RouteEnum = RouteEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+	readonly DroitEnum = DroitEnum;
 
-	constructor(public headerService: HeaderService, private timbreService: TimbreService, private dialog: MatDialog) {
+	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private dialog: MatDialog) {
 	}
 
 	ajouter() {

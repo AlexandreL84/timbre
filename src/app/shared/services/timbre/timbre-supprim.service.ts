@@ -22,14 +22,12 @@ export class TimbreSupprimService {
 			}*/)
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
-				console.log(timbres)
 				timbres.forEach((timbre, index) => {
 					this.firestore.collection(baseEmun)
 						.ref.where(critere, '==', timbre[critere])
 						.get()
 						.then(snapshot => {
 							snapshot.forEach(doc => {
-								console.log(doc.ref)
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
 									this.load$.next(true);
@@ -55,14 +53,12 @@ export class TimbreSupprimService {
 			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
-				console.log(timbres)
 				timbres.forEach((timbre, index) => {
 					this.firestore.collection(BaseEnum.TIMBRE)
 						.ref.where('id', '==', timbre["id"])
 						.get()
 						.then(snapshot => {
 							snapshot.forEach(doc => {
-								console.log(doc.ref)
 								this.supprimerAcquis(timbre["id"]);
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
@@ -90,14 +86,12 @@ export class TimbreSupprimService {
 			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
-				console.log(timbres)
 				timbres.forEach((timbre, index) => {
 					this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
 						.ref.where('idTimbre', '==', timbre["idTimbre"])
 						.get()
 						.then(snapshot => {
 							snapshot.forEach(doc => {
-								console.log(doc.ref)
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
 									this.load$.next(true);
@@ -125,14 +119,12 @@ export class TimbreSupprimService {
 			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
-				console.log(timbres)
 				timbres.forEach((timbre, index) => {
 					this.firestore.collection(BaseEnum.TIMBRE_BLOC)
 						.ref.where('id', '==', timbre["id"])
 						.get()
 						.then(snapshot => {
 							snapshot.forEach(doc => {
-								console.log(doc.ref)
 								this.supprimerBlocsAcquis(timbre["id"]);
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
@@ -160,14 +152,12 @@ export class TimbreSupprimService {
 			})
 			.valueChanges().pipe(first()).subscribe(timbres => {
 			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
-				console.log(timbres)
 				timbres.forEach((timbre, index) => {
 					this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
 						.ref.where('id', '==', timbre["id"])
 						.get()
 						.then(snapshot => {
 							snapshot.forEach(doc => {
-								console.log(doc.ref)
 								doc.ref.delete();
 								if (index == timbres.length - 1) {
 									this.load$.next(true);

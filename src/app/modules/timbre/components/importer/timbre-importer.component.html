@@ -22,6 +22,7 @@
 				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 				<app-timbre-resultat
 					*ngIf="(timbres$ |async)?.length > 0"
+					[load$]="load$"
 					[timbres$]="timbres$"
 					[modif]="false"
 				>

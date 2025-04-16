@@ -26,6 +26,9 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	displayedColumns: string[] = ["annee", "total", "nombre", "acquis", "doublon", "nombreCarnet", "nombreTimbresCarnet",  "acquisTimbresCarnet", "doublonTimbresCarnet", "nombreBloc", "acquisBloc", "doublonBloc", "nombreTimbresBloc", "acquisTimbresBloc", "doublonTimbresBloc"];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
+	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+
 	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
@@ -57,7 +60,4 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
 		this.dialogRef.close();
 	}
-
-	protected readonly FontAwesomeEnum = FontAwesomeEnum;
-	protected readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 }

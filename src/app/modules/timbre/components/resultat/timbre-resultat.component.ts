@@ -8,7 +8,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {TimbreModifierComponent} from "../modifier/timbre-modifier.component";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, first, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
@@ -18,6 +18,10 @@ import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awe
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TimbreResumeComponent} from "../resume/timbre-resume.component";
+import {AuthService} from "../../../../shared/services/auth.service";
+import {UserModel} from "../../../../model/user.model";
+import {DroitEnum} from "../../../../shared/enum/droit.enum";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -29,10 +33,10 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 
 	@Input() timbres$: BehaviorSubject<TimbreModel[]> | Observable<TimbreModel[]>;
+	@Input() load$: BehaviorSubject<boolean> | Observable<boolean>;
 	@Input() total$: BehaviorSubject<number> | Observable<number>;
 	@Input() modif: boolean = true;
 
-	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreModel> = new MatTableDataSource<TimbreModel>();
 	displayedColumns: string[];
 	public timbre: TimbreModel = new TimbreModel();
@@ -40,8 +44,9 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+	readonly DroitEnum = DroitEnum;
 
-	constructor(public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
+	constructor(private snackBar: MatSnackBar, public authService: AuthService, public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -51,13 +56,13 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type", "yt", "acquis", "doublon"];
 		if (this.modif) {
-			this.displayedColumns.push("modifier", "supprimer");
+			this.authService.user$.pipe(first(user => isNotNullOrUndefined(user) && user?.getDroit() == DroitEnum.TOTAL)).subscribe(user=> {
+				this.displayedColumns.push("modifier", "supprimer");
+			});
 		}
 
-		this.load$.next(false);
 		this.timbres$.subscribe(timbres => {
 			this.dataSource.data = timbres;
-			this.load$.next(true);
 		});
 	}
 
@@ -72,6 +77,11 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		if (isNotNullOrUndefined(sort)) {
 			this.dataSource.sort = this.sort;
 		}
+	}
+
+	setUser(userModel: UserModel) {
+		this.authService.userSelect$.next(userModel);
+		this.filtreByCritere()
 	}
 
 	filtreByCritere() {
@@ -99,12 +109,20 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	acquis(timbreModel: TimbreModel) {
-		this.timbreService.acquis(timbreModel, false);
+	droitInsuffisant() {
+		this.snackBar.open("Droit insuffisant", null, {
+			duration: 6000,
+		});
 	}
 
-	doublon(timbreModel: TimbreModel) {
-		this.timbreService.acquis(timbreModel, true);
+	acquisDoublon(timbreModel: TimbreModel, doublon: boolean) {
+		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user=> {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				this.timbreService.acquis(timbreModel, doublon);
+			} else {
+				this.droitInsuffisant();
+			}
+		});
 	}
 
 	modifier(timbreModel: TimbreModel) {

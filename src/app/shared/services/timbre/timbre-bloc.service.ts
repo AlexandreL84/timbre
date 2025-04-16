@@ -79,15 +79,15 @@ export class TimbreBlocService {
 					filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", null);
 				}
 			}
-			//filteredQuery = filteredQuery.orderBy('id', 'asc');
+			filteredQuery = filteredQuery.orderBy('id', 'asc');
 			return filteredQuery;
 		})
 			.valueChanges();
 	}
 
 	getTimbreBlocAcquis(): Observable<any> {
-		return this.authService.getUser().pipe(
-			first(),
+		return this.authService.userSelect$.pipe(
+			first(userSelect => isNotNullOrUndefined(userSelect)),
 			switchMap((user) => {
 				if (isNotNullOrUndefined(user)) {
 					return this.getTimbreBlocAcquisByUser(user.getId()).pipe(first(),
@@ -163,7 +163,7 @@ export class TimbreBlocService {
 	}
 
 	acquis(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
-		return this.authService.getUser().pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+		return this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (isNotNullOrUndefined(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser())) {
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
 					.ref.where('idTimbre', '==', timbreBlocModel.getId()).where('idUser', '==', user.getId())
@@ -253,7 +253,7 @@ export class TimbreBlocService {
 
 
 	supprimer(timbreBlocModel: TimbreBlocModel) {
-		this.authService.getUser().pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
 				timbres.forEach(timbreModel => {
 					this.timbreUtilsService.supprimerTimbreAcquis(timbreModel, user.getId());

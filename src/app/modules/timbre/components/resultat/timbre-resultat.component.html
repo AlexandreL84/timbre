@@ -2,19 +2,36 @@
 
 <section [fxHide]="(load$ | async) == false">
 	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
-		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" style="height: 50px">
-			<div fxFlex style="font-size: 1.2em">
-				<span>Nombre de timbres : </span>
-				<span class="bold">{{ (total$ | async) ? (total$ | async) : dataSource?.data?.length }}</span>
+		<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="30px" style="height: 50px">
+			<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+				<div fxFlex style="font-size: 1.2em">
+					<span>Nombre de timbres : </span>
+					<span class="bold">{{ (total$ | async) ? (total$ | async) : dataSource?.data?.length }}</span>
+				</div>
+
+				<lib-icon [icone]="FontAwesomeEnum.CHART_LINE_UP"
+						  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+						  class="accent click"
+						  style="font-size: 2em"
+						  [info]="'Détail par année'"
+						  (click)="resume()">
+				</lib-icon>
 			</div>
 
-			<lib-icon [icone]="FontAwesomeEnum.CHART_LINE_UP"
-					  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
-					  class="accent click"
-					  style="font-size: 2em"
-					  [info]="'Détail par année'"
-					  (click)="resume()">
-			</lib-icon>
+			<div
+				*ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"
+				fxLayout="row" fxLayoutAlign="end center"
+				class="form-input select" style="width: 120px">
+				<mat-select name="user"
+							class="scrollBarAccent"
+							[ngModel]="authService.userSelect$ | async"
+							[placeholder]="'Utilisateur'"
+							(ngModelChange)="setUser($event)">
+					<mat-option class="selectMin" *ngFor="let user of (authService.users$ | async)" [value]="user">
+						{{ user?.getPrenom() }}
+					</mat-option>
+				</mat-select>
+			</div>
 		</div>
 
 		<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
@@ -195,7 +212,11 @@
 		</ng-container>
 		<ng-container matColumnDef="acquis">
 			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbre?.getTimbreAcquisModel()" [key]="'acquis'" [align]="'center center'"></lib-libelle-model>
+				<lib-libelle-model
+					[object]="timbre?.getTimbreAcquisModel()"
+					[key]="'acquis'"
+					[align]="'center center'">
+				</lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<lib-icon
@@ -205,14 +226,18 @@
 					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="element?.getTimbreAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
-					(click)="acquis(element)"
+					(click)="acquisDoublon(element, false)"
 				>
 				</lib-icon>
 			</td>
 		</ng-container>
 		<ng-container matColumnDef="doublon">
 			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbre?.getTimbreAcquisModel()" [key]="'doublon'" [align]="'center center'"></lib-libelle-model>
+				<lib-libelle-model
+					[object]="timbre?.getTimbreAcquisModel()"
+					[key]="'doublon'"
+					[align]="'center center'">
+				</lib-libelle-model>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<lib-icon
@@ -222,7 +247,7 @@
 					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="element?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
-					(click)="doublon(element)"
+					(click)="acquisDoublon(element, true)"
 				>
 				</lib-icon>
 			</td>

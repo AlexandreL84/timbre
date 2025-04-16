@@ -5,7 +5,7 @@
 	 fxLayoutAlign="space-between center">
 	<div fxLayout="column" fxFlex="15" fxLayoutAlign="start center">
 		<span class="color-white" style="font-size: 1.5em">
-			{{ (user$ | async)?.getNom() }} {{ (user$ | async)?.getPrenom() }}
+			{{ (authService.user$ | async)?.getNom() }} {{ (authService.user$ | async)?.getPrenom() }}
 		</span>
 	</div>
 	<div fxLayout="column" fxFlex fxLayoutAlign="center center">
@@ -13,24 +13,26 @@
 	</div>
 
 	<div fxLayoutAlign="center end" fxLayoutGap="15px">
-		<ng-container *ngIf="(headerService.choixRoutes$ |async)?.length > 0">
-			<ng-container *ngFor="let choixRoute of (headerService.choixRoutes$ |async)">
-				<lib-icon [icone]="choixRoute?.getIcone()"
-						  [type]="choixRoute?.getType()"
-						  style="font-size: 2em"
-						  [color]="'white'"
-						  [info]="choixRoute?.getInfo()"
-						  (click)="headerService.setRoute(choixRoute.getRoute())">
-				</lib-icon>
+		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
+			<ng-container *ngIf="(headerService.choixRoutes$ |async)?.length > 0">
+				<ng-container *ngFor="let choixRoute of (headerService.choixRoutes$ |async)">
+					<lib-icon [icone]="choixRoute?.getIcone()"
+							  [type]="choixRoute?.getType()"
+							  style="font-size: 2em"
+							  [color]="'white'"
+							  [info]="choixRoute?.getInfo()"
+							  (click)="headerService.setRoute(choixRoute.getRoute())">
+					</lib-icon>
+				</ng-container>
 			</ng-container>
-		</ng-container>
 
-		<lib-icon [icone]="FontAwesomeEnum.PALETTE"
-				  style="font-size: 2em"
-				  [color]="'white'"
-				  [info]="'Changer couleur'"
-				  (click)="toggleDarkTheme()">
-		</lib-icon>
+			<lib-icon [icone]="FontAwesomeEnum.PALETTE"
+					  style="font-size: 2em"
+					  [color]="'white'"
+					  [info]="'Changer couleur'"
+					  (click)="toggleDarkTheme()">
+			</lib-icon>
+		</ng-container>
 
 		<lib-icon [icone]="FontAwesomeEnum.POWER_OFF"
 				  style="font-size: 2em"
