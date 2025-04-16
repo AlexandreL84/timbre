@@ -137,6 +137,8 @@ export class TimbreResumeService {
 				totalTimbreResume.setDoublon(totalTimbreResume.getDoublon() + timbreResumeModel.getDoublon());
 				totalTimbreResume.setNombreCarnet(totalTimbreResume.getNombreCarnet() + timbreResumeModel.getNombreCarnet());
 				totalTimbreResume.setNombreTimbresCarnet(totalTimbreResume.getNombreTimbresCarnet() + timbreResumeModel.getNombreTimbresCarnet());
+				totalTimbreResume.setAcquisTimbresCarnet(totalTimbreResume.getAcquisTimbresCarnet() + timbreResumeModel.getAcquisTimbresCarnet());
+				totalTimbreResume.setDoublonTimbresCarnet(totalTimbreResume.getDoublonTimbresCarnet() + timbreResumeModel.getDoublonTimbresCarnet());
 				totalTimbreResume.setNombreBloc(totalTimbreResume.getNombreBloc() + timbreResumeModel.getNombreBloc());
 				totalTimbreResume.setAcquisBloc(totalTimbreResume.getAcquisBloc() + timbreResumeModel.getAcquisBloc());
 				totalTimbreResume.setDoublonBloc(totalTimbreResume.getDoublonBloc() + timbreResumeModel.getDoublonBloc());
