@@ -38,7 +38,7 @@ export class AuthService {
 	getUser(): Observable<UserModel> {
 		const collectionUser = this.firestore.collection(BaseEnum.USER).valueChanges();
 		return combineLatest([this.afAuth.authState, collectionUser]).pipe(map(([user, users]) => {
-				const findUser = users.find(userFind => userFind["id"] == user.uid);
+				const findUser = users.find(userFind => userFind["id"] == user?.uid);
 				if (isNotNullOrUndefined(findUser)) {
 					return plainToInstance(UserModel, findUser);
 				}

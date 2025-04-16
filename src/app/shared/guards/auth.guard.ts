@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, Router} from '@angular/router';
 import {AuthService} from '../services/auth.service';
-import {Observable} from 'rxjs';
+import {first, Observable} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
 import {RouteEnum} from "../enum/route.enum";
 import {HeaderService} from "../services/header.service";
