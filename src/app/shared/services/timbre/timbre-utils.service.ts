@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {map, Observable} from "rxjs";
+import {BehaviorSubject, map, Observable} from "rxjs";
 import {isNotNullOrUndefined} from "../../utils/utils";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {BaseEnum} from "../../enum/base.enum";
@@ -11,6 +11,7 @@ import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
 
 @Injectable()
 export class TimbreUtilsService {
+	reinitResume$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(private firestore: AngularFirestore) {

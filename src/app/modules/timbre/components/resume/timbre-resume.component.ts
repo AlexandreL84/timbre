@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
-import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../../../../shared/utils/utils";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, first} from "rxjs";
 import {TimbreResumeService} from "../../../../shared/services/timbre/timbre-resume.service";
 import {TimbreResumeModel} from "../../../../model/timbre-resume.model";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
@@ -34,9 +34,18 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit(): void {
-		this.timbreResumeService.getResume();
+		this.timbreUtilsService.reinitResume$.pipe(first()).subscribe(reinit => {
+			if (reinit == true) {
+				this.timbreResumeService.getResume();
+			}
 
-		this.timbreResumeService.timbresResume$.subscribe(timbresResume => {
+			this.initData();
+		});
+
+	}
+
+	initData() {
+		this.timbreResumeService.timbresResume$.pipe(first(timbresResume=> isNotNullOrUndefined(timbresResume) && timbresResume?.length > 0)).subscribe(timbresResume => {
 			this.dataSource.data = timbresResume;
 		});
 	}

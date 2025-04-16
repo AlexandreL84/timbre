@@ -30,6 +30,7 @@ export class TimbreResumeService {
 			this.timbreBlocService.getTimbreBlocAcquis()
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBloc, timbresBlocAcquis]) => {
 			this.timbresResume$.next(this.construct(timbres, timbresAcquis, timbresBloc, timbresBlocAcquis));
+			this.timbreUtilsService.reinitResume$.next(false);
 		});
 	}
 
@@ -92,9 +93,7 @@ export class TimbreResumeService {
 						}
 					}
 				}
-
 			});
-
 
 			timbresBloc.forEach(bloc => {
 				let timbreResumeModel: TimbreResumeModel = timbreResumeModels.find(timbreResumeModel => timbreResumeModel.getAnnee() == bloc["annee"])

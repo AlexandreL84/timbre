@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { TimbreModel } from '../../../model/timbre.model';
-import { BehaviorSubject, combineLatest, first, map, Observable, switchMap } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { isNotNullOrUndefined, isNullOrUndefined } from '../../utils/utils';
-import { AuthService } from '../auth.service';
-import { TimbreAcquisModel } from '../../../model/timbre-acquis.model';
-import { TimbreCritereModel } from '../../../model/timbre-critere.model';
-import { TimbreBlocService } from './timbre-bloc.service';
-import { UploadService } from '../upload.service';
-import { DossierEnum } from '../../enum/dossier.enum';
-import { BaseEnum } from '../../enum/base.enum';
-import { UtilsService } from '../utils.service';
-import { TimbreUtilsService } from './timbre-utils.service';
+import {Injectable} from '@angular/core';
+import {TimbreModel} from '../../../model/timbre.model';
+import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 'rxjs';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
+import {AuthService} from '../auth.service';
+import {TimbreAcquisModel} from '../../../model/timbre-acquis.model';
+import {TimbreCritereModel} from '../../../model/timbre-critere.model';
+import {TimbreBlocService} from './timbre-bloc.service';
+import {UploadService} from '../upload.service';
+import {DossierEnum} from '../../enum/dossier.enum';
+import {BaseEnum} from '../../enum/base.enum';
+import {UtilsService} from '../utils.service';
+import {TimbreUtilsService} from './timbre-utils.service';
 
 @Injectable()
 export class TimbreService {
@@ -114,6 +114,7 @@ export class TimbreService {
 			} else {
 				this.addAcquis(user?.getId(), timbreModel, doublon);
 			}
+			this.timbreUtilsService.reinitResume$.next(true);
 		});
 	}
 
@@ -152,6 +153,7 @@ export class TimbreService {
 				if (refresh) {
 					this.getTimbres();
 				}
+				this.timbreUtilsService.reinitResume$.next(true);
 			} else {
 				console.error("timbre " + timbreModel.getId() + " déjà existant");
 			}
@@ -194,6 +196,7 @@ export class TimbreService {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			this.timbreUtilsService.supprimerTimbreAcquis(timbreModel, user.getId());
 			this.supprimerTimbre(timbreModel);
+			this.timbreUtilsService.reinitResume$.next(true);
 		});
 	}
 

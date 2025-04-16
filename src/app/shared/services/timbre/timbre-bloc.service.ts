@@ -30,7 +30,7 @@ export class TimbreBlocService {
 		private authService: AuthService,
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
-		private timbreUtilsService: TimbreUtilsService
+		private timbreUtilsService: TimbreUtilsService,
 	) {
 	}
 
@@ -191,6 +191,7 @@ export class TimbreBlocService {
 			} else {
 				this.addAcquis(user?.getId(), timbreBlocModel, doublon);
 			}
+			this.timbreUtilsService.reinitResume$.next(true);
 		});
 	}
 
@@ -224,6 +225,7 @@ export class TimbreBlocService {
 				if (refresh) {
 					this.getBlocs();
 				}
+				this.timbreUtilsService.reinitResume$.next(true);
 			} else {
 				console.error("bloc " + timbreBlocModel.getId() + " déjà existant");
 			}
@@ -284,6 +286,7 @@ export class TimbreBlocService {
 				.catch(error => {
 					console.error('Erreur de suppression :', error);
 				});
+			this.timbreUtilsService.reinitResume$.next(true);
 		});
 	}
 
