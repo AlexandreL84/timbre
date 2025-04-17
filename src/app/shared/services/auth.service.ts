@@ -31,6 +31,8 @@ export class AuthService {
 
 	// Méthode de déconnexion
 	signOut() {
+		this.user$.next(null);
+		this.userSelect$.next(null);
 		return this.afAuth.signOut();
 	}
 
@@ -41,29 +43,31 @@ export class AuthService {
 
 	// Méthode pour obtenir l'utilisateur actuellement connecté
 	getUser(): Observable<UserModel> {
-		this.user$.next(null);
-		this.userSelect$.next(null);
 		const collectionUser = this.firestore.collection(BaseEnum.USER).valueChanges();
-		return combineLatest([this.afAuth.authState, collectionUser]).pipe(map(([user, users]) => {
-				const findUser = users.find(userFind => userFind["id"] == user?.uid);
-				if (isNotNullOrUndefined(findUser)) {
-					const userModel: UserModel = plainToInstance(UserModel, findUser);
-					this.user$.next(userModel);
-					if (userModel?.getDroit() == DroitEnum.TOTAL || userModel?.getDroit() == DroitEnum.CONSULT_TOTAL) {
-						this.getUsers(DroitEnum.PARTIEL).pipe(first(users => isNotNullOrUndefined(users))).subscribe(users => {
-							const findUser = users.find(user=> user.getId() == userModel.getId());
-							if (findUser) {
-								this.userSelect$.next(findUser);
-							} else {
-								this.userSelect$.next(users.find(user=> user.getNom() == "LEFAIX"));
-							}
-						});
-					} else {
-						this.userSelect$.next(userModel);
+		return combineLatest([this.afAuth.authState, collectionUser, this.user$]).pipe(map(([user, users, userConnect]) => {
+				if (isNotNullOrUndefined(userConnect)) {
+					return userConnect;
+				} else {
+					const findUser = users.find(userFind => userFind["id"] == user?.uid);
+					if (isNotNullOrUndefined(findUser)) {
+						const userModel: UserModel = plainToInstance(UserModel, findUser);
+						this.user$.next(userModel);
+						if (userModel?.getDroit() == DroitEnum.TOTAL || userModel?.getDroit() == DroitEnum.CONSULT_TOTAL) {
+							this.getUsers(DroitEnum.PARTIEL).pipe(first(users => isNotNullOrUndefined(users))).subscribe(users => {
+								const findUser = users.find(user => user.getId() == userModel.getId());
+								if (findUser) {
+									this.userSelect$.next(findUser);
+								} else {
+									this.userSelect$.next(users.find(user => user.getNom() == "LEFAIX"));
+								}
+							});
+						} else {
+							this.userSelect$.next(userModel);
+						}
+						return userModel;
 					}
-					return userModel;
+					return null;
 				}
-				return null;
 			})
 		);
 	}

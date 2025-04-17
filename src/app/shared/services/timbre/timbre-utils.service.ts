@@ -13,6 +13,7 @@ import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
 export class TimbreUtilsService {
 	reinitResume$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
+	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(private firestore: AngularFirestore) {
 	}
@@ -99,17 +100,15 @@ export class TimbreUtilsService {
 		return timbreModel;
 	}
 
-	supprimerTimbreAcquis(timbreModel: TimbreModel, idUUser: string) {
-		if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.getIdUser())) {
-			this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
-				.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', idUUser)
-				.get()
-				.then(snapshot => {
-					snapshot.forEach(doc => {
-						doc.ref.delete();
-					});
+	supprimerTimbreAcquis(timbreModel: TimbreModel) {
+		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
+			.ref.where('idTimbre', '==', timbreModel.getId())
+			.get()
+			.then(snapshot => {
+				snapshot.forEach(doc => {
+					doc.ref.delete();
 				});
-		}
+			});
 	}
 
 	supprimerTimbre(timbreModel: TimbreModel) {

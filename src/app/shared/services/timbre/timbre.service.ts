@@ -193,11 +193,9 @@ export class TimbreService {
 	}
 
 	supprimer(timbreModel: TimbreModel) {
-		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
-			this.timbreUtilsService.supprimerTimbreAcquis(timbreModel, user.getId());
-			this.supprimerTimbre(timbreModel);
-			this.timbreUtilsService.reinitResume$.next(true);
-		});
+		this.timbreUtilsService.supprimerTimbreAcquis(timbreModel);
+		this.supprimerTimbre(timbreModel);
+		this.timbreUtilsService.reinitResume$.next(true);
 	}
 
 	getBouchon(): TimbreModel {

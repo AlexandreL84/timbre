@@ -10,6 +10,12 @@ import {RouteEnum} from "../../../shared/enum/route.enum";
 import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {AuthService} from "../../../shared/services/auth.service";
 import {DroitEnum} from "../../../shared/enum/droit.enum";
+import {UserModel} from "../../../model/user.model";
+import {isNotNullOrUndefined} from "../../../shared/utils/utils";
+import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.service";
+import {TimbreBlocService} from "../../../shared/services/timbre/timbre-bloc.service";
+import {BaseEnum} from "../../../shared/enum/base.enum";
+import {first} from "rxjs";
 
 @Component({
 	selector: 'app-menu',
@@ -21,7 +27,7 @@ export class MenuComponent {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly DroitEnum = DroitEnum;
 
-	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private dialog: MatDialog) {
+	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
 	}
 
 	ajouter() {
@@ -61,5 +67,29 @@ export class MenuComponent {
 		refDialog.afterClosed().subscribe(() => {
 			refDialog.close();
 		});
+	}
+
+	setUser(userModel: UserModel) {
+		this.authService.userSelect$.next(userModel);
+		if (window.location.href.indexOf("bloc") > 0) {
+			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
+				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
+			} else {
+				this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
+					this.timbreUtilsService.timbreCritereBlocModel.setAnnees([annees[0]]);
+					this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
+				});
+			}
+		} else {
+			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
+				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+			} else {
+				this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
+					this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
+					this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+				});
+			}
+		}
+		this.timbreUtilsService.reinitResume$.next(true);
 	}
 }

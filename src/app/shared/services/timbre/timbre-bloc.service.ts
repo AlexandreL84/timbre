@@ -44,7 +44,7 @@ export class TimbreBlocService {
 			witdth = witdth * (this.heightTimbreZoom / height);
 			height = this.heightTimbreZoom;
 		}
-		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, ('bloc-' + timbreBlocModel.getId()) , this.getDossier(timbreBlocModel, dossier, ident));
+		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, ('bloc-' + timbreBlocModel.getId()), this.getDossier(timbreBlocModel, dossier, ident));
 	}
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
@@ -88,9 +88,9 @@ export class TimbreBlocService {
 	getTimbreBlocAcquis(): Observable<any> {
 		return this.authService.userSelect$.pipe(
 			first(userSelect => isNotNullOrUndefined(userSelect)),
-			switchMap((user) => {
-				if (isNotNullOrUndefined(user)) {
-					return this.getTimbreBlocAcquisByUser(user.getId()).pipe(first(),
+			switchMap((userSelect) => {
+				if (isNotNullOrUndefined(userSelect)) {
+					return this.getTimbreBlocAcquisByUser(userSelect.getId()).pipe(first(),
 						map(result => {
 							return result;
 						}));
@@ -166,7 +166,7 @@ export class TimbreBlocService {
 		return this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (isNotNullOrUndefined(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser())) {
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
-					.ref.where('idTimbre', '==', timbreBlocModel.getId()).where('idUser', '==', user.getId())
+					.ref.where('idBloc', '==', timbreBlocModel.getId()).where('idUser', '==', user.getId())
 					//.limit(1)
 					.get()
 					.then(snapshot => {
@@ -255,39 +255,35 @@ export class TimbreBlocService {
 
 
 	supprimer(timbreBlocModel: TimbreBlocModel) {
-		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
-			this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
-				timbres.forEach(timbreModel => {
-					this.timbreUtilsService.supprimerTimbreAcquis(timbreModel, user.getId());
-					this.timbreUtilsService.supprimerTimbre(timbreModel);
+		this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
+			timbres.forEach(timbreModel => {
+				this.timbreUtilsService.supprimerTimbreAcquis(timbreModel);
+				this.timbreUtilsService.supprimerTimbre(timbreModel);
+			});
+		});
+
+		this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
+			.ref.where('idBloc', '==', timbreBlocModel.getId())
+			.get()
+			.then(snapshot => {
+				snapshot.forEach(doc => {
+					doc.ref.delete();
 				});
 			});
 
-			if (isNotNullOrUndefined(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser())) {
-				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
-					.ref.where('idBloc', '==', timbreBlocModel.getId()).where('idUser', '==', user.getId())
-					.get()
-					.then(snapshot => {
-						snapshot.forEach(doc => {
-							doc.ref.delete();
-						});
-					});
-			}
-
-			this.firestore.collection(BaseEnum.TIMBRE_BLOC)
-				.ref.where('id', '==', timbreBlocModel.getId())
-				.get()
-				.then(snapshot => {
-					snapshot.forEach(doc => {
-						doc.ref.delete();
-						this.getBlocs();
-					});
-				})
-				.catch(error => {
-					console.error('Erreur de suppression :', error);
+		this.firestore.collection(BaseEnum.TIMBRE_BLOC)
+			.ref.where('id', '==', timbreBlocModel.getId())
+			.get()
+			.then(snapshot => {
+				snapshot.forEach(doc => {
+					doc.ref.delete();
+					this.getBlocs();
 				});
-			this.timbreUtilsService.reinitResume$.next(true);
-		});
+			})
+			.catch(error => {
+				console.error('Erreur de suppression :', error);
+			});
+		this.timbreUtilsService.reinitResume$.next(true);
 	}
 
 	getDossier(timbreBlocModel: TimbreBlocModel, dossier, ident: number): string {
@@ -295,7 +291,7 @@ export class TimbreBlocService {
 		if (isNotNullOrUndefined(dossier)) {
 			dossierImage = dossierImage + '/' + dossier;
 		}
-		dossierImage = dossierImage + '/bloc/' + (isNotNullOrUndefined(ident)? ident: timbreBlocModel.getId());
+		dossierImage = dossierImage + '/bloc/' + (isNotNullOrUndefined(ident) ? ident : timbreBlocModel.getId());
 		return dossierImage;
 	}
 

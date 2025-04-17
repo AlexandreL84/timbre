@@ -31,6 +31,8 @@ export class LoginComponent {
 		if (this.formLogin?.valid) {
 			this.authService.signIn(this.email, this.password)
 				.then((result) => {
+					this.authService.user$.next(null);
+					this.authService.userSelect$.next(null);
 					this.authService.getUser().pipe(first()).subscribe();
 					this.headerService.setRoute(RouteEnum.TIMBRE);
 					this.redirection$.next(true);

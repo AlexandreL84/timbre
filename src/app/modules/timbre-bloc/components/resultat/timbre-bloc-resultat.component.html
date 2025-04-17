@@ -20,8 +20,8 @@
 
 		<!--
 		<div fxLayout="row" fxLayoutAlign="end center" style="width: 75px">
-			<mat-checkbox color="primary" [(ngModel)]="timbreCritereModel.acquis" (ngModelChange)="filtreByCritere()">
-				<lib-libelle-model [object]="timbreCritereModel" [key]="'acquis'"></lib-libelle-model>
+			<mat-checkbox color="primary" [(ngModel)]="timbreUtilsService.timbreCritereBlocModel.acquis" (ngModelChange)="filtreByCritere()">
+				<lib-libelle-model [object]="timbreUtilsService.timbreCritereBlocModel" [key]="'acquis'"></lib-libelle-model>
 			</mat-checkbox>
 		</div>
 		-->
@@ -29,7 +29,7 @@
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
 			<mat-select name="carnet"
 						class="scrollBarAccent"
-						[(ngModel)]="timbreCritereModel.carnet"
+						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.carnet"
 						[placeholder]="'Carnet'"
 						(ngModelChange)="filtreByCritere()">
 				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -40,7 +40,7 @@
 
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
 			<mat-select name="acquis"
-						[(ngModel)]="timbreCritereModel.acquis"
+						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.acquis"
 						[placeholder]="'Acquis'"
 						(ngModelChange)="filtreByCritere()">
 				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -52,7 +52,7 @@
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
 			<mat-select name="doublon"
 						class="scrollBarAccent"
-						[(ngModel)]="timbreCritereModel.doublon"
+						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.doublon"
 						[placeholder]="'Doublon'"
 						(ngModelChange)="filtreByCritere()">
 				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -64,7 +64,7 @@
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 150px">
 			<mat-select name="anneeSelect"
 						multiple
-						[(ngModel)]="timbreCritereModel.annees"
+						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.annees"
 						[placeholder]="'Années'"
 						(ngModelChange)="filtreByCritere()">
 				<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"

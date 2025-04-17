@@ -11,11 +11,13 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {LibIconModule} from "../../shared/components/lib-icon";
 import {TimbreService} from "../../shared/services/timbre/timbre.service";
 import {TimbreSupprimToutModule} from "../timbre/components/supprim-tout/timbre-supprim-tout.module";
+import {MatOption} from "@angular/material/core";
+import {MatSelect} from "@angular/material/select";
 
 
 @NgModule({
 	declarations: [MenuComponent],
-    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton, TimbreSupprimToutModule],
+    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton, TimbreSupprimToutModule, MatOption, MatSelect],
 	exports: [
 		MenuComponent
 	],

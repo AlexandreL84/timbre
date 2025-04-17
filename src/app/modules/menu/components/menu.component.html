@@ -38,4 +38,19 @@
 	</lib-icon>
 
 	<app-timbre-supprim *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"></app-timbre-supprim>
+
+	<div
+		*ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"
+		fxLayout="row" fxLayoutAlign="end center"
+		class="form-input select" style="width: 120px">
+		<mat-select name="user"
+					class="scrollBarAccent"
+					[ngModel]="authService.userSelect$ | async"
+					[placeholder]="'Utilisateur'"
+					(ngModelChange)="setUser($event)">
+			<mat-option class="selectMin" *ngFor="let user of (authService.users$ | async)" [value]="user">
+				{{ user?.getPrenom() }}
+			</mat-option>
+		</mat-select>
+	</div>
 </div>

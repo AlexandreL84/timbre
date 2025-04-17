@@ -12,7 +12,6 @@ import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
 import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
-import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
@@ -32,7 +31,6 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreBlocModel> = new MatTableDataSource<TimbreBlocModel>();
 	displayedColumns: string[];
-	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 	public timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 	annees$: Observable<number[]>;
 	modif: boolean = true;
@@ -40,7 +38,7 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
+	constructor(public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -74,11 +72,11 @@ export class TimbreBlocResultatComponent implements OnInit, AfterViewInit {
 	}
 
 	filtreByCritere() {
-		if (this.timbreCritereModel.getAcquis() == "NON") {
-			this.timbreCritereModel.setDoublon("TOUS");
+		if (this.timbreUtilsService.timbreCritereBlocModel.getAcquis() == "NON") {
+			this.timbreUtilsService.timbreCritereBlocModel.setDoublon("TOUS");
 		}
-		if (isNotNullOrUndefined(this.timbreCritereModel.getAnnees()) && this.timbreCritereModel.getAnnees().length > 0) {
-			this.timbreBlocService.getBlocs(this.timbreCritereModel);
+		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
+			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
 		}
 	}
 

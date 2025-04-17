@@ -19,7 +19,6 @@ import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-util
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TimbreResumeComponent} from "../resume/timbre-resume.component";
 import {AuthService} from "../../../../shared/services/auth.service";
-import {UserModel} from "../../../../model/user.model";
 import {DroitEnum} from "../../../../shared/enum/droit.enum";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -44,7 +43,6 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
-	readonly DroitEnum = DroitEnum;
 
 	constructor(private snackBar: MatSnackBar, public authService: AuthService, public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService, private dialog: MatDialog, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
@@ -77,11 +75,6 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 		if (isNotNullOrUndefined(sort)) {
 			this.dataSource.sort = this.sort;
 		}
-	}
-
-	setUser(userModel: UserModel) {
-		this.authService.userSelect$.next(userModel);
-		this.filtreByCritere()
 	}
 
 	filtreByCritere() {
