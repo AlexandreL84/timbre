@@ -9,14 +9,49 @@
 
 	<div class="listeTimbre primary">
 		<div *ngFor="let timbre of timbres$ | async" class="detailTimbre border-primary">
+			<div class="headerTimbre">
+				<div class="actionTimbre">
+					<lib-icon
+						class="click"
+						[classIcone]="timbre?.getTimbreAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="timbre?.getTimbreAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+						[info]="timbre?.getTimbreAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
+						(click)="acquisDoublon(timbre, false)"
+					>
+					</lib-icon>
+					<lib-icon
+						class="click"
+						[classIcone]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="timbre?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+						[info]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
+						(click)="acquisDoublon(timbre, true)"
+					>
+					</lib-icon>
+				</div>
+				<div class="actionTimbre2">
+					<lib-icon
+						class="primary click"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+						[info]="'Modifier'"
+						(click)="modifier(timbre)"
+					>
+					</lib-icon>
+					<lib-icon
+						class="primary click"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.TRASH"
+						[info]="'Supprimer'"
+						(click)="supprimer(timbre)"
+					></lib-icon>
+				</div>
+			</div>
+
 			<div class="imgTimbre">
 				<img *ngIf="timbre?.getImageTable()"
 					 [src]="timbre?.getImageTable()"
 					 class="image click"
 					 (click)="utilsService.zoom(timbre?.getImageZoom())"/>
-			</div>
-
-			<div class="footerTimbre">
 			</div>
 
 			<div class="footerTimbre">
@@ -32,7 +67,6 @@
 						*ngIf="timbre?.getIdBloc()"
 						class="click"
 						[classIcone]="'primary'"
-						style="font-size: 1.2em"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="FontAwesomeEnum.IMAGE_POLAROID"
 						(click)="utilsService.zoom(timbre?.getTimbreBlocModel()?.getImageZoom() )"
@@ -42,7 +76,6 @@
 					<lib-icon
 						class="click"
 						[classIcone]="'primary'"
-						style="font-size: 1.2em"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="FontAwesomeEnum.CIRCLE_INFO"
 						[info]="timbre?.getYt()"
