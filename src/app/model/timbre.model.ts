@@ -141,4 +141,8 @@ export class TimbreModel extends ProprieteModel {
 	setTimbreBlocModel(value: TimbreBlocModel) {
 		this.timbreBlocModel = value;
 	}
+
+	getImageBloc() {
+		return "<img src='" + this.timbreBlocModel?.getImage() + "'/>";
+	}
 }

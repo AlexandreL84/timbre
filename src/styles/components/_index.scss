@@ -12,6 +12,7 @@
 @use "all/spinner" as spinner;
 @use "all/table" as table;
 @use "global" as global;
+@use "responsive" as responsive;
 
 @mixin theme($theme) {
 	@include scrollbar.color($theme);

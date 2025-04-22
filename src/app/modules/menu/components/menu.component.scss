@@ -1,0 +1,31 @@
+.menu {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	padding: 0px 5px;
+
+	.sousMenu {
+		display: flex;
+		flex-direction: row;
+		gap: 15px;
+	}
+}
+
+
+@media screen and (max-width: 800px) {
+	.menu {
+		flex-direction: column;
+
+		.sousMenuBouton {
+			justify-content: space-between;
+		}
+
+		button.large {
+			width: 170px;
+		}
+
+		.sousMenu {
+			gap: 10px;
+		}
+	}
+}

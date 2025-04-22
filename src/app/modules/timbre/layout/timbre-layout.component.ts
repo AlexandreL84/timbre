@@ -10,6 +10,7 @@ import {first} from "rxjs";
 import {isNotNullOrUndefined} from "../../../shared/utils/utils";
 import {AuthService} from "../../../shared/services/auth.service";
 import {take} from "rxjs/operators";
+import {ModeEnum} from "../../../shared/enum/mode.enum";
 
 @Component({
 	selector: "app-timbre-layout",
@@ -34,4 +35,6 @@ export class TimbreLayoutComponent implements OnInit {
 			});
 		});
 	}
+
+    protected readonly ModeEnum = ModeEnum;
 }

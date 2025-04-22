@@ -1,0 +1,202 @@
+<lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+
+<section [fxHide]="(load$ | async) == false">
+	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+		<app-timbre-total [total$]="total$"></app-timbre-total>
+
+		<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+			<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
+			<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
+				 style="width: 200px; min-height:55px; height: 55px">
+				<input
+					placeholder="Filtrer les données"
+					type="text"
+					(input)="applyFilter($event)"
+				/>
+			</div>
+			<lib-icon
+				class="primary click"
+				style="font-size: 1.7em"
+				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+				[info]="'Exporter tableau'"
+				(click)="exportTable()"
+			>
+			</lib-icon>
+			<!--
+			<lib-icon
+				class="primary click"
+				style="font-size: 1.7em"
+				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+				[info]="'Exporter en pdf'"
+				(click)="generatePDFByImage()"
+			>
+			</lib-icon>
+			-->
+		</div>
+	</div>
+
+	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+		<ng-container matColumnDef="image">
+			<th mat-header-cell *matHeaderCellDef class="image">
+				<lib-libelle-model class="hide-on-mobile" [object]="timbre" [key]="'image'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
+				<img *ngIf="element?.getImageTable()"
+					 [src]="element?.getImageTable()"
+					 class="image click"
+					 (click)="utilsService.zoom(element?.getImageZoom())"/>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="id">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbre" [key]="'id'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				{{ element?.getId() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="annee">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header>
+				<lib-libelle-model [object]="timbre" [key]="'annee'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<ng-template [ngIf]="element?.getIdBloc()" [ngIfElse]="noBloc">
+					{{ element?.getTimbreBlocModel()?.getAnnee() }}
+				</ng-template>
+				<ng-template #noBloc>
+					{{ element?.getAnnee() }}
+				</ng-template>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="idBloc">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-libelle-model [object]="timbre" [key]="'idBloc'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index">
+				<ng-template [ngIf]="element?.getIdBloc()" [ngIfElse]="noBloc">
+					<img *ngIf="element?.getTimbreBlocModel()?.getImage()"
+						 [src]="element?.getTimbreBlocModel()?.getImageTable()"
+						 class="image click"
+						 (click)="utilsService.zoom(element?.getTimbreBlocModel()?.getImageZoom())"/>
+				</ng-template>
+				<ng-template #noBloc>
+					Non
+				</ng-template>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="monnaie">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
+				<lib-libelle-model [object]="timbre" [key]="'monnaie'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
+				<ng-template [ngIf]="element?.getIdBloc()" [ngIfElse]="noBloc">
+					{{ element?.getTimbreBlocModel()?.getMonnaie() == "E" ? "€" : "Francs" }}
+				</ng-template>
+				<ng-template #noBloc>
+					{{ element?.getMonnaie() == "E" ? "€" : "Francs" }}
+				</ng-template>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="type">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
+				<lib-libelle-model [object]="timbre" [key]="'type'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
+				{{ element?.getType() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="yt">
+			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
+				<lib-libelle-model [object]="timbre" [key]="'yt'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
+				{{ element?.getYt() }}
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="acquis">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-libelle-model
+					[object]="timbre?.getTimbreAcquisModel()"
+					[key]="'acquis'"
+					[align]="'center center'">
+				</lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
+				<lib-icon
+					class="click"
+					[classIcone]="element?.getTimbreAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="element?.getTimbreAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="element?.getTimbreAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
+					(click)="acquisDoublon(element, false)"
+				>
+				</lib-icon>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="doublon">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-libelle-model
+					[object]="timbre?.getTimbreAcquisModel()"
+					[key]="'doublon'"
+					[align]="'center center'">
+				</lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
+				<lib-icon
+					class="click"
+					[classIcone]="element?.getTimbreAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="element?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+					[info]="element?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
+					(click)="acquisDoublon(element, true)"
+				>
+				</lib-icon>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="modifier">
+			<th mat-header-cell *matHeaderCellDef class="alignCenter">
+				<lib-icon
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.PENCIL"
+					[info]="'Modifier'"
+				></lib-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
+				<lib-icon
+					class="primary click"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+					[info]="'Modifier'"
+					(click)="modifier(element)"
+				>
+				</lib-icon>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="supprimer">
+			<th mat-header-cell *matHeaderCellDef class="alignCenter">
+				<lib-icon
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
+					[icone]="FontAwesomeEnum.TRASH"
+					[info]="'Supprimer'"
+				></lib-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
+				<lib-icon
+					class="primary click"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
+					[info]="'Supprimer'"
+					(click)="supprimer(element)"
+				></lib-icon>
+			</td>
+		</ng-container>
+
+		<tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary color-white"></tr>
+		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row"></tr>
+	</table>
+	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+</section>

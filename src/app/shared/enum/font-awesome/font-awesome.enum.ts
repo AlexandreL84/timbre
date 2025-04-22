@@ -10,12 +10,15 @@ export enum FontAwesomeEnum {
     EYE = "fa-eye",
     EYE_SLASH = "fa-eye-slash",
 
-	FLAG = "fa-flag",
+	IMAGE_POLAROID = "fa-image-polaroid",
 
     FILE_EXEL = "fa-file-excel",
     FILE_PDF = "fa-file-pdf",
     FILE_PEN = "fa-file-pen",
+	FLAG = "fa-flag",
 	FOLDER = "fa-folder",
+
+	MEMO = "fa-memo",
 
     PALETTE = "fa-palette",
     PENCIL = "fa-pencil",
@@ -23,6 +26,7 @@ export enum FontAwesomeEnum {
 
 	ROTATE = "fa-rotate",
 
+	TABLE = "fa-table",
 	TRASH = "fa-trash",
 
 	UPLOAD = "fa-upload",

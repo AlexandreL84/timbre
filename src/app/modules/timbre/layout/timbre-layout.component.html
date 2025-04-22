@@ -1,14 +1,18 @@
-<div fxLayout="row" fxLayoutAlign="space-between stretch">
-	<div fxFlex="5"></div>
-	<div fxFlex fxLayout="column" fxLayoutGap="20px">
+<div class="timbreLayout">
+	<div class="timbreBody">
 		<app-menu></app-menu>
-
 		<app-timbre-resultat
+			*ngIf="timbreService.mode == ModeEnum.GRAPH"
 			[load$]="timbreService.load$"
 			[timbres$]="timbreService.timbres$"
 			[total$]="timbreService.total$"
-		>
-		</app-timbre-resultat>
+		></app-timbre-resultat>
+
+		<app-timbre-resultat-table
+			*ngIf="timbreService.mode == ModeEnum.TABLE"
+			[load$]="timbreService.load$"
+			[timbres$]="timbreService.timbres$"
+			[total$]="timbreService.total$"
+		></app-timbre-resultat-table>
 	</div>
-	<div fxFlex="5"></div>
 </div>

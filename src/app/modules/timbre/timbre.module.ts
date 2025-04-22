@@ -27,10 +27,13 @@ import {TimbreUtilsService} from '../../shared/services/timbre/timbre-utils.serv
 import {MenuModule} from "../menu/menu.module";
 import {TimbreResumeComponent} from "./components/resume/timbre-resume.component";
 import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.service";
+import {TimbreRechercheComponent} from "./components/recherche/timbre-recherche.component";
+import {TimbreResultatTableComponent} from "./components/resultat-table/timbre-resultat-table.component";
+import {TimbreTotalComponent} from "./components/total/timbre-total.component";
 
 @NgModule({
 	declarations: [
-		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatComponent, TimbreResumeComponent
+		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent
 	],
     imports: [
         MaterialModule,

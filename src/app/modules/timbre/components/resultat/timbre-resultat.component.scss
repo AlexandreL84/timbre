@@ -1,72 +1,65 @@
-@mixin changeSize($widthAcquis, $height, $widthBouton) {
-	.mat-row {
-		height: $height * 1px;
-	}
+.spinner {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+	flex: 100%;
+	height: 100%;
+}
 
-	.image {
-		//max-width: 40px !important;
-		max-height: $height - 5 * 1px !important;
-	}
+.listeTimbre {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: left;
+	width: 100%;
 
-	.mat-column-acquis,
-	.mat-column-doublon {
-		width: $widthAcquis * 1px !important;
-		max-width: $widthAcquis * 1px !important;
-		padding: 0px !important;
-	}
+	.detailTimbre {
+		margin: 10px;
+		width: 115px;
+		height: 150px;
+		border-radius: 10px;
+		border: 1px solid;
+		padding: 10px 10px 5px 10px;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: stretch;
 
-	.mat-column-ajouter,
-	.mat-column-modifier,
-	.mat-column-supprimer {
-		width: $widthBouton * 1px !important;
-		max-width: $widthBouton * 1px !important;
-		padding: 0px !important;
+		.imgTimbre {
+			width: 100%;
+			display: flex;
+			flex: auto;
+			justify-content: center;
+			align-items: center;
+
+			img {
+				max-width: 100px;
+				max-height: 100px;
+			}
+		}
+
+		.footerTimbre {
+			height: 25px;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: end;
+			width: 100%;
+
+			.infoTimbre {
+				display: flex;
+				flex-direction: row;
+				justify-content: end;
+				gap: 5px;
+			}
+		}
 	}
 }
 
-@mixin changeSizeMobile($fontSize, $padding, $widthDrapeau, $widthLibelle, $widthPage, $widthTotal) {
-	th, td {
-		padding: 0px $padding * 1px !important;
-	}
-
-	th, .mat-row {
-		font-size: $fontSize * 1em;
-	}
-
-	.mat-column-libelle,
-	::ng-deep .mat-column-libelle .mat-sort-header-container {
-		width: $widthLibelle * 1px !important;
-		max-width: $widthLibelle * 1px !important;
-	}
-
-	.mat-column-drapeau,
-	::ng-deep .mat-column-drapeau span {
-		width: $widthDrapeau * 1px !important;
-		max-width: $widthDrapeau * 1px !important;
-	}
-
-	.mat-column-classeur,
-	::ng-deep .mat-column-classeur .mat-sort-header-container,
-	.mat-column-page,
-	::ng-deep .mat-column-page .mat-sort-header-container {
-		width: $widthPage * 1px !important;
-		max-width: $widthPage * 1px !important;
-	}
-
-	.mat-column-total,
-	::ng-deep .mat-column-total .mat-sort-header-container {
-		width: $widthTotal * 1px !important;
-		max-width: $widthTotal * 1px !important;
-	}
-}
-
-@include changeSize(60, 35, 35);
 
 @media screen and (max-width: 800px) {
-	@include changeSize(50, 25, 20);
-	@include changeSizeMobile(0.8, 5, 15, 40, 15, 25);
-
-	.hide-on-mobile {
-		display: none;
+	.listeTimbre {
+		justify-content: space-evenly;
 	}
 }

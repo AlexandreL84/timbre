@@ -16,10 +16,12 @@ import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.s
 import {TimbreBlocService} from "../../../shared/services/timbre/timbre-bloc.service";
 import {BaseEnum} from "../../../shared/enum/base.enum";
 import {first} from "rxjs";
+import {ModeEnum} from "../../../shared/enum/mode.enum";
 
 @Component({
 	selector: 'app-menu',
 	templateUrl: './menu.component.html',
+	styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
@@ -27,7 +29,7 @@ export class MenuComponent {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly DroitEnum = DroitEnum;
 
-	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
+	constructor(public authService: AuthService, public headerService: HeaderService, public timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
 	}
 
 	ajouter() {
@@ -92,4 +94,6 @@ export class MenuComponent {
 		}
 		this.timbreUtilsService.reinitResume$.next(true);
 	}
+
+	protected readonly ModeEnum = ModeEnum;
 }

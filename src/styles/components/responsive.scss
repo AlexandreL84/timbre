@@ -1,0 +1,29 @@
+@media screen and (max-width: 800px) {
+	.hide-on-mobile {
+		display: none;
+	}
+}
+
+.responsiveDirection {
+	display: flex;
+	flex-direction: row;
+	gap: 15px;
+}
+
+.responsiveMenu {
+	height: 50px;
+	justify-content: space-between;
+	align-items: center;
+}
+
+@media screen and (max-width: 800px) {
+	.responsiveDirection {
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.responsiveMenu {
+		height: auto;
+		align-items: stretch;
+	}
+}

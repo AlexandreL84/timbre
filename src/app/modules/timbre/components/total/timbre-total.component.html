@@ -1,0 +1,13 @@
+<div class="timbreTotal">
+	<div *ngIf="(total$ | async)" class="nbTimbre">
+		<span>Nombre de timbres : </span>
+		<span class="bold">{{ (total$ | async) }}</span>
+	</div>
+
+	<lib-icon [icone]="FontAwesomeEnum.CHART_LINE_UP"
+			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+			  class="accent click"
+			  [info]="'Détail par année'"
+			  (click)="resume()">
+	</lib-icon>
+</div>

@@ -13,11 +13,13 @@ import {TimbreService} from "../../shared/services/timbre/timbre.service";
 import {TimbreSupprimToutModule} from "../timbre/components/supprim-tout/timbre-supprim-tout.module";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
+import {MatHeaderCell} from "@angular/material/table";
+import {MatSortHeader} from "@angular/material/sort";
 
 
 @NgModule({
 	declarations: [MenuComponent],
-    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton, TimbreSupprimToutModule, MatOption, MatSelect],
+    imports: [CommonModule, FlexLayoutModule, FormsModule, MatCheckbox, MatProgressSpinner, DirectiveModule, ReactiveFormsModule, MatIcon, MatIconButton, LibIconModule, MatButton, TimbreSupprimToutModule, MatOption, MatSelect, MatHeaderCell, MatSortHeader],
 	exports: [
 		MenuComponent
 	],

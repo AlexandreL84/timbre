@@ -1,56 +1,87 @@
-<div fxLayout="row" fxLayoutGap="20px">
-	<ng-container *ngIf="(headerService.choixRoutesTimbre$ |async)?.length > 0">
-		<ng-container *ngFor="let choixRoute of (headerService.choixRoutesTimbre$ |async)">
-			<lib-icon [icone]="choixRoute?.getIcone()"
-					  [type]="choixRoute?.getType()"
-					  class="primary click"
-					  style="font-size: 2em"
-					  [info]="choixRoute?.getInfo()"
-					  (click)="headerService.setRoute(choixRoute.getRoute())">
-			</lib-icon>
+<div class="menu">
+	<div class="sousMenu sousMenuBouton">
+		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
+			<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white"
+					mat-raised-button color="primary" (click)="ajouter()">
+				Ajouter
+			</button>
+
+			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
+				Ajouter
+				<ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
+			</button>
 		</ng-container>
-	</ng-container>
+	</div>
 
-	<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
-		<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white"
-				mat-raised-button color="primary" (click)="ajouter()">
-			Ajouter
+	<div class="sousMenu">
+		<ng-container *ngIf="(headerService.choixRoutesTimbre$ |async)?.length > 0">
+			<ng-container *ngFor="let choixRoute of (headerService.choixRoutesTimbre$ |async)">
+				<lib-icon [icone]="choixRoute?.getIcone()"
+						  [type]="choixRoute?.getType()"
+						  class="primary click"
+						  style="font-size: 2em"
+						  [info]="choixRoute?.getInfo()"
+						  (click)="headerService.setRoute(choixRoute.getRoute())">
+				</lib-icon>
+			</ng-container>
+		</ng-container>
+
+		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE">
+			<ng-template [ngIf]="timbreService.mode == ModeEnum.GRAPH" [ngIfElse]="modeTable">
+				<lib-icon
+					[icone]="FontAwesomeEnum.TABLE"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
+					class="primary click hide-on-mobile"
+					style="font-size: 2em"
+					[info]="'Mode tableau'"
+					(click)="timbreService.mode = ModeEnum.TABLE">
+				</lib-icon>
+			</ng-template>
+			<ng-template #modeTable>
+				<lib-icon
+					[icone]="FontAwesomeEnum.MEMO"
+					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
+					class="primary click hide-on-mobile"
+					style="font-size: 2em"
+					[info]="'Mode tableau'"
+					(click)="timbreService.mode = ModeEnum.GRAPH">
+				</lib-icon>
+			</ng-template>
+		</ng-container>
+
+		<!--
+		<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="accent"
+				(click)="ajouterBouchon()">
+			Bouchon
 		</button>
+		-->
+		<lib-icon
+			*ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
+			[icone]="FontAwesomeEnum.UPLOAD"
+			[type]="FontAwesomeTypeEnum.TYPE_SOLID"
+			class="accent click hide-on-mobile"
+			style="font-size: 2em"
+			[info]="'Importer les timbres'"
+			(click)="importer()">
+		</lib-icon>
 
-		<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
-			Ajouter
-			<ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
-		</button>
-	</ng-container>
-	<!--
-	<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="accent"
-			(click)="ajouterBouchon()">
-		Bouchon
-	</button>
-	-->
-	<lib-icon *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
-			  [icone]="FontAwesomeEnum.UPLOAD"
-			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
-			  class="accent click"
-			  style="font-size: 2em"
-			  [info]="'Importer les timbres'"
-			  (click)="importer()">
-	</lib-icon>
+		<app-timbre-supprim
+			*ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
+			class="hide-on-mobile"></app-timbre-supprim>
 
-	<app-timbre-supprim *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"></app-timbre-supprim>
-
-	<div
-		*ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"
-		fxLayout="row" fxLayoutAlign="end center"
-		class="form-input select" style="width: 120px">
-		<mat-select name="user"
-					class="scrollBarAccent"
-					[ngModel]="authService.userSelect$ | async"
-					[placeholder]="'Utilisateur'"
-					(ngModelChange)="setUser($event)">
-			<mat-option class="selectMin" *ngFor="let user of (authService.users$ | async)" [value]="user">
-				{{ user?.getPrenom() }}
-			</mat-option>
-		</mat-select>
+		<div
+			*ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"
+			fxLayout="row" fxLayoutAlign="end center"
+			class="form-input select" style="width: 120px">
+			<mat-select name="user"
+						class="scrollBarAccent"
+						[ngModel]="authService.userSelect$ | async"
+						[placeholder]="'Utilisateur'"
+						(ngModelChange)="setUser($event)">
+				<mat-option class="selectMin" *ngFor="let user of (authService.users$ | async)" [value]="user">
+					{{ user?.getPrenom() }}
+				</mat-option>
+			</mat-select>
+		</div>
 	</div>
 </div>

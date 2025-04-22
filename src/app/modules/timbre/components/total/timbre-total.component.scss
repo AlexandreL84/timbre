@@ -1,0 +1,31 @@
+.timbreTotal {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-content: center;
+	gap: 10px;
+
+	.nbTimbre {
+		font-size: 1.2em;
+	}
+
+	lib-icon {
+		font-size: 1.5em;
+	}
+}
+
+
+@media screen and (max-width: 800px) {
+	.timbreTotal {
+		height: 25px;
+		gap: 5px;
+
+		.nbTimbre {
+			font-size: 1em;
+		}
+
+		lib-icon {
+			font-size: 1.2em;
+		}
+	}
+}

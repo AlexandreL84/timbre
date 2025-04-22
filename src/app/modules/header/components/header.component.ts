@@ -10,6 +10,7 @@ import {DroitEnum} from "../../../shared/enum/droit.enum";
 @Component({
 	selector: 'app-header',
 	templateUrl: './header.component.html',
+	styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;

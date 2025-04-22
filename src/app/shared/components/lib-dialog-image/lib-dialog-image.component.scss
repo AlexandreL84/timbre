@@ -1,12 +1,29 @@
 .dialogImage {
+	display: flex;
+	flex: 100;
+	flex-direction: column;
+	justify-content: start;
+	align-content: end;
+
 	.closeDialogImage {
-		position: absolute;
+		display: flex;
+		flex: 5;
+		justify-content: end;
+		align-content: end;
+		width: 100%;
 		font-size: 1.5em;
-		margin-right: 5px;
+		lib-icon {
+			padding-right: 5px;
+		}
 	}
 
 	img {
-		max-height: 95vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-content: center;
+		width: 100%;
+		height: 100%;
 	}
 }
 

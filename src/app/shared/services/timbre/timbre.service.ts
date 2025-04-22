@@ -12,6 +12,7 @@ import {DossierEnum} from '../../enum/dossier.enum';
 import {BaseEnum} from '../../enum/base.enum';
 import {UtilsService} from '../utils.service';
 import {TimbreUtilsService} from './timbre-utils.service';
+import {ModeEnum} from "../../enum/mode.enum";
 
 @Injectable()
 export class TimbreService {
@@ -24,6 +25,8 @@ export class TimbreService {
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+	mode: ModeEnum = ModeEnum.GRAPH;
 
 	constructor(
 		private firestore: AngularFirestore,

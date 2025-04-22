@@ -1,9 +1,11 @@
-<div class="dialogImage" fxFlexFill fxLayout="column" fxLayoutAlign="start end">
-	<lib-icon class="closeDialogImage click"
-			[icone]="FontAwesomeEnum.XMARK" [mat-dialog-close]="true">
-	</lib-icon>
+<div class="dialogImage">
+	<div class="closeDialogImage">
+		<lib-icon class="click primary"
+				  [icone]="FontAwesomeEnum.XMARK" [mat-dialog-close]="true">
+		</lib-icon>
+	</div>
 
-	<div fxFlex fxLayout="column" fxLayoutAlign="center center">
+	<div>
 		<img [src]=" url"/>
 	</div>
 </div>

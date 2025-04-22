@@ -1,0 +1,25 @@
+.timbreLayout {
+	display: flex;
+	flex: 100;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: stretch;
+	padding: 0px 15px;
+
+	.timbreBody {
+		display: flex;
+		flex: 100;
+		flex-direction: column;
+		gap: 20px;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.timbreLayout {
+		padding: 0px 5px;
+
+		.timbreBody {
+			gap: 10px;
+		}
+	}
+}
