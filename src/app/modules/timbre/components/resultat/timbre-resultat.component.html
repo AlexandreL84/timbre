@@ -35,6 +35,7 @@
 						style="font-size: 1.2em"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="FontAwesomeEnum.IMAGE_POLAROID"
+						(click)="utilsService.zoom(timbre?.getTimbreBlocModel()?.getImageZoom() )"
 						[classInfo]="'imageHoverBloc'"
 						[info]="'<img src=\'' + timbre?.getTimbreBlocModel()?.getImageZoom() + '\'/>'"
 					></lib-icon>
