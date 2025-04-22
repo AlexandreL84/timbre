@@ -89,6 +89,7 @@ export class TimbreResultatComponent implements OnInit, AfterViewInit {
 			height: "75vh",
 			maxHeight: "750px",
 			width: "30%",
+			minWidth: "300px",
 		});
 		refDialog.componentInstance.id = timbreModel.getId();
 

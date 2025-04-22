@@ -19,6 +19,7 @@ export interface DialogData {
 @Component({
     selector: "lib-modal",
     templateUrl: "./lib-modal.component.html",
+	styleUrls: ["./lib-modal.component.scss"],
 })
 export class LibModalComponent {
     @Input() content: any;

@@ -1,4 +1,4 @@
-<div fxLayout="column" fxFlex="100" fxLayoutGap="1%">
+<div class="dialog">
     <h2 *ngIf="data?.titre" mat-dialog-title class="{{ data?.classTitre }}">
         {{ data?.titre }}
     </h2>
@@ -9,7 +9,7 @@
         </ng-container>
     </div>
 
-    <div mat-dialog-actions [fxLayoutAlign]="data?.positionBtn ? data?.positionBtn : data?.desactiveBtnGauche ? 'center' : positionBtn" [style.padding-right]="'10px'">
+    <div class="dialogBouton" mat-dialog-actions>
 		<button
 			*ngIf="!data?.desactiveBtnGauche"
 			type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="annuler()">

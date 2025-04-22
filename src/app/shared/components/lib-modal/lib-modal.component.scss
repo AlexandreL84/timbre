@@ -1,0 +1,25 @@
+.dialog {
+	display: flex;
+	flex-direction: column;
+	flex: 100%;
+	width: 100%;
+	gap: 1%;
+
+	.dialogBouton {
+		display: flex;
+		flex-direction: row;
+		justify-content: end;
+		align-items: end;
+		gap: 10px;
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.dialog {
+		.dialogBouton {
+			button {
+				width: 100px;
+			}
+		}
+	}
+}
