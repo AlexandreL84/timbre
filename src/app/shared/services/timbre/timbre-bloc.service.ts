@@ -247,7 +247,6 @@ export class TimbreBlocService {
 				timbreBlocModel.setTimbreBlocAcquisModel(null);
 				timbreBlocModel.setIdOrigine(null);
 
-				console.log(timbreBlocModel)
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
 					Object.assign(new Object(), timbreBlocModel)
 				).then((result) => {
