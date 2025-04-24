@@ -12,6 +12,12 @@ import {UtilsService} from '../utils.service';
 import {AuthService} from '../auth.service';
 import {TimbreBlocAcquisModel} from '../../../model/timbre-bloc-acquis.model';
 import {TimbreUtilsService} from './timbre-utils.service';
+import {
+	TimbreModifierBlocComponent
+} from "../../../modules/timbre-bloc/components/modifier-bloc/timbre-modifier-bloc.component";
+import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
+import {MatDialog} from "@angular/material/dialog";
+import {DroitEnum} from "../../enum/droit.enum";
 
 @Injectable()
 export class TimbreBlocService {
@@ -31,6 +37,7 @@ export class TimbreBlocService {
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
 		private timbreUtilsService: TimbreUtilsService,
+		private dialog: MatDialog
 	) {
 	}
 
@@ -232,6 +239,11 @@ export class TimbreBlocService {
 		});
 	}
 
+	isCarnet(timbreBlocModel: TimbreBlocModel) {
+		timbreBlocModel.setCarnet(!timbreBlocModel.isCarnet());
+		this.modifier(timbreBlocModel);
+	}
+
 	modifier(timbreBlocModel: TimbreBlocModel) {
 		this.firestore.collection(BaseEnum.TIMBRE_BLOC)
 			.ref.where('id', '==', timbreBlocModel.getId())
@@ -300,5 +312,60 @@ export class TimbreBlocService {
 		timbreBlocModel.setAnnee(new Date().getFullYear());
 		timbreBlocModel.setMonnaie('E');
 		return timbreBlocModel;
+	}
+
+	acquisDoublon(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
+		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				this.acquis(timbreBlocModel, doublon);
+			} else {
+				this.utilsService.droitInsuffisant();
+			}
+		});
+	}
+
+	modifierDialog(timbreBlocModel: TimbreBlocModel) {
+		const refDialog = this.dialog.open(TimbreModifierBlocComponent, {
+			height: "75vh",
+			maxHeight: "750px",
+			width: "30%",
+		});
+		refDialog.componentInstance.id = timbreBlocModel.getId();
+
+		refDialog.afterClosed().subscribe(() => {
+			refDialog.close();
+		});
+	}
+
+	supprimerDialog(timbreBlocModel: TimbreBlocModel) {
+		this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
+			let message: string = "";
+			if (isNotNullOrUndefined(timbres) && timbres?.length > 0) {
+				message = "<span class='warn'>Attention <b>" + timbres.length + "</b> timbre";
+				if (timbres?.length > 1) {
+					message += "s sont reliés";
+				} else {
+					message += " est relié";
+				}
+				message += " à ce bloc.</span></br></br>";
+			}
+			message += "Souhaitez-vous supprimer le bloc <b>n° " + timbreBlocModel?.getId() + "</b> ?";
+
+			const dialogModal = this.dialog.open(LibModalComponent, {
+				maxHeight: "95vh",
+				data: {
+					titre: "Confirmation",
+					message: message,
+					btnDroite: "Oui",
+					btnGauche: "Non",
+				},
+			});
+
+			dialogModal.afterClosed().subscribe(() => {
+				if (dialogModal.componentInstance.data.resultat === "valider") {
+					this.supprimer(timbreBlocModel)
+				}
+			});
+		});
 	}
 }

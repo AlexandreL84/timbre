@@ -18,11 +18,18 @@ import {UploadService} from "../../shared/services/upload.service";
 import {TimbreBlocLayoutComponent} from "./layout/timbre-bloc-layout.component";
 import {SimpleNotificationModule} from "../simple-notification/simple-notification.module";
 import {MenuModule} from "../menu/menu.module";
+import {TimbreBlocResultatTableComponent} from "./components/resultat-table/timbre-bloc-resultat-table.component";
+import {TimbreBlocTotalComponent} from "./components/total/timbre-bloc-total.component";
+import {TimbreBlocRechercheComponent} from "./components/recherche/timbre-bloc-recherche.component";
+import {TimbreService} from "../../shared/services/timbre/timbre.service";
 
 @NgModule({
 	declarations: [
 		TimbreBlocLayoutComponent,
+		TimbreBlocRechercheComponent,
 		TimbreBlocResultatComponent,
+		TimbreBlocResultatTableComponent,
+		TimbreBlocTotalComponent,
 		TimbreModifierBlocComponent
 	],
     imports: [
@@ -41,7 +48,7 @@ import {MenuModule} from "../menu/menu.module";
         MenuModule,
     ],
 	exports: [],
-	providers: [TimbreBlocService, TimbreUtilsService, UploadService, provideHttpClient()]
+	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, UploadService, provideHttpClient()]
 })
 export class TimbreBlocModule {
 }

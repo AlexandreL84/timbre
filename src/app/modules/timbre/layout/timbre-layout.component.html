@@ -2,14 +2,14 @@
 	<div class="timbreBody">
 		<app-menu></app-menu>
 		<app-timbre-resultat
-			*ngIf="timbreService.mode == ModeEnum.GRAPH"
+			*ngIf="headerService.mode == ModeEnum.GRAPH"
 			[load$]="timbreService.load$"
 			[timbres$]="timbreService.timbres$"
 			[total$]="timbreService.total$"
 		></app-timbre-resultat>
 
 		<app-timbre-resultat-table
-			*ngIf="timbreService.mode == ModeEnum.TABLE"
+			*ngIf="headerService.mode == ModeEnum.TABLE"
 			[load$]="timbreService.load$"
 			[timbres$]="timbreService.timbres$"
 			[total$]="timbreService.total$"

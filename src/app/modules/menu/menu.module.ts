@@ -9,7 +9,6 @@ import {MenuComponent} from "./components/menu.component";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {LibIconModule} from "../../shared/components/lib-icon";
-import {TimbreService} from "../../shared/services/timbre/timbre.service";
 import {TimbreSupprimToutModule} from "../timbre/components/supprim-tout/timbre-supprim-tout.module";
 import {MatOption} from "@angular/material/core";
 import {MatSelect} from "@angular/material/select";
@@ -23,7 +22,6 @@ import {MatSortHeader} from "@angular/material/sort";
 	exports: [
 		MenuComponent
 	],
-	providers: [TimbreService]
 })
 export class MenuModule {
 }

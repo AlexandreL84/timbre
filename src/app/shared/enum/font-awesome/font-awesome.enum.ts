@@ -1,6 +1,8 @@
 export enum FontAwesomeEnum {
 	CHART_LINE_UP = "fa-chart-line-up",
 	CHECK = "fa-check",
+	CIRCLE_B = "fa-circle-b",
+	CIRCLE_C = "fa-circle-c",
 	CHECK_DOUBLE = "fa-check-double",
     CIRCLE_INFO = "fa-circle-info",
     CIRCLE_PLUS = "fa-circle-plus",

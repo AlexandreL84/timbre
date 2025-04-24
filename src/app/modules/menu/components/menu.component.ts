@@ -28,8 +28,10 @@ export class MenuComponent {
 	readonly RouteEnum = RouteEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly DroitEnum = DroitEnum;
+	readonly ModeEnum = ModeEnum;
 
-	constructor(public authService: AuthService, public headerService: HeaderService, public timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
+	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
+		this.verifRoute();
 	}
 
 	ajouter() {
@@ -71,8 +73,7 @@ export class MenuComponent {
 		});
 	}
 
-	setUser(userModel: UserModel) {
-		this.authService.userSelect$.next(userModel);
+	verifRoute() {
 		if (window.location.href.indexOf("bloc") > 0) {
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
 				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
@@ -92,8 +93,11 @@ export class MenuComponent {
 				});
 			}
 		}
-		this.timbreUtilsService.reinitResume$.next(true);
 	}
 
-	protected readonly ModeEnum = ModeEnum;
+	setUser(userModel: UserModel) {
+		this.authService.userSelect$.next(userModel);
+		this.verifRoute();
+		this.timbreUtilsService.reinitResume$.next(true);
+	}
 }

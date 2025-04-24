@@ -1,0 +1,18 @@
+<div class="timbreTotal">
+	<div class="nbTimbre">
+		<span>Nombre de blocs : </span>
+		<span class="bold">{{ (timbreBlocService.total$ | async) ? (timbreBlocService.total$ | async) : 0 }}</span>
+	</div>
+
+	<div class="nbTimbre">
+		<span>Nombre de carnets : </span>
+		<span class="bold">{{ (timbreBlocService.totalCarnet$ | async) ? (timbreBlocService.totalCarnet$ | async) : 0 }}</span>
+	</div>
+
+	<lib-icon [icone]="FontAwesomeEnum.CHART_LINE_UP"
+			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+			  class="accent click"
+			  [info]="'Détail par année'"
+			  (click)="resume()">
+	</lib-icon>
+</div>

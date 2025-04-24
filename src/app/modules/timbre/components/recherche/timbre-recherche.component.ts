@@ -9,7 +9,7 @@ import {AuthService} from "../../../../shared/services/auth.service";
 @Component({
 	selector: "app-timbre-recherche",
 	templateUrl: "./timbre-recherche.component.html",
-	styleUrls: ["./timbre-recherche.component.scss"],
+	styleUrls: ["./../../../styles/timbre-recherche.scss"],
 })
 export class TimbreRechercheComponent implements OnInit {
 	@Input() modif: boolean = true;

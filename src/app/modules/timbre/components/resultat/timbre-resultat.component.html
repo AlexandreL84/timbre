@@ -17,7 +17,7 @@
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="timbre?.getTimbreAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 						[info]="timbre?.getTimbreAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
-						(click)="acquisDoublon(timbre, false)"
+						(click)="timbreService.acquisDoublon(timbre, false)"
 					>
 					</lib-icon>
 					<lib-icon
@@ -26,7 +26,7 @@
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="timbre?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 						[info]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
-						(click)="acquisDoublon(timbre, true)"
+						(click)="timbreService.acquisDoublon(timbre, true)"
 					>
 					</lib-icon>
 				</div>
@@ -36,14 +36,14 @@
 						class="primary click"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
 						[info]="'Modifier'"
-						(click)="modifier(timbre)"
+						(click)="timbreService.modifierDialog(timbre)"
 					>
 					</lib-icon>
 					<lib-icon
 						class="primary click"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.TRASH"
 						[info]="'Supprimer'"
-						(click)="supprimer(timbre)"
+						(click)="timbreService.supprimerDialog(timbre)"
 					></lib-icon>
 				</div>
 			</div>
@@ -74,7 +74,9 @@
 						[classInfo]="'imageHoverBloc'"
 						[info]="'<img src=\'' + timbre?.getTimbreBlocModel()?.getImageZoom() + '\'/>'"
 					></lib-icon>
+
 					<lib-icon
+						*ngIf="timbre?.getYt()"
 						class="click"
 						[classIcone]="'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"

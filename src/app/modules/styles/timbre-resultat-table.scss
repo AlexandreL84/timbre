@@ -65,4 +65,16 @@
 @media screen and (max-width: 800px) {
 	@include changeSize(50, 25, 20);
 	@include changeSizeMobile(0.8, 5, 15, 40, 15, 25);
+
+	.hide-on-mobile {
+		display: none;
+	}
+}
+
+lib-icon {
+	font-size: 1.2em;
+}
+
+.exportTable {
+	font-size: 1.7em;
 }

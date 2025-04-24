@@ -1,22 +1,20 @@
-import {Component, Input} from "@angular/core";
+import {Component} from "@angular/core";
 import {MatDialog} from "@angular/material/dialog";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
-import {BehaviorSubject,  Observable} from "rxjs";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
-import {TimbreResumeComponent} from "../resume/timbre-resume.component";
+import {TimbreResumeComponent} from "../../../timbre/components/resume/timbre-resume.component";
+import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 
 @Component({
-	selector: "app-timbre-total",
-	templateUrl: "./timbre-total.component.html",
+	selector: "app-timbre-bloc-total",
+	templateUrl: "./timbre-bloc-total.component.html",
 	styleUrls: ["./../../../styles/timbre-total.scss"],
 })
-export class TimbreTotalComponent {
-	@Input() total$: BehaviorSubject<number> | Observable<number>;
-
+export class TimbreBlocTotalComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(private dialog: MatDialog) {
+	constructor(private dialog: MatDialog, public timbreBlocService: TimbreBlocService) {
 	}
 
 	resume() {

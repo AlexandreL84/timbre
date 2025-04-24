@@ -12,7 +12,10 @@ import {DossierEnum} from '../../enum/dossier.enum';
 import {BaseEnum} from '../../enum/base.enum';
 import {UtilsService} from '../utils.service';
 import {TimbreUtilsService} from './timbre-utils.service';
-import {ModeEnum} from "../../enum/mode.enum";
+import {DroitEnum} from "../../enum/droit.enum";
+import {TimbreModifierComponent} from "../../../modules/timbre/components/modifier/timbre-modifier.component";
+import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Injectable()
 export class TimbreService {
@@ -26,15 +29,14 @@ export class TimbreService {
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-	mode: ModeEnum = ModeEnum.GRAPH;
-
 	constructor(
 		private firestore: AngularFirestore,
 		private authService: AuthService,
 		private timbreBlocService: TimbreBlocService,
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
-		private timbreUtilsService: TimbreUtilsService) {
+		private timbreUtilsService: TimbreUtilsService,
+		private dialog: MatDialog) {
 	}
 
 	getTimbre(id: number): Observable<any> {
@@ -237,5 +239,46 @@ export class TimbreService {
 			dossierImage = dossierImage + '/bloc/' + timbreModel.getIdBloc();
 		}
 		return dossierImage;
+	}
+
+	acquisDoublon(timbreModel: TimbreModel, doublon: boolean) {
+		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				this.acquis(timbreModel, doublon);
+			} else {
+				this.utilsService.droitInsuffisant();
+			}
+		});
+	}
+
+	modifierDialog(timbreModel: TimbreModel) {
+		const refDialog = this.dialog.open(TimbreModifierComponent, {
+			height: "75vh",
+			maxHeight: "750px",
+			width: "30%",
+		});
+		refDialog.componentInstance.id = timbreModel.getId();
+
+		refDialog.afterClosed().subscribe(() => {
+			refDialog.close();
+		});
+	}
+
+	supprimerDialog(timbreModel: TimbreModel) {
+		const dialogModal = this.dialog.open(LibModalComponent, {
+			maxHeight: "95vh",
+			data: {
+				titre: "Confirmation",
+				message: "Souhaitez-vous supprimer le timbre <b>n° " + timbreModel?.getId() + "</b> ?",
+				btnDroite: "Oui",
+				btnGauche: "Non",
+			},
+		});
+
+		dialogModal.afterClosed().subscribe(() => {
+			if (dialogModal.componentInstance.data.resultat === "valider") {
+				this.supprimer(timbreModel)
+			}
+		})
 	}
 }

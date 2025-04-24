@@ -1,254 +1,86 @@
-<lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+<lib-spinner [fxHide]="(load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section [fxHide]="(load$ | async) == false">
-	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
-		<div fxFlex fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" style="font-size: 1.2em">
-			<div>
-				<span>Nombre de blocs : </span>
-				<span
-					class="bold">{{ (timbreBlocService.total$ | async) ? (timbreBlocService.total$ | async) : 0 }}
-			</span>
-			</div>
-			<span>/</span>
-			<div>
-				<span>Nombre de carnets : </span>
-				<span
-					class="bold">{{ (timbreBlocService.totalCarnet$ | async) ? (timbreBlocService.totalCarnet$ | async) : 0 }}
-			</span>
-			</div>
-		</div>
 
-		<!--
-		<div fxLayout="row" fxLayoutAlign="end center" style="width: 75px">
-			<mat-checkbox color="primary" [(ngModel)]="timbreUtilsService.timbreCritereBlocModel.acquis" (ngModelChange)="filtreByCritere()">
-				<lib-libelle-model [object]="timbreUtilsService.timbreCritereBlocModel" [key]="'acquis'"></lib-libelle-model>
-			</mat-checkbox>
-		</div>
-		-->
+	<div class="responsiveDirection responsiveMenu">
+		<app-timbre-bloc-total></app-timbre-bloc-total>
 
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-			<mat-select name="carnet"
-						class="scrollBarAccent"
-						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.carnet"
-						[placeholder]="'Carnet'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-			</mat-select>
-		</div>
-
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-			<mat-select name="acquis"
-						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.acquis"
-						[placeholder]="'Acquis'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-			</mat-select>
-		</div>
-
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-			<mat-select name="doublon"
-						class="scrollBarAccent"
-						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.doublon"
-						[placeholder]="'Doublon'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-				<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-				<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-			</mat-select>
-		</div>
-
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 150px">
-			<mat-select name="anneeSelect"
-						multiple
-						[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.annees"
-						[placeholder]="'Années'"
-						(ngModelChange)="filtreByCritere()">
-				<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"
-							[value]="annee">
-					{{ annee }}
-				</mat-option>
-			</mat-select>
-		</div>
-
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
-			 style="width: 200px; min-height:55px; height: 55px">
-			<input
-				placeholder="Filtrer les données"
-				type="text"
-				(input)="applyFilter($event)"
-			/>
-		</div>
-		<lib-icon
-			class="primary click"
-			style="font-size: 1.7em"
-			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
-			[info]="'Exporter tableau'"
-			(click)="exportTable()"
-		>
-		</lib-icon>
-		<!--
-		<lib-icon
-			class="primary click"
-			style="font-size: 1.7em"
-			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
-			[info]="'Exporter en pdf'"
-			(click)="generatePDFByImage()"
-		>
-		</lib-icon>
-		-->
+		<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
 	</div>
 
-	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
-		<ng-container matColumnDef="image">
-			<th mat-header-cell *matHeaderCellDef class="image">
-				<lib-libelle-model class="hide-on-mobile" [object]="timbreBlocModel"
-								   [key]="'image'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
-				<img *ngIf="element?.getImageTable()"
-					 [src]="element?.getImageTable()"
-					 class="image click"
-					 (click)="utilsService.zoom(element?.getImageZoom())"/>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="id">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
-				<lib-libelle-model [object]="timbreBlocModel" [key]="'id'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getId() }}
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="annee">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header>
-				<lib-libelle-model [object]="timbreBlocModel" [key]="'annee'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getAnnee() }}
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="carnet">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreBlocModel" [key]="'carnet'"
-								   [align]="'center center'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="element?.isCarnet()? FontAwesomeEnum.CHECK : FontAwesomeEnum.XMARK"
-					(click)="acquis(element)"
-				>
-				</lib-icon>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="nbTimbres">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
-				<lib-libelle-model [object]="timbreBlocModel" [key]="'nbTimbres'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
-				{{ element?.getNbTimbres() }}
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="monnaie">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
-				<lib-libelle-model [object]="timbreBlocModel" [key]="'monnaie'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
-				{{ element?.getMonnaie() == "E" ? "€" : "Francs" }}
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="yt">
-			<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
-				<lib-libelle-model [object]="timbreBlocModel" [key]="'yt'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
-				{{ element?.getYt() }}
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="acquis">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreBlocModel?.getTimbreBlocAcquisModel()"
-								   [key]="'acquis'" [align]="'center center'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
-				<lib-icon
-					class="click"
-					[classIcone]="element?.getTimbreBlocAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="element?.getTimbreBlocAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
-					[info]="element?.getTimbreBlocAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
-					(click)="acquis(element)"
-				>
-				</lib-icon>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="doublon">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreBlocModel?.getTimbreBlocAcquisModel()"
-								   [key]="'doublon'" [align]="'center center'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
-				<lib-icon
-					class="click"
-					[classIcone]="element?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="element?.getTimbreBlocAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
-					[info]="element?.getTimbreBlocAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
-					(click)="doublon(element)"
-				>
-				</lib-icon>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="modifier">
-			<th mat-header-cell *matHeaderCellDef class="alignCenter">
-				<lib-icon
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.PENCIL"
-					[info]="'Modifier'"
-				></lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
-				<lib-icon
-					class="primary click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
-					[info]="'Modifier'"
-					(click)="modifier(element)"
-				>
-				</lib-icon>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="supprimer">
-			<th mat-header-cell *matHeaderCellDef class="alignCenter">
-				<lib-icon
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
-					[icone]="FontAwesomeEnum.TRASH"
-					[info]="'Modifier'"
-				></lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
-				<lib-icon
-					class="primary click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_SOLID" [icone]="FontAwesomeEnum.TRASH"
-					[info]="'Supprimer'"
-					(click)="supprimer(element)"
-				></lib-icon>
-			</td>
-		</ng-container>
+	<div class="listeTimbre primary">
+		<div *ngFor="let timbreBloc of timbreBlocService.timbresBlocModel$ | async" class="detailTimbre border-primary">
+			<div class="headerTimbre">
+				<div class="actionTimbre">
+					<lib-icon
+						class="click"
+						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+						[info]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
+						(click)="timbreBlocService.acquisDoublon(timbreBloc, false)"
+					>
+					</lib-icon>
+					<lib-icon
+						class="click"
+						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+						[info]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
+						(click)="timbreBlocService.acquisDoublon(timbreBloc, true)"
+					>
+					</lib-icon>
+				</div>
 
-		<tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary color-white"></tr>
-		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row"></tr>
-	</table>
-	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+				<div class="actionTimbre2">
+					<lib-icon
+						class="primary click"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+						[info]="'Modifier'"
+						(click)="timbreBlocService.modifierDialog(timbreBloc)"
+					>
+					</lib-icon>
+					<lib-icon
+						class="primary click"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.TRASH"
+						[info]="'Supprimer'"
+						(click)="timbreBlocService.supprimerDialog(timbreBloc)"
+					></lib-icon>
+				</div>
+			</div>
+
+			<div class="imgTimbre">
+				<img *ngIf="timbreBloc?.getImage()"
+					 [src]="timbreBloc?.getImage()"
+					 class="image click"
+					 (click)="utilsService.zoom(timbreBloc?.getImageZoom())"/>
+			</div>
+
+			<div class="footerTimbre">
+				{{ timbreBloc?.getAnnee() }}
+
+				<div class="infoTimbre">
+					<lib-icon
+						class="click"
+						[classIcone]="timbreBloc?.isCarnet() ? 'accent' : 'primary'"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="timbreBloc?.isCarnet()? FontAwesomeEnum.CIRCLE_C: FontAwesomeEnum.CIRCLE_B"
+						(click)="timbreBlocService.isCarnet(timbreBloc)"
+					>
+					</lib-icon>
+				</div>
+
+				<div *ngIf="timbreBloc?.getYt()" class="infoTimbre">
+					<lib-icon
+						class="click"
+						[classIcone]="'primary'"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CIRCLE_INFO"
+						[info]="timbreBloc?.getYt()"
+					></lib-icon>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
+

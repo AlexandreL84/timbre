@@ -26,15 +26,15 @@
 			</ng-container>
 		</ng-container>
 
-		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE">
-			<ng-template [ngIf]="timbreService.mode == ModeEnum.GRAPH" [ngIfElse]="modeTable">
+		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && ((headerService.route$ | async) == RouteEnum.TIMBRE || (headerService.route$ | async) == RouteEnum.BLOC)">
+			<ng-template [ngIf]="headerService.mode == ModeEnum.GRAPH" [ngIfElse]="modeTable">
 				<lib-icon
 					[icone]="FontAwesomeEnum.TABLE"
 					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
 					class="primary click hide-on-mobile"
 					style="font-size: 2em"
 					[info]="'Mode tableau'"
-					(click)="timbreService.mode = ModeEnum.TABLE">
+					(click)="headerService.mode = ModeEnum.TABLE">
 				</lib-icon>
 			</ng-template>
 			<ng-template #modeTable>
@@ -44,7 +44,7 @@
 					class="primary click hide-on-mobile"
 					style="font-size: 2em"
 					[info]="'Mode tableau'"
-					(click)="timbreService.mode = ModeEnum.GRAPH">
+					(click)="headerService.mode = ModeEnum.GRAPH">
 				</lib-icon>
 			</ng-template>
 		</ng-container>

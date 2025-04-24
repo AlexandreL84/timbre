@@ -6,6 +6,7 @@ import {IconeModel} from "../../model/icone.model";
 import {RouteEnum} from "../enum/route.enum";
 import {Router} from "@angular/router";
 import {isNotNullOrUndefined, isNullOrUndefined} from "../utils/utils";
+import {ModeEnum} from "../enum/mode.enum";
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class HeaderService {
 	route$: BehaviorSubject<RouteEnum> = new BehaviorSubject<RouteEnum>(null);
 	choixRoutes$: BehaviorSubject<IconeModel[]> = new BehaviorSubject<IconeModel[]>(null);
 	choixRoutesTimbre$: BehaviorSubject<IconeModel[]> = new BehaviorSubject<IconeModel[]>(null);
+	mode: ModeEnum = ModeEnum.GRAPH;
 
 	constructor(private router: Router) {
 	}

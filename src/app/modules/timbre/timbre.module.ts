@@ -5,7 +5,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {TimbreRoutingModule} from './timbre-routing.module';
 import {MaterialModule} from '../../shared/modules/material.module';
 import {TimbreLayoutComponent} from './layout/timbre-layout.component';
-import {TimbreService} from '../../shared/services/timbre/timbre.service';
 import {TimbreModifierComponent} from './components/modifier/timbre-modifier.component';
 import {LibSpinnerModule} from '../../shared/components/lib-spinner';
 import {DirectiveModule} from '../../shared/directives/directive.module';
@@ -30,6 +29,7 @@ import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.se
 import {TimbreRechercheComponent} from "./components/recherche/timbre-recherche.component";
 import {TimbreResultatTableComponent} from "./components/resultat-table/timbre-resultat-table.component";
 import {TimbreTotalComponent} from "./components/total/timbre-total.component";
+import {TimbreService} from "../../shared/services/timbre/timbre.service";
 
 @NgModule({
 	declarations: [
@@ -57,7 +57,7 @@ import {TimbreTotalComponent} from "./components/total/timbre-total.component";
         ReactiveFormsModule
     ],
 	exports: [],
-	providers: [UtilsService, TimbreUtilsService, TimbreService, TimbreBlocService, TimbreResumeService, UploadService, provideHttpClient()]
+	providers: [TimbreService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService, provideHttpClient()]
 })
 export class TimbreModule {
 }

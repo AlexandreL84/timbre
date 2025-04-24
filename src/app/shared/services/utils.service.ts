@@ -5,10 +5,11 @@ import {BaseEnum} from "../enum/base.enum";
 import {map, Observable} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {isNotNullOrUndefined} from "../utils/utils";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Injectable()
 export class UtilsService {
-	constructor(private dialog: MatDialog, private firestore: AngularFirestore) {
+	constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private firestore: AngularFirestore) {
 	}
 
 	zoom(url: string) {
@@ -37,5 +38,11 @@ export class UtilsService {
 				return isNotNullOrUndefined(docs[0]) ? docs[0]["id"] + 1 : 1
 			})
 		);
+	}
+
+	droitInsuffisant() {
+		this.snackBar.open("Droit insuffisant", null, {
+			duration: 6000,
+		});
 	}
 }
