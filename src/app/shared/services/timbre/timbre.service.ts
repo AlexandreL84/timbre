@@ -52,6 +52,12 @@ export class TimbreService {
 		}));
 	}
 
+	setTotal(number: number) {
+		this.total$.pipe(first()).subscribe(total => {
+			this.total$.next(total + number);
+		});
+	}
+
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
 		this.timbreUtilsService.getAllTimbres(timbreCritereModel).subscribe(timbres => {
@@ -156,18 +162,26 @@ export class TimbreService {
 
 				this.firestore.collection(BaseEnum.TIMBRE).add(
 					Object.assign(new Object(), timbreModel)
-				);
-				if (refresh) {
-					this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
-				}
-				this.timbreUtilsService.reinitResume$.next(true);
+				).then((result) => {
+					this.timbres$.pipe(first()).subscribe(timbres => {
+						timbres.push(timbreModel);
+						this.setTotal(1);
+					});
+					/*if (refresh) {
+						this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
+					}*/
+					this.timbreUtilsService.reinitResume$.next(true);
+				})
+				.catch((error) => {
+					console.error("Erreur d'ajout :", error);
+				});
 			} else {
 				console.error("timbre " + timbreModel.getId() + " déjà existant");
 			}
 		});
 	}
 
-	modifier(timbreModel: TimbreModel, refresh: boolean) {
+	modifier(timbreModel: TimbreModel) {
 		timbreModel.setTimbreBlocModel(null);
 		timbreModel.setTimbreAcquisModel(null);
 		this.firestore.collection(BaseEnum.TIMBRE)
@@ -177,20 +191,21 @@ export class TimbreService {
 				snapshot.forEach(doc => {
 					doc.ref.update(Object.assign(new Object(), timbreModel))
 						.then((result) => {
-							if (refresh) {
-								this.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
-							} else {
-								this.getTotal();
-							}
+							this.timbres$.pipe(first(timbres => isNotNullOrUndefined(timbres) && timbres?.length > 0)).subscribe(timbres => {
+								const findTimbre: TimbreModel = timbres.find(timbre => timbre.getId() == timbreModel.getId());
+								if (isNotNullOrUndefined(findTimbre)) {
+									Object.assign(findTimbre, timbreModel);
+								}
+							});
 						})
 						.catch((error) => {
-							console.error(error);
+							console.error('Erreur de mise à jour :', error);
 						});
 					doc.ref.update(Object.assign(new Object(), timbreModel));
 				});
 			})
 			.catch(error => {
-				console.error('Erreur de mise à jour:', error);
+				console.error('Erreur de mise à jour id introuvable :', error);
 			});
 	}
 
@@ -200,12 +215,24 @@ export class TimbreService {
 			.get()
 			.then(snapshot => {
 				snapshot.forEach(doc => {
-					doc.ref.delete();
-					this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
+					doc.ref.delete()
+						.then((result) => {
+							this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
+							this.timbres$.pipe(first()).subscribe(timbresModel => {
+								const findIndex: number = timbresModel.findIndex(timbre => timbre.getId() == timbreModel.getId());
+								if (findIndex >= 0) {
+									timbresModel.splice(findIndex, 1);
+									this.setTotal(-1);
+								}
+							});
+						})
+						.catch((error) => {
+							console.error('Erreur de suppression :', error);
+						});
 				});
 			})
 			.catch(error => {
-				console.error('Erreur de suppression :', error);
+				console.error('Erreur de suppression id introuvable :', error);
 			});
 	}
 

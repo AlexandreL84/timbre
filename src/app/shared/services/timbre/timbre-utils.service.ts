@@ -22,7 +22,6 @@ export class TimbreUtilsService {
 		return this.firestore.collection(baseEmun, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			filteredQuery = filteredQuery.orderBy('annee', 'desc');
-
 			return filteredQuery;
 		}).valueChanges().pipe(
 			map(docs => {

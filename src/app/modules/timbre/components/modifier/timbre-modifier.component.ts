@@ -123,7 +123,7 @@ export class TimbreModifierComponent implements OnInit {
 					this.timbreModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreService.modifier(this.timbreModel, true);
+					this.timbreService.modifier(this.timbreModel);
 				} else {
 					this.timbreService.ajouter(this.timbreModel, true);
 				}

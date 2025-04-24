@@ -57,6 +57,14 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.id = value;
 	}
 
+	getIdOrigine(): number {
+		return this.idOrigine;
+	}
+
+	setIdOrigine(value: number) {
+		this.idOrigine = value;
+	}
+
 	getAnnee(): number {
 		return this.annee;
 	}

@@ -27,10 +27,10 @@ export class UtilsService {
 	getMaxIdentAsync(baseEmun: BaseEnum, annee?: number): Observable<number> {
 		return this.firestore.collection(baseEmun, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-			if (isNotNullOrUndefined(annee)) {
+			/*if (isNotNullOrUndefined(annee)) {
 				filteredQuery = filteredQuery.where("annee", "==", annee);
-			}
-			filteredQuery = filteredQuery.orderBy('id', 'desc');
+			}*/
+			filteredQuery = filteredQuery.orderBy("id", "desc");
 			filteredQuery = filteredQuery.limit(1);
 			return filteredQuery;
 		}).valueChanges().pipe(

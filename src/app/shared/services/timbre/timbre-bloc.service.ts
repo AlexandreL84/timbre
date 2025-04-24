@@ -55,6 +55,18 @@ export class TimbreBlocService {
 		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, ('bloc-' + timbreBlocModel.getId()), this.getDossier(timbreBlocModel, dossier, ident));
 	}
 
+	setTotal(timbreBlocModel: TimbreBlocModel, number: number) {
+		if (timbreBlocModel.isCarnet()) {
+			this.total$.pipe(first()).subscribe(total => {
+				this.total$.next(total + 1);
+			});
+		} else {
+			this.totalCarnet$.pipe(first()).subscribe(totalCarnet => {
+				this.totalCarnet$.next(totalCarnet + number);
+			});
+		}
+	}
+
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
 		this.totalCarnet$.next(null);
@@ -233,14 +245,24 @@ export class TimbreBlocService {
 		this.getBloc(timbreBlocModel.getId()).pipe(first()).subscribe(data => {
 			if (isNullOrUndefined(data) || isNullOrUndefined(data[0]) || (isNotNullOrUndefined(data[0]) && data[0]?.length == 0)) {
 				timbreBlocModel.setTimbreBlocAcquisModel(null);
+				timbreBlocModel.setIdOrigine(null);
 
+				console.log(timbreBlocModel)
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
 					Object.assign(new Object(), timbreBlocModel)
-				);
-				if (refresh) {
-					this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
-				}
-				this.timbreUtilsService.reinitResume$.next(true);
+				).then((result) => {
+					this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
+						timbresBlocModel.push(timbreBlocModel);
+						this.setTotal(timbreBlocModel, 1);
+					});
+					/*if (refresh) {
+						this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+					}*/
+					this.timbreUtilsService.reinitResume$.next(true);
+				})
+				.catch((error) => {
+					console.error("Erreur d'ajout :", error);
+				});
 			} else {
 				console.error("bloc " + timbreBlocModel.getId() + " déjà existant");
 			}
@@ -251,14 +273,14 @@ export class TimbreBlocService {
 		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
 				timbreBlocModel.setCarnet(!timbreBlocModel.isCarnet());
-				this.modifier(timbreBlocModel, false);
+				this.modifier(timbreBlocModel);
 			} else {
 				this.utilsService.droitInsuffisant();
 			}
 		});
 	}
 
-	modifier(timbreBlocModel: TimbreBlocModel, refresh: boolean) {
+	modifier(timbreBlocModel: TimbreBlocModel) {
 		timbreBlocModel.setTimbreBlocAcquisModel(null);
 		this.firestore.collection(BaseEnum.TIMBRE_BLOC)
 			.ref.where('id', '==', timbreBlocModel.getId())
@@ -267,19 +289,20 @@ export class TimbreBlocService {
 				snapshot.forEach(doc => {
 					doc.ref.update(Object.assign(new Object(), timbreBlocModel))
 						.then((result) => {
-							if (refresh) {
-								this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
-							} else {
-								this.getTotal();
-							}
+							this.timbresBlocModel$.pipe(first(timbresBlocModel => isNotNullOrUndefined(timbresBlocModel) && timbresBlocModel?.length > 0)).subscribe(timbresBlocModel => {
+								const findTimbreBloc: TimbreBlocModel = timbresBlocModel.find(timbreBloc => timbreBloc.getId() == timbreBlocModel.getId());
+								if (isNotNullOrUndefined(findTimbreBloc)) {
+									Object.assign(findTimbreBloc, timbreBlocModel);
+								}
+							});
 						})
 						.catch((error) => {
-							console.error(error);
+							console.error('Erreur de mise à jour :', error);
 						});
 				});
 			})
 			.catch(error => {
-				console.error('Erreur de mise à jour:', error);
+				console.error('Erreur de mise à jour id introuvable :', error);
 			});
 	}
 
@@ -312,12 +335,24 @@ export class TimbreBlocService {
 			.get()
 			.then(snapshot => {
 				snapshot.forEach(doc => {
-					doc.ref.delete();
-					this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
+					doc.ref.delete()
+						.then((result) => {
+							//this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
+							this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
+								const findIndex: number = timbresBlocModel.findIndex(timbreBloc => timbreBloc.getId() == timbreBlocModel.getId());
+								if (findIndex >= 0) {
+									timbresBlocModel.splice(findIndex, 1);
+									this.setTotal(timbreBlocModel, -1);
+								}
+							});
+						})
+						.catch((error) => {
+							console.error('Erreur de suppression :', error);
+						});
 				});
 			})
 			.catch(error => {
-				console.error('Erreur de suppression :', error);
+				console.error('Erreur de suppression id introuvable :', error);
 			});
 		this.timbreUtilsService.reinitResume$.next(true);
 	}

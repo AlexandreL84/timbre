@@ -25,7 +25,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 	id: number;
-	maxAnnee: number = new Date().getFullYear();
+	maxAnnee: number = new Date().getFullYear() + 1;
 	timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
@@ -114,7 +114,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 					this.timbreBlocModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreBlocService.modifier(this.timbreBlocModel, true);
+					this.timbreBlocService.modifier(this.timbreBlocModel);
 				} else {
 					this.timbreBlocService.ajouter(this.timbreBlocModel, true);
 				}
