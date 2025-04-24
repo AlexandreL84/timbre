@@ -259,9 +259,9 @@ export class TimbreBlocService {
 					}*/
 					this.timbreUtilsService.reinitResume$.next(true);
 				})
-				.catch((error) => {
-					console.error("Erreur d'ajout :", error);
-				});
+					.catch((error) => {
+						console.error("Erreur d'ajout :", error);
+					});
 			} else {
 				console.error("bloc " + timbreBlocModel.getId() + " déjà existant");
 			}
@@ -375,11 +375,51 @@ export class TimbreBlocService {
 	acquisDoublon(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
 		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
-				this.acquis(timbreBlocModel, doublon);
+				if (timbreBlocModel?.isCarnet()) {
+					this.acquisCarnetDialog(timbreBlocModel, doublon);
+				} else {
+					this.acquis(timbreBlocModel, doublon);
+				}
 			} else {
 				this.utilsService.droitInsuffisant();
 			}
 		});
+	}
+
+	acquisCarnetDialog(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
+		let text: string = "";
+		if (timbreBlocModel?.getTimbreBlocAcquisModel()?.isDoublon() && doublon) {
+			text = "enlever les doublons";
+		} else if (timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis()) {
+			text = "enlever les acquis";
+		} else  {
+			text = "mettre en " + (doublon ? "doublon" : "acquis") + " tous";
+		}
+
+		const dialogModal = this.dialog.open(LibModalComponent, {
+			maxHeight: "95vh",
+			data: {
+				titre: "Confirmation",
+				message: "Souhaitez-vous <b>" + text + "</b> les timbres du carnet ?",
+				btnDroite: "Oui",
+				btnGauche: "Non",
+			},
+		});
+
+		dialogModal.afterClosed().subscribe(() => {
+			if (dialogModal.componentInstance.data.resultat === "valider") {
+				this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+					this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
+						console.log(!timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis())
+						timbres.forEach(timbreModel => {
+							this.timbreUtilsService.acquis(timbreModel, doublon, !timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis());
+							//this.timbreUtilsService.supprimerAcquisTimbreByUser(user.getId(), timbreModel, doublon, !timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis());
+						});
+					});
+					this.acquis(timbreBlocModel, doublon);
+				});
+			}
+		})
 	}
 
 	modifierDialog(timbreBlocModel: TimbreBlocModel) {

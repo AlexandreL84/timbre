@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, map, Observable} from "rxjs";
-import {isNotNullOrUndefined} from "../../utils/utils";
+import {BehaviorSubject, first, map, Observable} from "rxjs";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../../utils/utils";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {BaseEnum} from "../../enum/base.enum";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";
@@ -8,6 +8,7 @@ import {TimbreBlocModel} from "../../../model/timbre-bloc.model";
 import {TimbreModel} from "../../../model/timbre.model";
 import {plainToInstance} from "class-transformer";
 import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
+import {AuthService} from "../auth.service";
 
 @Injectable()
 export class TimbreUtilsService {
@@ -15,7 +16,7 @@ export class TimbreUtilsService {
 	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
-	constructor(private firestore: AngularFirestore) {
+	constructor(private authService: AuthService, private firestore: AngularFirestore) {
 	}
 
 	getAnneesAsync(baseEmun: BaseEnum): Observable<number[]>  {
@@ -124,4 +125,78 @@ export class TimbreUtilsService {
 			});
 	}
 
+	acquis(timbreModel: TimbreModel, doublon: boolean, force?: boolean) {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			//if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.getIdUser())) {
+				this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
+					.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', user.getId())
+					//.limit(1)
+					.get()
+					.then(snapshot => {
+						if (snapshot?.size == 0) {
+							this.addAcquis(user.getId(), timbreModel, doublon);
+						}
+						snapshot.forEach(doc => {
+							//const timbreAcquisModel: TimbreAcquisModel = timbreModel.getTimbreAcquisModel();
+							const timbreAcquisModel = plainToInstance(TimbreAcquisModel, doc.data());
+							if (doublon) {
+								timbreAcquisModel.setAcquis(true);
+								timbreAcquisModel.setDoublon(force? force : !timbreAcquisModel.isDoublon());
+							} else {
+								console.log(force, timbreAcquisModel)
+								timbreAcquisModel.setAcquis(force? force : !timbreAcquisModel.isAcquis());
+								if (!timbreAcquisModel.isAcquis()) {
+									timbreAcquisModel.setDoublon(false);
+								}
+							}
+							doc.ref.update(Object.assign(new Object(), timbreAcquisModel));
+						});
+					})
+					.catch(error => {
+						console.error('Erreur de mise à jour:', error);
+					});
+			/*} else {
+				this.addAcquis(user?.getId(), timbreModel, doublon);
+			}*/
+			this.reinitResume$.next(true);
+		});
+	}
+
+	supprimerAcquisTimbreByUser(idUser: string, timbreModel: TimbreModel, doublon?: boolean, ajout?: boolean) {
+		console.log("supprimerTimbreByUser")
+		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
+			.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', idUser)
+			.get()
+			.then(snapshot => {
+				if (snapshot?.size == 0) {
+					if (ajout) {
+						this.addAcquis(idUser, timbreModel, doublon);
+					}
+				}
+				snapshot.forEach(doc => {
+					console.log(doc.ref)
+					doc.ref.delete().then((result) => {
+						if (ajout) {
+							this.addAcquis(idUser, timbreModel, doublon);
+						}
+					})
+				});
+			})
+			.catch(error => {
+				console.error('Erreur de suppression :', error);
+			});
+	}
+
+	addAcquis(idUser: string, timbreModel: TimbreModel, doublon: boolean) {
+		console.log("addAcquis")
+		const timbreAcquisModel = new TimbreAcquisModel();
+		timbreAcquisModel.setIdUser(idUser);
+		timbreAcquisModel.setIdTimbre(timbreModel.getId());
+		timbreAcquisModel.setAcquis(true);
+		timbreAcquisModel.setDoublon(doublon);
+		timbreModel.setTimbreAcquisModel(timbreAcquisModel);
+		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS).add(
+			Object.assign(new Object(), timbreAcquisModel)
+		);
+	}
 }

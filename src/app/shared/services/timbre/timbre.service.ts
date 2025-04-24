@@ -99,50 +99,6 @@ export class TimbreService {
 		return this.firestore.collection(BaseEnum.TIMBRE_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
 	}
 
-	acquis(timbreModel: TimbreModel, doublon: boolean) {
-		return this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
-			if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.getIdUser())) {
-				this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
-					.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', user.getId())
-					//.limit(1)
-					.get()
-					.then(snapshot => {
-						snapshot.forEach(doc => {
-							const timbreAcquisModel: TimbreAcquisModel = timbreModel.getTimbreAcquisModel();
-							if (doublon) {
-								timbreAcquisModel.setAcquis(true);
-								timbreAcquisModel.setDoublon(!timbreAcquisModel.isDoublon());
-							} else {
-								timbreAcquisModel.setAcquis(!timbreAcquisModel.isAcquis());
-								if (!timbreAcquisModel.isAcquis()) {
-									timbreAcquisModel.setDoublon(false);
-								}
-							}
-							doc.ref.update(Object.assign(new Object(), timbreAcquisModel));
-						});
-					})
-					.catch(error => {
-						console.error('Erreur de mise à jour:', error);
-					});
-			} else {
-				this.addAcquis(user?.getId(), timbreModel, doublon);
-			}
-			this.timbreUtilsService.reinitResume$.next(true);
-		});
-	}
-
-	addAcquis(idUser: string, timbreModel: TimbreModel, doublon: boolean) {
-		const timbreAcquisModel = new TimbreAcquisModel();
-		timbreAcquisModel.setIdUser(idUser);
-		timbreAcquisModel.setIdTimbre(timbreModel.getId());
-		timbreAcquisModel.setAcquis(true);
-		timbreAcquisModel.setDoublon(doublon);
-		timbreModel.setTimbreAcquisModel(timbreAcquisModel);
-		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS).add(
-			Object.assign(new Object(), timbreAcquisModel)
-		);
-	}
-
 	ajouterSansId(timbreModel: TimbreModel) {
 		this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE).pipe(first()).subscribe(id => {
 			timbreModel.setId(id);
@@ -283,7 +239,7 @@ export class TimbreService {
 	acquisDoublon(timbreModel: TimbreModel, doublon: boolean) {
 		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
-				this.acquis(timbreModel, doublon);
+				this.timbreUtilsService.acquis(timbreModel, doublon);
 			} else {
 				this.utilsService.droitInsuffisant();
 			}
