@@ -143,7 +143,6 @@ export class TimbreUtilsService {
 								timbreAcquisModel.setAcquis(true);
 								timbreAcquisModel.setDoublon(force? force : !timbreAcquisModel.isDoublon());
 							} else {
-								console.log(force, timbreAcquisModel)
 								timbreAcquisModel.setAcquis(force? force : !timbreAcquisModel.isAcquis());
 								if (!timbreAcquisModel.isAcquis()) {
 									timbreAcquisModel.setDoublon(false);
@@ -163,7 +162,6 @@ export class TimbreUtilsService {
 	}
 
 	supprimerAcquisTimbreByUser(idUser: string, timbreModel: TimbreModel, doublon?: boolean, ajout?: boolean) {
-		console.log("supprimerTimbreByUser")
 		this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
 			.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', idUser)
 			.get()
@@ -174,7 +172,6 @@ export class TimbreUtilsService {
 					}
 				}
 				snapshot.forEach(doc => {
-					console.log(doc.ref)
 					doc.ref.delete().then((result) => {
 						if (ajout) {
 							this.addAcquis(idUser, timbreModel, doublon);
@@ -188,7 +185,6 @@ export class TimbreUtilsService {
 	}
 
 	addAcquis(idUser: string, timbreModel: TimbreModel, doublon: boolean) {
-		console.log("addAcquis")
 		const timbreAcquisModel = new TimbreAcquisModel();
 		timbreAcquisModel.setIdUser(idUser);
 		timbreAcquisModel.setIdTimbre(timbreModel.getId());

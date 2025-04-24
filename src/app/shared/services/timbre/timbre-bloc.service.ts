@@ -410,7 +410,6 @@ export class TimbreBlocService {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
 				this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 					this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
-						console.log(!timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis())
 						timbres.forEach(timbreModel => {
 							this.timbreUtilsService.acquis(timbreModel, doublon, !timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis());
 							//this.timbreUtilsService.supprimerAcquisTimbreByUser(user.getId(), timbreModel, doublon, !timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis());
