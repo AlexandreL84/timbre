@@ -5,7 +5,7 @@ import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
@@ -24,8 +24,6 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
-
-	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	dataSource: MatTableDataSource<TimbreBlocModel> = new MatTableDataSource<TimbreBlocModel>();
 	displayedColumns: string[];
 	public timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
@@ -48,10 +46,8 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 			this.displayedColumns.push("modifier", "supprimer");
 		}
 
-		this.load$.next(false);
 		this.timbreBlocService.timbresBlocModel$.subscribe(timbres => {
 			this.dataSource.data = timbres;
-			this.load$.next(true);
 		});
 	}
 

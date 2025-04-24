@@ -31,7 +31,7 @@ export class TimbreRechercheComponent implements OnInit {
 			this.timbreUtilsService.timbreCritereModel.setDoublon("TOUS");
 		}
 		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
-			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
 		}
 	}
 }

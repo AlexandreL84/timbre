@@ -28,7 +28,7 @@ export class TimbreBlocRechercheComponent implements OnInit {
 			this.timbreUtilsService.timbreCritereBlocModel.setDoublon("TOUS");
 		}
 		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
-			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
+			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
 		}
 	}
 }

@@ -22,6 +22,7 @@ import {TimbreBlocResultatTableComponent} from "./components/resultat-table/timb
 import {TimbreBlocTotalComponent} from "./components/total/timbre-bloc-total.component";
 import {TimbreBlocRechercheComponent} from "./components/recherche/timbre-bloc-recherche.component";
 import {TimbreService} from "../../shared/services/timbre/timbre.service";
+import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.service";
 
 @NgModule({
 	declarations: [
@@ -48,7 +49,7 @@ import {TimbreService} from "../../shared/services/timbre/timbre.service";
         MenuModule,
     ],
 	exports: [],
-	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, UploadService, provideHttpClient()]
+	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService, provideHttpClient()]
 })
 export class TimbreBlocModule {
 }

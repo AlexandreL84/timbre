@@ -114,7 +114,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 					this.timbreBlocModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreBlocService.modifier(this.timbreBlocModel);
+					this.timbreBlocService.modifier(this.timbreBlocModel, true);
 				} else {
 					this.timbreBlocService.ajouter(this.timbreBlocModel, true);
 				}

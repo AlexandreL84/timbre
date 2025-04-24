@@ -76,20 +76,20 @@ export class MenuComponent {
 	verifRoute() {
 		if (window.location.href.indexOf("bloc") > 0) {
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
-				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
+				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
 			} else {
 				this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 					this.timbreUtilsService.timbreCritereBlocModel.setAnnees([annees[0]]);
-					this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel);
+					this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
 				});
 			}
 		} else {
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
-				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 			} else {
 				this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 					this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
-					this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+					this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 				});
 			}
 		}

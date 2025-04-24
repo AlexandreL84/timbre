@@ -1,40 +1,41 @@
+
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+	<app-timbre-total [total$]="total$"></app-timbre-total>
+
+	<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+		<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
+			 style="width: 200px; min-height:55px; height: 55px">
+			<input
+				placeholder="Filtrer les données"
+				type="text"
+				(input)="applyFilter($event)"
+			/>
+		</div>
+		<lib-icon
+			class="primary click"
+			style="font-size: 1.7em"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+			[info]="'Exporter tableau'"
+			(click)="exportTable()"
+		>
+		</lib-icon>
+		<!--
+		<lib-icon
+			class="primary click"
+			style="font-size: 1.7em"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+			[info]="'Exporter en pdf'"
+			(click)="generatePDFByImage()"
+		>
+		</lib-icon>
+		-->
+	</div>
+</div>
+
 <lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section [fxHide]="(load$ | async) == false">
-	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
-		<app-timbre-total [total$]="total$"></app-timbre-total>
-
-		<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
-			<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
-			<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
-				 style="width: 200px; min-height:55px; height: 55px">
-				<input
-					placeholder="Filtrer les données"
-					type="text"
-					(input)="applyFilter($event)"
-				/>
-			</div>
-			<lib-icon
-				class="primary click"
-				style="font-size: 1.7em"
-				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
-				[info]="'Exporter tableau'"
-				(click)="exportTable()"
-			>
-			</lib-icon>
-			<!--
-			<lib-icon
-				class="primary click"
-				style="font-size: 1.7em"
-				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
-				[info]="'Exporter en pdf'"
-				(click)="generatePDFByImage()"
-			>
-			</lib-icon>
-			-->
-		</div>
-	</div>
-
 	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 		<ng-container matColumnDef="image">
 			<th mat-header-cell *matHeaderCellDef class="image">

@@ -1,12 +1,12 @@
+<div class="responsiveDirection responsiveMenu">
+	<app-timbre-total [total$]="total$"></app-timbre-total>
+
+	<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
+</div>
+
 <lib-spinner [fxHide]="(load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section [fxHide]="(load$ | async) == false">
-	<div class="responsiveDirection responsiveMenu">
-		<app-timbre-total [total$]="total$"></app-timbre-total>
-
-		<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
-	</div>
-
 	<div class="listeTimbre primary">
 		<div *ngFor="let timbre of timbres$ | async" class="detailTimbre border-primary">
 			<div class="headerTimbre">

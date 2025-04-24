@@ -26,13 +26,13 @@ export class TimbreLayoutComponent implements OnInit {
 	ngOnInit(): void {
 		this.timbreService.timbres$.next(null);
 		this.headerService.titre$.next("TIMBRES");
-		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
+		/*this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
 		this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect=> {
 			this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 				this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
-				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 			});
-		});
+		});*/
 	}
 
     protected readonly ModeEnum = ModeEnum;

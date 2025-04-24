@@ -30,6 +30,7 @@ export class TimbreBlocService {
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	totalCarnet$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbresBlocModel$: BehaviorSubject<TimbreBlocModel[]> = new BehaviorSubject<TimbreBlocModel[]>(null);
+	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		private firestore: AngularFirestore,
@@ -57,10 +58,11 @@ export class TimbreBlocService {
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
 		this.totalCarnet$.next(null);
-		this.getAllBlocs(timbreCritereModel).pipe(first(timbesBloc => isNotNullOrUndefined(timbesBloc) && timbesBloc?.length > 0)).subscribe(timbesBloc => {
-			this.total$.next(timbesBloc?.filter(timbesBloc => !timbesBloc["carnet"])?.length);
-			this.totalCarnet$.next(timbesBloc?.filter(timbesBloc => timbesBloc["carnet"])?.length);
-		});
+		this.getAllBlocs(timbreCritereModel)
+			.subscribe(timbesBloc => {
+				this.total$.next(timbesBloc?.filter(timbesBloc => !timbesBloc["carnet"])?.length);
+				this.totalCarnet$.next(timbesBloc?.filter(timbesBloc => timbesBloc["carnet"])?.length);
+			});
 	}
 
 	getBloc(id: number): Observable<any> {
@@ -75,21 +77,24 @@ export class TimbreBlocService {
 			}));
 	}
 
+	getRef(ref, timbreCritereModel: TimbreCritereModel) {
+		let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
+		if (isNotNullOrUndefined(timbreCritereModel)) {
+			if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
+				filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
+			}
+			if (isNotNullOrUndefined(timbreCritereModel.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
+				filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", null);
+			}
+		}
+		filteredQuery = filteredQuery.orderBy('id', 'asc');
+		return filteredQuery;
+	}
+
 	getAllBlocs(timbreCritereModel: TimbreCritereModel): Observable<any> {
 		return this.firestore.collection(BaseEnum.TIMBRE_BLOC, ref => {
-			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
-			if (isNotNullOrUndefined(timbreCritereModel)) {
-				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
-				}
-				if (isNotNullOrUndefined(timbreCritereModel.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
-					filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", null);
-				}
-			}
-			filteredQuery = filteredQuery.orderBy('id', 'asc');
-			return filteredQuery;
-		})
-			.valueChanges();
+			return this.getRef(ref, timbreCritereModel);
+		}).valueChanges();
 	}
 
 	getTimbreBlocAcquis(): Observable<any> {
@@ -110,14 +115,18 @@ export class TimbreBlocService {
 		return this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
 	}
 
-	getBlocs(timbreCritereModel?: TimbreCritereModel) {
+	getBlocs(timbreCritereModel: TimbreCritereModel, total: boolean) {
+		this.load$.next(false);
 		this.timbresBlocModel$.next(null);
+		if (total) {
+			this.getTotal();
+		}
 		combineLatest([
 			this.getAllBlocs(timbreCritereModel),
 			this.getTimbreBlocAcquis()
 		]).pipe(first()).subscribe(([timbresBloc, timbresBlocAcquis]) => {
-			this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel);
-			this.getTotal();
+			this.timbresBlocModel$.next(this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel));
+			this.load$.next(true);
 		});
 	}
 
@@ -165,7 +174,6 @@ export class TimbreBlocService {
 				}
 			});
 		}
-		this.timbresBlocModel$.next(timbresBlocModel);
 		return timbresBlocModel;
 	}
 
@@ -230,7 +238,7 @@ export class TimbreBlocService {
 					Object.assign(new Object(), timbreBlocModel)
 				);
 				if (refresh) {
-					this.getBlocs();
+					this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
 				}
 				this.timbreUtilsService.reinitResume$.next(true);
 			} else {
@@ -243,21 +251,31 @@ export class TimbreBlocService {
 		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
 				timbreBlocModel.setCarnet(!timbreBlocModel.isCarnet());
-				this.modifier(timbreBlocModel);
+				this.modifier(timbreBlocModel, false);
 			} else {
 				this.utilsService.droitInsuffisant();
 			}
 		});
 	}
 
-	modifier(timbreBlocModel: TimbreBlocModel) {
+	modifier(timbreBlocModel: TimbreBlocModel, refresh: boolean) {
+		timbreBlocModel.setTimbreBlocAcquisModel(null);
 		this.firestore.collection(BaseEnum.TIMBRE_BLOC)
 			.ref.where('id', '==', timbreBlocModel.getId())
 			.get()
 			.then(snapshot => {
 				snapshot.forEach(doc => {
-					doc.ref.update(Object.assign(new Object(), timbreBlocModel));
-					this.getBlocs();
+					doc.ref.update(Object.assign(new Object(), timbreBlocModel))
+						.then((result) => {
+							if (refresh) {
+								this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+							} else {
+								this.getTotal();
+							}
+						})
+						.catch((error) => {
+							console.error(error);
+						});
 				});
 			})
 			.catch(error => {
@@ -295,7 +313,7 @@ export class TimbreBlocService {
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					doc.ref.delete();
-					this.getBlocs();
+					this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
 				});
 			})
 			.catch(error => {

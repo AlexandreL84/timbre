@@ -123,7 +123,7 @@ export class TimbreModifierComponent implements OnInit {
 					this.timbreModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
-					this.timbreService.modifier(this.timbreModel);
+					this.timbreService.modifier(this.timbreModel, true);
 				} else {
 					this.timbreService.ajouter(this.timbreModel, true);
 				}
@@ -146,7 +146,7 @@ export class TimbreModifierComponent implements OnInit {
 		if (isNotNullOrUndefined(annee)) {
 			const timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 			timbreCritereModel.setAnnees([annee]);
-			this.timbreBlocService.getBlocs(timbreCritereModel);
+			this.timbreBlocService.getBlocs(timbreCritereModel, false);
 		}
 	}
 

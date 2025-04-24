@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {TimbreBlocModel} from "../../../../model/timbre-bloc.model";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
-import {BehaviorSubject, first, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
@@ -15,7 +15,6 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 	styleUrls: ["./../../../styles/timbre-resultat.scss"],
 })
 export class TimbreBlocResultatComponent implements OnInit {
-	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	public timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 	annees$: Observable<number[]>;
 	modif: boolean = true;
@@ -29,10 +28,5 @@ export class TimbreBlocResultatComponent implements OnInit {
 	ngOnInit(): void {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 		this.timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
-
-		this.load$.next(false);
-		this.timbreBlocService.timbresBlocModel$.subscribe(timbres => {
-			this.load$.next(true);
-		});
 	}
 }

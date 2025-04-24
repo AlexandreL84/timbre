@@ -1,39 +1,40 @@
-<lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+	<app-timbre-bloc-total></app-timbre-bloc-total>
 
-<section [fxHide]="(load$ | async) == false">
-	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
-		<app-timbre-bloc-total></app-timbre-bloc-total>
-
-		<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px"
-			 style="height: 50px">
-			<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
-			<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
-				 style="width: 200px; min-height:55px; height: 55px">
-				<input
-					placeholder="Filtrer les données"
-					type="text"
-					(input)="applyFilter($event)"
-				/>
-			</div>
-			<lib-icon
-				class="exportTable primary click"
-				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
-				[info]="'Exporter tableau'"
-				(click)="exportTable()"
-			>
-			</lib-icon>
-			<!--
-			<lib-icon
-				class="primary click"
-				style="font-size: 1.7em"
-				[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
-				[info]="'Exporter en pdf'"
-				(click)="generatePDFByImage()"
-			>
-			</lib-icon>
-			-->
+	<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px"
+		 style="height: 50px">
+		<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
+		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
+			 style="width: 200px; min-height:55px; height: 55px">
+			<input
+				placeholder="Filtrer les données"
+				type="text"
+				(input)="applyFilter($event)"
+			/>
 		</div>
+		<lib-icon
+			class="exportTable primary click"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
+			[info]="'Exporter tableau'"
+			(click)="exportTable()"
+		>
+		</lib-icon>
+		<!--
+		<lib-icon
+			class="primary click"
+			style="font-size: 1.7em"
+			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_PDF"
+			[info]="'Exporter en pdf'"
+			(click)="generatePDFByImage()"
+		>
+		</lib-icon>
+		-->
 	</div>
+</div>
+
+<lib-spinner [fxHide]="(timbreBlocService.load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+
+<section [fxHide]="(timbreBlocService.load$ | async) == false">
 
 	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 		<ng-container matColumnDef="image">

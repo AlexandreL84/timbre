@@ -1,13 +1,12 @@
-<lib-spinner [fxHide]="(load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
+<div class="responsiveDirection responsiveMenu">
+	<app-timbre-bloc-total></app-timbre-bloc-total>
 
-<section [fxHide]="(load$ | async) == false">
+	<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
+</div>
 
-	<div class="responsiveDirection responsiveMenu">
-		<app-timbre-bloc-total></app-timbre-bloc-total>
+<lib-spinner [fxHide]="(timbreBlocService.load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
-		<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
-	</div>
-
+<section [fxHide]="(timbreBlocService.load$ | async) == false">
 	<div class="listeTimbre primary">
 		<div *ngFor="let timbreBloc of timbreBlocService.timbresBlocModel$ | async" class="detailTimbre border-primary">
 			<div class="headerTimbre">
@@ -68,10 +67,9 @@
 						(click)="timbreBlocService.isCarnet(timbreBloc)"
 					>
 					</lib-icon>
-				</div>
 
-				<div *ngIf="timbreBloc?.getYt()" class="infoTimbre">
 					<lib-icon
+						*ngIf="timbreBloc?.getYt()"
 						class="click"
 						[classIcone]="'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"

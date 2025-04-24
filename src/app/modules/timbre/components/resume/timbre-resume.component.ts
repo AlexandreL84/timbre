@@ -66,7 +66,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	filtreParAnnee(timbreResumeModel: TimbreResumeModel) {
 		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
 		this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
-		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel);
+		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
 		this.dialogRef.close();
 	}
 }

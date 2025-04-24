@@ -54,12 +54,15 @@ export class TimbreService {
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
-		this.timbreUtilsService.getAllTimbres(timbreCritereModel).pipe(first()).subscribe(timbres => {
+		this.timbreUtilsService.getAllTimbres(timbreCritereModel).subscribe(timbres => {
 			this.total$.next(timbres?.length);
 		});
 	}
 
-	getTimbres(timbreCritereModel?: TimbreCritereModel) {
+	getTimbres(timbreCritereModel: TimbreCritereModel, total: boolean) {
+		if (total) {
+			this.getTotal();
+		}
 		this.timbres$.next(null);
 		this.load$.next(false);
 		combineLatest([
@@ -68,7 +71,6 @@ export class TimbreService {
 			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			this.timbres$.next(this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel));
-			this.getTotal();
 			this.load$.next(true);
 		});
 	}
@@ -156,7 +158,7 @@ export class TimbreService {
 					Object.assign(new Object(), timbreModel)
 				);
 				if (refresh) {
-					this.getTimbres();
+					this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 				}
 				this.timbreUtilsService.reinitResume$.next(true);
 			} else {
@@ -165,7 +167,7 @@ export class TimbreService {
 		});
 	}
 
-	modifier(timbreModel: TimbreModel) {
+	modifier(timbreModel: TimbreModel, refresh: boolean) {
 		timbreModel.setTimbreBlocModel(null);
 		timbreModel.setTimbreAcquisModel(null);
 		this.firestore.collection(BaseEnum.TIMBRE)
@@ -173,8 +175,18 @@ export class TimbreService {
 			.get()
 			.then(snapshot => {
 				snapshot.forEach(doc => {
+					doc.ref.update(Object.assign(new Object(), timbreModel))
+						.then((result) => {
+							if (refresh) {
+								this.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
+							} else {
+								this.getTotal();
+							}
+						})
+						.catch((error) => {
+							console.error(error);
+						});
 					doc.ref.update(Object.assign(new Object(), timbreModel));
-					this.getTimbres();
 				});
 			})
 			.catch(error => {
@@ -189,7 +201,7 @@ export class TimbreService {
 			.then(snapshot => {
 				snapshot.forEach(doc => {
 					doc.ref.delete();
-					this.getTimbres();
+					this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 				});
 			})
 			.catch(error => {
