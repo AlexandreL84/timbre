@@ -240,8 +240,14 @@ export class TimbreBlocService {
 	}
 
 	isCarnet(timbreBlocModel: TimbreBlocModel) {
-		timbreBlocModel.setCarnet(!timbreBlocModel.isCarnet());
-		this.modifier(timbreBlocModel);
+		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				timbreBlocModel.setCarnet(!timbreBlocModel.isCarnet());
+				this.modifier(timbreBlocModel);
+			} else {
+				this.utilsService.droitInsuffisant();
+			}
+		});
 	}
 
 	modifier(timbreBlocModel: TimbreBlocModel) {
