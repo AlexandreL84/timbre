@@ -110,17 +110,21 @@ export class TimbreService {
 				timbreModel.setTimbreAcquisModel(null);
 				timbreModel.setTimbreBlocModel(null);
 
+				console.log("ajouter")
 				this.firestore.collection(BaseEnum.TIMBRE).add(
 					Object.assign(new Object(), timbreModel)
 				).then((result) => {
-					this.timbres$.pipe(first()).subscribe(timbres => {
-						timbres.push(timbreModel);
-						this.setTotal(1);
-					});
-					/*if (refresh) {
-						this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
-					}*/
-					this.timbreUtilsService.reinitResume$.next(true);
+					console.log("ici")
+					if (refresh) {
+						this.timbres$.pipe(first()).subscribe(timbres => {
+							timbres.push(timbreModel);
+							this.setTotal(1);
+						});
+						/*if (refresh) {
+							this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
+						}*/
+						this.timbreUtilsService.reinitResume$.next(true);
+					}
 				})
 				.catch((error) => {
 					console.error("Erreur d'ajout :", error);
@@ -167,7 +171,7 @@ export class TimbreService {
 				snapshot.forEach(doc => {
 					doc.ref.delete()
 						.then((result) => {
-							this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
+							//this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 							this.timbres$.pipe(first()).subscribe(timbresModel => {
 								const findIndex: number = timbresModel.findIndex(timbre => timbre.getId() == timbreModel.getId());
 								if (findIndex >= 0) {

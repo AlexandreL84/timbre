@@ -82,6 +82,7 @@ export class UploadService {
 							observer.next(result);
 						})
 						.catch((error) => {
+							observer.next('nok');
 							console.error(error);
 						});
 				};
@@ -142,11 +143,12 @@ export class UploadService {
 
 				// Dessin de l'image
 				ctx.drawImage(img, x, y, width, height);
-				//this.saveFile2();
 			}
-
 			canvas.toBlob((blob) => {
-				if (blob) resolve(blob);
+				resolve(blob)
+				/*if (blob) {
+					resolve(blob)
+				}*/
 			}, 'image/png', 1);
 		});
 	}
