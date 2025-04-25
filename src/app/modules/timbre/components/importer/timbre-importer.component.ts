@@ -243,7 +243,7 @@ export class TimbreImporterComponent implements OnInit {
 			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.AUTRE),
 			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.TABLE),
 			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.ZOOM)
-		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
+		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
 			if (isNotNullOrUndefined(image) && image != 'nok') {
 				timbreBlocModel.setImage(image);
 			}
@@ -265,7 +265,7 @@ export class TimbreImporterComponent implements OnInit {
 			this.timbreService.upload(timbreModel, DossierEnum.AUTRE),
 			this.timbreService.upload(timbreModel, DossierEnum.TABLE),
 			this.timbreService.upload(timbreModel, DossierEnum.ZOOM)
-		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
+		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
 			if (isNotNullOrUndefined(image) && image != 'nok') {
 				timbreModel.setImage(image);
 			}

@@ -99,7 +99,7 @@ export class TimbreModifierComponent implements OnInit {
 				this.timbreService.upload(this.timbreModel, DossierEnum.AUTRE),
 				this.timbreService.upload(this.timbreModel, DossierEnum.TABLE),
 				this.timbreService.upload(this.timbreModel, DossierEnum.ZOOM),
-			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
+			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
 				if (isNotNullOrUndefined(image) && image != 'nok') {
 					this.timbreModel.setImage(image);
 				}

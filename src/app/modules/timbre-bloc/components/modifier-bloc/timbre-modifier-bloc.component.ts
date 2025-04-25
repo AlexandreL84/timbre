@@ -89,7 +89,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.AUTRE),
 				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.TABLE),
 				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.ZOOM),
-			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([imageTable, image, imageZoom]) => {
+			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
 				if (isNotNullOrUndefined(image) && image != 'nok') {
 					this.timbreBlocModel.setImage(image);
 				}
