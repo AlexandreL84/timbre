@@ -1,6 +1,6 @@
 <div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
 	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
-		<span>{{timbreBlocModel?.getId()? 'MODIFICATION' : 'AJOUT'}} BLOC </span>
+		<span>{{ timbreBlocModel?.getId() ? 'MODIFICATION' : 'AJOUT' }} BLOC </span>
 		<span>{{ timbreBlocModel?.getId() }}</span>
 	</div>
 
@@ -113,7 +113,14 @@
 					</div>
 				</div>
 
-				<lib-upload [object]="timbreBlocModel" [key]="'image'" [maxWidth]="timbreBlocService.widthTimbre" [maxHeight]="timbreBlocService.heightTimbre" (outPutObject)="timbreBlocModel = $event"></lib-upload>
+				<lib-upload
+					[object]="timbreBlocModel"
+					[key]="'image'"
+					[zoom]="timbreBlocModel.getImageZoom()"
+					[maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
+					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
+					(outPutObject)="timbreBlocModel = $event">
+				</lib-upload>
 			</div>
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">

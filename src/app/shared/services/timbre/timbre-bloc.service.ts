@@ -18,15 +18,10 @@ import {
 import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DroitEnum} from "../../enum/droit.enum";
+import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 
 @Injectable()
 export class TimbreBlocService {
-	heigthTable: number = 50;
-	widthTimbre: number = 100;
-	heightTimbre: number = 100;
-	widthTimbreZoom: number = 500;
-	heightTimbreZoom: number = 500;
-
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	totalCarnet$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbresBlocModel$: BehaviorSubject<TimbreBlocModel[]> = new BehaviorSubject<TimbreBlocModel[]>(null);
@@ -43,14 +38,14 @@ export class TimbreBlocService {
 	}
 
 	upload(timbreBlocModel: TimbreBlocModel, dossier: DossierEnum, ident?: number): Observable<string> {
-		let witdth: number = this.widthTimbre;
-		let height: number = this.heightTimbre;
+		let witdth: number = DimensionImageEnum.WIDTH_TIMBRE;
+		let height: number = DimensionImageEnum.HEIGTH_TIMBRE;
 		if (dossier == DossierEnum.TABLE) {
-			witdth = witdth * (this.heigthTable / height);
-			height = this.heigthTable;
+			witdth = witdth * (DimensionImageEnum.HEIGTH_TABLE / height);
+			height = DimensionImageEnum.HEIGTH_TABLE;
 		} else if (dossier == DossierEnum.ZOOM) {
-			witdth = witdth * (this.heightTimbreZoom / height);
-			height = this.heightTimbreZoom;
+			witdth = witdth * (DimensionImageEnum.HEIGTH_TIMBRE_ZOOM / height);
+			height = DimensionImageEnum.HEIGTH_TIMBRE_ZOOM;
 		}
 		return this.uploadService.processAndUploadImage(timbreBlocModel?.getImage(), witdth, height, ('bloc-' + timbreBlocModel.getId()), this.getDossier(timbreBlocModel, dossier, ident));
 	}

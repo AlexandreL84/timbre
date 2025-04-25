@@ -12,8 +12,8 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {TimbreBlocModel} from "../../../../model/timbre-bloc.model";
 import {FileUploadModel} from "../../../../model/file/file-upload.model";
-import {FileDetailUploadModel} from "../../../../model/file/file-detail-upload.model";
-
+import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
+import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 
 @Component({
 	selector: 'app-timbre-modifier-bloc',
@@ -29,16 +29,19 @@ export class TimbreModifierBlocComponent implements OnInit {
 	timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
+	readonly DimensionImageEnum = DimensionImageEnum;
+
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
 		public dialogRef: MatDialogRef<TimbreModifierBlocComponent>,
 		private utilsService: UtilsService,
 		public timbreBlocService: TimbreBlocService,
+		public timbreUtilsService: TimbreUtilsService,
 	) {
 	}
 
 	ngOnInit(): void {
-		this.initUpload();
+		this.fileUploadModel = this.timbreUtilsService.initUpload();
 		this.load$.next(false);
 		if (isNotNullOrUndefined(this.id)) {
 			this.timbreBlocService.getBlocByIdAsync(this.id).subscribe(timbreBlocModel => {
@@ -50,23 +53,6 @@ export class TimbreModifierBlocComponent implements OnInit {
 			this.timbreBlocModel.setMonnaie('E');
 			this.load$.next(true);
 		}
-	}
-
-	initUpload() {
-		this.fileUploadModel.setDossier('test');
-		this.fileUploadModel.setNom(new Date().getTime()?.toString());
-
-		const fileDetailUploadModel = new FileDetailUploadModel();
-		fileDetailUploadModel.setMaxWidth(this.timbreBlocService.widthTimbre);
-		fileDetailUploadModel.setMaxHeight(this.timbreBlocService.heightTimbre);
-		fileDetailUploadModel.setDossier('autre');
-
-		const fileDetailUploadModelZoom = new FileDetailUploadModel();
-		fileDetailUploadModelZoom.setMaxWidth(this.timbreBlocService.widthTimbreZoom);
-		fileDetailUploadModelZoom.setMaxHeight(this.timbreBlocService.heightTimbreZoom);
-		fileDetailUploadModelZoom.setDossier('zoom');
-
-		this.fileUploadModel.setDetail([fileDetailUploadModel, fileDetailUploadModelZoom]);
 	}
 
 	valider(formModif: NgForm) {

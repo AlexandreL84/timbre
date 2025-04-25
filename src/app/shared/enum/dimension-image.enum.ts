@@ -1,0 +1,7 @@
+export enum DimensionImageEnum {
+	HEIGTH_TABLE = 50,
+	WIDTH_TIMBRE = 100,
+	HEIGTH_TIMBRE = 100,
+	WIDTH_TIMBRE_ZOOM = 700,
+	HEIGTH_TIMBRE_ZOOM = 700,
+}

@@ -4,7 +4,6 @@ import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from 
 import {AngularFirestore} from '@angular/fire/compat/firestore';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
 import {AuthService} from '../auth.service';
-import {TimbreAcquisModel} from '../../../model/timbre-acquis.model';
 import {TimbreCritereModel} from '../../../model/timbre-critere.model';
 import {TimbreBlocService} from './timbre-bloc.service';
 import {UploadService} from '../upload.service';
@@ -16,15 +15,10 @@ import {DroitEnum} from "../../enum/droit.enum";
 import {TimbreModifierComponent} from "../../../modules/timbre/components/modifier/timbre-modifier.component";
 import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
+import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 
 @Injectable()
 export class TimbreService {
-	heigthTable: number = 50;
-	widthTimbre: number = 100;
-	heightTimbre: number = 100;
-	widthTimbreZoom: number = 500;
-	heightTimbreZoom: number = 500;
-
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -208,14 +202,14 @@ export class TimbreService {
 	}
 
 	upload(timbreModel: TimbreModel, dossier: DossierEnum, ident?: number): Observable<string> {
-		let witdth: number = this.widthTimbre;
-		let height: number = this.heightTimbre;
+		let witdth: number = DimensionImageEnum.WIDTH_TIMBRE;
+		let height: number = DimensionImageEnum.HEIGTH_TIMBRE;
 		if (dossier == DossierEnum.TABLE) {
-			witdth = witdth * (this.heigthTable / height);
-			height = this.heigthTable;
+			witdth = witdth * (DimensionImageEnum.HEIGTH_TABLE / height);
+			height = DimensionImageEnum.HEIGTH_TABLE;
 		} else if (dossier == DossierEnum.ZOOM) {
-			witdth = witdth * (this.heightTimbreZoom / height);
-			height = this.heightTimbreZoom;
+			witdth = witdth * (DimensionImageEnum.HEIGTH_TIMBRE_ZOOM / height);
+			height = DimensionImageEnum.HEIGTH_TIMBRE_ZOOM;
 		}
 		return this.uploadService.processAndUploadImage(timbreModel?.getImage(), witdth, height, isNotNullOrUndefined(ident) ? ident : timbreModel?.getId(), this.getDossier(timbreModel, dossier));
 	}

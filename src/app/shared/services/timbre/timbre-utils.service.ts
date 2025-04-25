@@ -9,6 +9,9 @@ import {TimbreModel} from "../../../model/timbre.model";
 import {plainToInstance} from "class-transformer";
 import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
 import {AuthService} from "../auth.service";
+import {FileDetailUploadModel} from "../../../model/file/file-detail-upload.model";
+import {DimensionImageEnum} from "../../enum/dimension-image.enum";
+import {FileUploadModel} from "../../../model/file/file-upload.model";
 
 @Injectable()
 export class TimbreUtilsService {
@@ -17,6 +20,26 @@ export class TimbreUtilsService {
 	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(private authService: AuthService, private firestore: AngularFirestore) {
+	}
+
+	initUpload(): FileUploadModel {
+		const fileUploadModel: FileUploadModel = new FileUploadModel();
+		fileUploadModel.setDossier('table');
+		fileUploadModel.setNom(new Date().getTime()?.toString());
+
+		const fileDetailUploadModel = new FileDetailUploadModel();
+		fileDetailUploadModel.setMaxWidth(DimensionImageEnum.WIDTH_TIMBRE);
+		fileDetailUploadModel.setMaxHeight(DimensionImageEnum.HEIGTH_TIMBRE);
+		fileDetailUploadModel.setDossier('autre');
+
+		const fileDetailUploadModelZoom = new FileDetailUploadModel();
+		fileDetailUploadModelZoom.setMaxWidth(DimensionImageEnum.WIDTH_TIMBRE_ZOOM);
+		fileDetailUploadModelZoom.setMaxHeight(DimensionImageEnum.HEIGTH_TIMBRE_ZOOM);
+		fileDetailUploadModelZoom.setDossier('zoom');
+
+		fileUploadModel.setDetail([fileDetailUploadModel, fileDetailUploadModelZoom]);
+
+		return fileUploadModel;
 	}
 
 	getAnneesAsync(baseEmun: BaseEnum): Observable<number[]>  {

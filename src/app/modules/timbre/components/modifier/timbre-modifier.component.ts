@@ -9,13 +9,14 @@ import {HttpResponseHandlerService} from '../../../../shared/services/httpRespon
 import {NotificationTypeEnum} from '../../../../shared/enum/notification/notification-type.enum';
 import {NotificationMessageEnum} from '../../../../shared/enum/notification/notification-message.enum';
 import {FileUploadModel} from '../../../../model/file/file-upload.model';
-import {FileDetailUploadModel} from '../../../../model/file/file-detail-upload.model';
 import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
 import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
 import {DossierEnum} from "../../../../shared/enum/dossier.enum";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
+import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
+import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -31,18 +32,21 @@ export class TimbreModifierComponent implements OnInit {
 	timbreModel: TimbreModel = new TimbreModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
+	readonly DimensionImageEnum = DimensionImageEnum;
+
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
 		public dialogRef: MatDialogRef<TimbreModifierComponent>,
 		public timbreService: TimbreService,
 		public timbreBlocService: TimbreBlocService,
+		public timbreUtilsService: TimbreUtilsService,
 		public utilsService: UtilsService
 	) {
 	}
 
 	ngOnInit(): void {
 		//this.timbreBlocService.getBlocs();
-		this.initUpload();
+		this.fileUploadModel = this.timbreUtilsService.initUpload();
 		this.load$.next(false);
 		if (isNotNullOrUndefined(this.id)) {
 			this.timbreService.getTimbreByIdAsync(this.id).subscribe(timbreModel => {
@@ -59,23 +63,6 @@ export class TimbreModifierComponent implements OnInit {
 			this.load$.next(true);
 		}
 		this.changeAnnee(this.timbreModel.getAnnee());
-	}
-
-	initUpload() {
-		this.fileUploadModel.setDossier('test');
-		this.fileUploadModel.setNom(new Date().getTime()?.toString());
-
-		const fileDetailUploadModel = new FileDetailUploadModel();
-		fileDetailUploadModel.setMaxWidth(this.timbreService.widthTimbre);
-		fileDetailUploadModel.setMaxHeight(this.timbreService.heightTimbre);
-		fileDetailUploadModel.setDossier('autre');
-
-		const fileDetailUploadModelZoom = new FileDetailUploadModel();
-		fileDetailUploadModelZoom.setMaxWidth(this.timbreService.widthTimbreZoom);
-		fileDetailUploadModelZoom.setMaxHeight(this.timbreService.heightTimbreZoom);
-		fileDetailUploadModelZoom.setDossier('zoom');
-
-		this.fileUploadModel.setDetail([fileDetailUploadModel, fileDetailUploadModelZoom]);
 	}
 
 	valider(formModif: NgForm) {

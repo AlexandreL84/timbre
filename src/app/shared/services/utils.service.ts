@@ -6,6 +6,7 @@ import {map, Observable} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {isNotNullOrUndefined} from "../utils/utils";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DimensionImageEnum} from "../enum/dimension-image.enum";
 
 @Injectable()
 export class UtilsService {
@@ -14,8 +15,9 @@ export class UtilsService {
 
 	zoom(url: string) {
 		const refDialog = this.dialog.open(LibDialogImageComponent, {
-			maxHeight: "70vh",
-			//maxWidth: "70vh",
+			maxWidth: DimensionImageEnum.WIDTH_TIMBRE_ZOOM + 10 + "px",
+			maxHeight: DimensionImageEnum.HEIGTH_TIMBRE_ZOOM + 40 + "px",
+			//maxHeight: "70vh",
 		});
 		refDialog.componentInstance.url = url;
 

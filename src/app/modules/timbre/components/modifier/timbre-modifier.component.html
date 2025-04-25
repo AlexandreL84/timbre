@@ -70,27 +70,27 @@
 							<lib-libelle-model [object]="timbreModel" [key]="'timbreBlocModel'"></lib-libelle-model>
 						</label>
 						<div fxLayout="row" fxLayoutGap="15px">
-						<mat-select name="bloc"
-									style="width: 180px !important;"
-									[ngModel]="timbreModel.getTimbreBlocModel()"
-									[placeholder]="'Choix bloc'"
-									[disabled]="!!timbreModel?.getId() || (timbreBlocService.timbresBlocModel$ | async)?.length <= 0"
-									(ngModelChange)="changeBloc($event)">
-							<mat-option class="selectMin" [value]="null"></mat-option>
+							<mat-select name="bloc"
+										style="width: 180px !important;"
+										[ngModel]="timbreModel.getTimbreBlocModel()"
+										[placeholder]="'Choix bloc'"
+										[disabled]="!!timbreModel?.getId() || (timbreBlocService.timbresBlocModel$ | async)?.length <= 0"
+										(ngModelChange)="changeBloc($event)">
+								<mat-option class="selectMin" [value]="null"></mat-option>
 
-							<mat-option class="selectMin"
-										*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
-										[value]="bloc">
-								{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc.isCarnet()? " (carnet)": "" }}
-							</mat-option>
-						</mat-select>
+								<mat-option class="selectMin"
+											*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
+											[value]="bloc">
+									{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc.isCarnet() ? " (carnet)" : "" }}
+								</mat-option>
+							</mat-select>
 
-						<img *ngIf="timbreModel?.getTimbreBlocModel()?.getImage()"
-							 [src]="timbreModel?.getTimbreBlocModel()?.getImage()"
-							 style="max-height: 40px"
-							 class="click"
-							 (click)="utilsService.zoom(timbreModel?.getTimbreBlocModel()?.getImageZoom())"
-						/>
+							<img *ngIf="timbreModel?.getTimbreBlocModel()?.getImage()"
+								 [src]="timbreModel?.getTimbreBlocModel()?.getImage()"
+								 style="max-height: 40px"
+								 class="click"
+								 (click)="utilsService.zoom(timbreModel?.getTimbreBlocModel()?.getImageZoom())"
+							/>
 						</div>
 					</div>
 				</div>
@@ -146,8 +146,14 @@
 					</div>
 				</div>
 
-				<lib-upload [object]="timbreModel" [key]="'image'" [zoom]="timbreModel.getImageZoom()" [maxWidth]="timbreService.widthTimbre"
-							[maxHeight]="timbreService.heightTimbre" (outPutObject)="timbreModel = $event"></lib-upload>
+				<lib-upload
+					[object]="timbreModel"
+					[key]="'image'"
+					[zoom]="timbreModel.getImageZoom()"
+					[maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
+					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
+					(outPutObject)="timbreModel = $event">
+				</lib-upload>
 			</div>
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
