@@ -209,7 +209,13 @@ export class TimbreBlocService {
 									timbreBlocAcquisModel.setDoublon(false);
 								}
 							}
-							doc.ref.update(Object.assign(new Object(), timbreBlocAcquisModel));
+							doc.ref.update(Object.assign(new Object(), timbreBlocAcquisModel))
+								.then(snapshot => {
+									timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
+								})
+								.catch(error => {
+									console.error('Erreur de mise à jour:', error);
+								});
 						});
 					})
 					.catch(error => {

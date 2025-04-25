@@ -148,11 +148,17 @@ export class TimbreUtilsService {
 									timbreAcquisModel.setDoublon(false);
 								}
 							}
-							doc.ref.update(Object.assign(new Object(), timbreAcquisModel));
+							doc.ref.update(Object.assign(new Object(), timbreAcquisModel))
+								.then(snapshot => {
+									timbreModel.setTimbreAcquisModel(timbreAcquisModel);
+								})
+								.catch(error => {
+									console.error('Erreur de mise à jour:', error);
+								});
 						});
 					})
 					.catch(error => {
-						console.error('Erreur de mise à jour:', error);
+						console.error('Erreur de mise à jour id introuvable :', error);
 					});
 			/*} else {
 				this.addAcquis(user?.getId(), timbreModel, doublon);
