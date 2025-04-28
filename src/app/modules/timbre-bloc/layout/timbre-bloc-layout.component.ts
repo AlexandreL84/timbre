@@ -17,6 +17,7 @@ import {ModeEnum} from "../../../shared/enum/mode.enum";
 export class TimbreBlocLayoutComponent implements OnInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly ModeEnum = ModeEnum;
 
 	constructor(private authService: AuthService, private timbreUtilsService: TimbreUtilsService, public headerService: HeaderService, public timbreBlocService: TimbreBlocService) {
 	}
@@ -24,7 +25,6 @@ export class TimbreBlocLayoutComponent implements OnInit {
 	ngOnInit(): void {
 		this.headerService.titre$.next("TIMBRES - BLOC");
 		//this.timbreBlocService.getBlocs();
-
 		/*this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect => {
 			this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 				this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
@@ -32,6 +32,4 @@ export class TimbreBlocLayoutComponent implements OnInit {
 			});
 		});*/
 	}
-
-	protected readonly ModeEnum = ModeEnum;
 }

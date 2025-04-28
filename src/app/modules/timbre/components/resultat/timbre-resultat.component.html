@@ -49,8 +49,8 @@
 			</div>
 
 			<div class="imgTimbre">
-				<img *ngIf="timbre?.getImageTable()"
-					 [src]="timbre?.getImageTable()"
+				<img *ngIf="timbre?.getImage()"
+					 [src]="timbre?.getImage()"
 					 class="image click"
 					 (click)="utilsService.zoom(timbre?.getImageZoom())"/>
 			</div>

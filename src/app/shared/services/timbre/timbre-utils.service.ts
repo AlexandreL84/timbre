@@ -203,7 +203,7 @@ export class TimbreUtilsService {
 				snapshot.forEach(doc => {
 					doc.ref.delete().then((result) => {
 						if (ajout) {
-							this.addAcquis(idUser, timbreModel, doublon);
+							this.supprimerTimbreAcquis(timbreModel);
 						}
 					})
 				});

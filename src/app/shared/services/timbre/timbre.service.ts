@@ -16,6 +16,7 @@ import {TimbreModifierComponent} from "../../../modules/timbre/components/modifi
 import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
+import {cloneDeep} from "lodash";
 
 @Injectable()
 export class TimbreService {
@@ -31,6 +32,24 @@ export class TimbreService {
 		private utilsService: UtilsService,
 		private timbreUtilsService: TimbreUtilsService,
 		private dialog: MatDialog) {
+	}
+
+	modifAllTimbres() {
+		const timbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.setAnnees([2024]);
+		this.getTimbres(timbreCritereModel, false);
+
+		this.timbres$.pipe(first(timbres$ => timbres$?.length > 0)).subscribe(timbres => {
+			timbres.forEach(timbre => {
+				//if (timbre.getId() < 8740) {
+					const newTimbre = cloneDeep(timbre);
+					newTimbre.setImageTable(timbre.getImage());
+					newTimbre.setImage(timbre.getImageTable());
+					console.log(timbre, newTimbre)
+					this.modifier(newTimbre)
+				//}
+			})
+		});
 	}
 
 	getTimbre(id: number): Observable<any> {
@@ -110,11 +129,9 @@ export class TimbreService {
 				timbreModel.setTimbreAcquisModel(null);
 				timbreModel.setTimbreBlocModel(null);
 
-				console.log("ajouter")
 				this.firestore.collection(BaseEnum.TIMBRE).add(
 					Object.assign(new Object(), timbreModel)
 				).then((result) => {
-					console.log("ici")
 					if (refresh) {
 						this.timbres$.pipe(first()).subscribe(timbres => {
 							timbres.push(timbreModel);

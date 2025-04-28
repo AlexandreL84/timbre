@@ -19,13 +19,14 @@ import {ModeEnum} from "../../../shared/enum/mode.enum";
 export class TimbreLayoutComponent implements OnInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly FontAwesomeEnum = FontAwesomeEnum;
+	readonly ModeEnum = ModeEnum;
 
 	constructor(private authService: AuthService, public headerService: HeaderService, public timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
 	}
 
 	ngOnInit(): void {
-		this.timbreService.timbres$.next(null);
-		this.headerService.titre$.next("TIMBRES");
+		//this.timbreService.timbres$.next(null);
+		//this.headerService.titre$.next("TIMBRES");
 		/*this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
 		this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect=> {
 			this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
@@ -34,6 +35,4 @@ export class TimbreLayoutComponent implements OnInit {
 			});
 		});*/
 	}
-
-    protected readonly ModeEnum = ModeEnum;
 }

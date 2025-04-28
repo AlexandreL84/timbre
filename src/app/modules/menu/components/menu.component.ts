@@ -84,6 +84,8 @@ export class MenuComponent {
 				});
 			}
 		} else {
+			//this.timbreService.modifAllTimbres()
+
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
 				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 			} else {
