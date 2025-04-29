@@ -98,7 +98,15 @@ export class TimbreService {
 			this.getTimbreAcquis(),
 			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
-			this.timbres$.next(this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel));
+			let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel);
+			if (timbresRetour?.length > 0) {
+				timbresRetour = timbresRetour.sort((a, b) => {
+					return a.getIdBloc() - b.getIdBloc();
+				}).sort((a, b) => {
+					return a?.getTimbreBlocModel()?.getNbTimbres() - b?.getTimbreBlocModel()?.getNbTimbres();
+				});
+			}
+			this.timbres$.next(timbresRetour);
 			this.load$.next(true);
 		});
 	}
