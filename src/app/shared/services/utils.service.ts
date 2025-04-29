@@ -14,11 +14,20 @@ export class UtilsService {
 	}
 
 	zoom(url: string) {
+		let maxWidth = DimensionImageEnum.WIDTH_TIMBRE_ZOOM + 10;
+		const width = window.innerWidth - 50;
+		let maxHeight = DimensionImageEnum.HEIGTH_TIMBRE_ZOOM + 40;
+		const height = window.innerWidth - 50;
+		if (width > maxWidth) {
+			maxWidth = width;
+		}
+		if (height > maxHeight) {
+			maxHeight = height;
+		}
+
 		const refDialog = this.dialog.open(LibDialogImageComponent, {
-			width: DimensionImageEnum.WIDTH_TIMBRE_ZOOM + 10 + "px",
-			height: DimensionImageEnum.HEIGTH_TIMBRE_ZOOM + 40 + "px",
-			maxHeight: "95vh",
-			maxWidth: "95vh",
+			maxWidth: maxWidth + "px",
+			maxHeight: maxHeight + "px",
 		});
 		refDialog.componentInstance.url = url;
 
