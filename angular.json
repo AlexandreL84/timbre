@@ -17,6 +17,12 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:application",
 					"options": {
+						"allowedCommonJsDependencies": [
+							"lodash",
+							"reflect-metadata",
+							"file-saver",
+							"papaparse"
+						],
 						"outputPath": "dist/timbre",
 						"index": "src/index.html",
 						"browser": "src/main.ts",
