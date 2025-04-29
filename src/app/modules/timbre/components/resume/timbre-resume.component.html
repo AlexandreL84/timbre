@@ -2,7 +2,7 @@
 	<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 </ng-template>
 <ng-template #load>
-	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+	<table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 		<ng-container matColumnDef="annee" sticky>
 			<th mat-header-cell mat-sort-header *matHeaderCellDef>
 				<lib-libelle-model [object]="timbreResumeModel" [key]="'annee'"></lib-libelle-model>

@@ -36,7 +36,7 @@
 <lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section [fxHide]="(load$ | async) == false">
-	<table id="pdf-content" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+	<table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 		<ng-container matColumnDef="image">
 			<th mat-header-cell *matHeaderCellDef class="image">
 				<lib-libelle-model class="hide-on-mobile" [object]="timbre" [key]="'image'"></lib-libelle-model>

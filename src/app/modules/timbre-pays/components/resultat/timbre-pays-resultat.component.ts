@@ -13,8 +13,6 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import {UploadService} from "../../../../shared/services/upload.service";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 
@@ -120,72 +118,4 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		const data: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
 		saveAs(data, 'export_pays.xlsx');
 	}
-
-	generatePDFByImage() {
-		const imageUrl = 'https://firebasestorage.googleapis.com/v0/b/book-f941b.appspot.com/o/AF.png?alt=media&token=a1039f78-3cff-41ab-8569-ea1b2cefe2c1';
-		this.generatePDF(null);
-		//this.uploadService.getImageBase642(imageUrl);
-
-		/*this.uploadService.getImageBase64(imageUrl).subscribe(
-			(base64) => {
-				this.generatePDF(base64);
-			},
-			(error) => {
-				console.error(error);
-			}
-		);*/
-	}
-
-	generatePDF(base64) {
-
-		const doc = new jsPDF({
-			orientation: 'portrait',
-			unit: 'pt',
-			format: 'a4'
-		});
-		const xOffset = doc.internal.pageSize.width / 2;
-		doc.setFontSize(16);
-		doc.setTextColor("#0e526e");
-		doc.text('Titre par Pays', xOffset, 30,{align: 'center'});
-
-		if (base64) {
-			doc.addImage('data:image/jpeg;base64,' + base64, 'jpg', 100, 10, 20, 20)// use the method doc.autoTable.previous.finalY + lineHeight * 1.5 + offsetY to be able to position the image of the signature below the table at a safe distance from it
-		}
-
-		// Exemple de contenu du tableau
-		const tableColumn = ["Code", "Libellé", "Classeur", "Page", "Total"];
-		const tableRows = [];
-		this.dataSource.data.forEach(data => {
-			tableRows.push([data.getCode(), data?.getLibelle(), data?.getClasseur(), data?.getPage(), data?.getTotal()]);
-		})
-
-		autoTable(doc, {
-			head: [tableColumn],
-			body: tableRows,
-			margin: {top: 60},
-			headStyles: {fillColor: "#0e526e"},
-			//alternateRowStyles: {fillColor : "#b7cbd4"}
-		});
-
-		doc.save('document.pdf');
-
-	}
-
-	generatePDF2() {
-		const element = document.getElementById('pdf-content'); // Sélectionne l'élément HTML à capturer
-
-		if (element) {
-			const doc = new jsPDF();
-
-			// Générer le PDF à partir de l'élément HTML
-			doc.html(element, {
-				callback: function (doc) {
-					doc.save('generated.pdf');
-				},
-				margin: [10, 10, 10, 10],
-				autoPaging: true
-			});
-		}
-	}
-
 }
