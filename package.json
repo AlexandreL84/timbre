@@ -24,7 +24,7 @@
 		"@angular/platform-browser-dynamic": "^18.2.0",
 		"@angular/pwa": "^0.5.3",
 		"@angular/router": "^18.2.0",
-		"@angular/service-worker": "^19.2.8",
+		"@angular/service-worker": "^18.2.13",
 		"angular-svg-icon": "^18.0.2",
 		"angular2-notifications": "^16.0.1",
 		"class-transformer": "^0.5.1",

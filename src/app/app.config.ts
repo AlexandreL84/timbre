@@ -1,4 +1,4 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {APP_INITIALIZER, ApplicationConfig, inject, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 import {getFirestore, provideFirestore} from '@angular/fire/firestore';
 import {routes} from './app.routes';
@@ -14,13 +14,11 @@ import {HeaderService} from "./shared/services/header.service";
 import {SimpleNotificationModule} from "./modules/simple-notification/simple-notification.module";
 import {provideServiceWorker} from "@angular/service-worker";
 
-
 export const appConfig: ApplicationConfig = {
 	providers: [
 		provideRouter(routes), provideAnimations(),
 		provideFirestore(() => getFirestore()),
 		provideZoneChangeDetection({eventCoalescing: true}),
-		provideRouter(routes),
 		AngularFireStorageModule,
 		AngularFireAuthModule,
 		provideAuth(() => getAuth()),
