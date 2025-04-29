@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, first, map, Observable} from "rxjs";
-import {isNotNullOrUndefined, isNullOrUndefined} from "../../utils/utils";
+import {isNotNullOrUndefined} from "../../utils/utils";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {BaseEnum} from "../../enum/base.enum";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";

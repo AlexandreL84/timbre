@@ -34,20 +34,29 @@ export class TimbreService {
 		private dialog: MatDialog) {
 	}
 
-	modifAllTimbres() {
+	modifAll() {
 		const timbreCritereModel = new TimbreCritereModel();
-		timbreCritereModel.setAnnees([2024]);
-		this.getTimbres(timbreCritereModel, false);
 
-		this.timbres$.pipe(first(timbres$ => timbres$?.length > 0)).subscribe(timbres => {
+		const annees : number[] = []
+		for (let i = 1849; i < 1850; i++) {
+			annees.push(i);
+		}
+		timbreCritereModel.setAnnees(annees);
+
+		this.timbreUtilsService.getAllTimbres(timbreCritereModel).pipe(first(timbres => timbres?.length > 0)).subscribe(timbres => {
 			timbres.forEach(timbre => {
-				//if (timbre.getId() < 8740) {
-					const newTimbre = cloneDeep(timbre);
-					newTimbre.setImageTable(timbre.getImage());
-					newTimbre.setImage(timbre.getImageTable());
-					console.log(timbre, newTimbre)
-					this.modifier(newTimbre)
-				//}
+				const timbreModel = cloneDeep(timbre);
+				timbreModel["imageTable"] = timbre["image"];
+				timbreModel["image"] = timbre["imageTable"];
+
+				this.firestore.collection(BaseEnum.TIMBRE)
+					.ref.where('id', '==', timbreModel["id"])
+					.get()
+					.then(snapshot => {
+						snapshot.forEach(doc => {
+							doc.ref.update(timbreModel);
+						});
+					});
 			})
 		});
 	}
@@ -172,7 +181,6 @@ export class TimbreService {
 						.catch((error) => {
 							console.error('Erreur de mise à jour :', error);
 						});
-					doc.ref.update(Object.assign(new Object(), timbreModel));
 				});
 			})
 			.catch(error => {

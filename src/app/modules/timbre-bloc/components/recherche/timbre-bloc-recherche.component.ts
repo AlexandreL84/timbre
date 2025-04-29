@@ -20,7 +20,7 @@ export class TimbreBlocRechercheComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
+		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 	}
 
 	filtreByCritere() {

@@ -75,6 +75,7 @@ export class MenuComponent {
 
 	verifRoute() {
 		if (window.location.href.indexOf("bloc") > 0) {
+			//this.timbreBlocService.modifAll();
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
 				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
 			} else {
@@ -84,8 +85,7 @@ export class MenuComponent {
 				});
 			}
 		} else {
-			//this.timbreService.modifAllTimbres()
-
+			//this.timbreService.modifAll();
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
 				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 			} else {
