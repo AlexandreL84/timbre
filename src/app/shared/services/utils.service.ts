@@ -15,9 +15,10 @@ export class UtilsService {
 
 	zoom(url: string) {
 		const refDialog = this.dialog.open(LibDialogImageComponent, {
-			maxWidth: DimensionImageEnum.WIDTH_TIMBRE_ZOOM + 10 + "px",
-			maxHeight: DimensionImageEnum.HEIGTH_TIMBRE_ZOOM + 40 + "px",
-			//maxHeight: "70vh",
+			width: DimensionImageEnum.WIDTH_TIMBRE_ZOOM + 10 + "px",
+			height: DimensionImageEnum.HEIGTH_TIMBRE_ZOOM + 40 + "px",
+			maxHeight: "95vh",
+			maxWidth: "95vh",
 		});
 		refDialog.componentInstance.url = url;
 
