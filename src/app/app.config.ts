@@ -13,6 +13,7 @@ import {PaginatorIntlService} from "./shared/services/paginator-intl.service";
 import {HeaderService} from "./shared/services/header.service";
 import {SimpleNotificationModule} from "./modules/simple-notification/simple-notification.module";
 import {provideServiceWorker} from "@angular/service-worker";
+import {provideHttpClient} from "@angular/common/http";
 
 
 export const appConfig: ApplicationConfig = {
@@ -27,6 +28,7 @@ export const appConfig: ApplicationConfig = {
 		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
 		HeaderService,
 		SimpleNotificationModule,
+		provideHttpClient(),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: environment.production,
 			registrationStrategy: 'registerWhenStable:30000'

@@ -7,7 +7,6 @@ import {MaterialModule} from "../../../../shared/modules/material.module";
 import {LibSpinnerModule} from "../../../../shared/components/lib-spinner";
 import {LibIconModule} from "../../../../shared/components/lib-icon";
 import {TimbreSupprimService} from "../../../../shared/services/timbre/timbre-supprim.service";
-import {provideHttpClient} from "@angular/common/http";
 import {TimbreSupprimChoixAnneeComponent} from "./choix-annee/timbre-supprim-choix-annee.component";
 import {DirectiveModule} from "../../../../shared/directives/directive.module";
 
@@ -31,7 +30,7 @@ import {DirectiveModule} from "../../../../shared/directives/directive.module";
 		TimbreSupprimComponent,
 		TimbreSupprimChoixAnneeComponent
 	],
-	providers: [TimbreSupprimService, provideHttpClient()]
+	providers: [TimbreSupprimService]
 })
 export class TimbreSupprimToutModule {
 }

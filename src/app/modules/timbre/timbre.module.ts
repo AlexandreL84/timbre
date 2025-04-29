@@ -14,7 +14,6 @@ import {SimpleNotificationModule} from '../simple-notification/simple-notificati
 import {TimbreImporterComponent} from './components/importer/timbre-importer.component';
 import {TimbreResultatComponent} from './components/resultat/timbre-resultat.component';
 import {UploadService} from '../../shared/services/upload.service';
-import {provideHttpClient} from '@angular/common/http';
 import {LibDialogImageModule} from '../../shared/components/lib-dialog-image/lib-dialog-image.module';
 import {UtilsService} from '../../shared/services/utils.service';
 import {LibModalModule} from '../../shared/components/lib-modal/lib-modal.module';
@@ -30,40 +29,34 @@ import {TimbreRechercheComponent} from "./components/recherche/timbre-recherche.
 import {TimbreResultatTableComponent} from "./components/resultat-table/timbre-resultat-table.component";
 import {TimbreTotalComponent} from "./components/total/timbre-total.component";
 import {TimbreService} from "../../shared/services/timbre/timbre.service";
-import {provideServiceWorker} from "@angular/service-worker";
-import {environment} from "../../../environments/environment";
 
 @NgModule({
 	declarations: [
 		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent
 	],
-	imports: [
-		MaterialModule,
-		TimbreRoutingModule,
-		CommonModule,
-		FlexModule,
-		FlexLayoutModule,
-		FormsModule,
-		AsyncPipe,
-		LibSpinnerModule,
-		LibIconModule,
-		LibDialogImageModule,
-		LibLibelleModelModule,
-		DirectiveModule,
-		ErrorModule,
-		PipeModule,
-		LibModalModule,
-		LibUploadModule,
-		SimpleNotificationModule,
-		MenuModule,
-		ReactiveFormsModule
-	],
+    imports: [
+        MaterialModule,
+        TimbreRoutingModule,
+        CommonModule,
+        FlexModule,
+        FlexLayoutModule,
+        FormsModule,
+        AsyncPipe,
+        LibSpinnerModule,
+        LibIconModule,
+        LibDialogImageModule,
+        LibLibelleModelModule,
+        DirectiveModule,
+        ErrorModule,
+        PipeModule,
+        LibModalModule,
+        LibUploadModule,
+        SimpleNotificationModule,
+        MenuModule,
+        ReactiveFormsModule
+    ],
 	exports: [],
-	providers: [TimbreService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService, provideHttpClient(),
-		provideServiceWorker('ngsw-worker.js', {
-			enabled: environment.production,
-			registrationStrategy: 'registerWhenStable:30000'
-		})]
+	providers: [TimbreService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService]
 })
 export class TimbreModule {
 }

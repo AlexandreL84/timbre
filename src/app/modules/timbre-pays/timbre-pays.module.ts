@@ -15,7 +15,6 @@ import {SimpleNotificationModule} from "../simple-notification/simple-notificati
 import {TimbrePaysImporterComponent} from "./components/importer/timbre-pays-importer.component";
 import {TimbrePaysResultatComponent} from "./components/resultat/timbre-pays-resultat.component";
 import {UploadService} from "../../shared/services/upload.service";
-import {provideHttpClient} from "@angular/common/http";
 import {LibDialogImageModule} from "../../shared/components/lib-dialog-image/lib-dialog-image.module";
 import {UtilsService} from "../../shared/services/utils.service";
 import {LibModalModule} from "../../shared/components/lib-modal/lib-modal.module";
@@ -47,7 +46,7 @@ import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.mod
         LibUploadModule
     ],
 	exports: [],
-	providers: [UtilsService, TimbrePaysService, UploadService, provideHttpClient()],
+	providers: [UtilsService, TimbrePaysService, UploadService],
 })
 export class TimbrePaysModule {
 }

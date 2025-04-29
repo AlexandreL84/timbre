@@ -5,7 +5,6 @@ import {FlexLayoutModule, FlexModule} from "@angular/flex-layout";
 import {FormsModule} from "@angular/forms";
 import {TimbreModifierBlocComponent} from "./components/modifier-bloc/timbre-modifier-bloc.component";
 import {TimbreBlocRoutingModule} from "./timbre-bloc-routing.module";
-import {provideHttpClient} from "@angular/common/http";
 import {MaterialModule} from "../../shared/modules/material.module";
 import {LibIconModule} from "../../shared/components/lib-icon";
 import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
@@ -49,7 +48,7 @@ import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.se
         MenuModule,
     ],
 	exports: [],
-	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService, provideHttpClient()]
+	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService]
 })
 export class TimbreBlocModule {
 }
