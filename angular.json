@@ -17,8 +17,7 @@
 				"build": {
 					"builder": "@angular-devkit/build-angular:application",
 					"options": {
-						"serviceWorker": true,
-						"ngswConfigPath": "ngsw-config.json",
+						"serviceWorker": "ngsw-config.json",
 						"allowedCommonJsDependencies": [
 							"lodash",
 							"reflect-metadata",
