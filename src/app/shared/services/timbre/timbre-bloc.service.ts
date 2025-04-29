@@ -19,7 +19,6 @@ import {LibModalComponent} from "../../components/lib-modal/lib-modal.component"
 import {MatDialog} from "@angular/material/dialog";
 import {DroitEnum} from "../../enum/droit.enum";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
-import {cloneDeep} from "lodash";
 
 @Injectable()
 export class TimbreBlocService {
@@ -123,7 +122,7 @@ export class TimbreBlocService {
 		return this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
 	}
 
-	modifAll() {
+	/*modifAll() {
 		const timbreCritereModel = new TimbreCritereModel();
 
 		const annees: number[] = []
@@ -148,7 +147,7 @@ export class TimbreBlocService {
 					});
 			})
 		});
-	}
+	}*/
 
 	getBlocs(timbreCritereModel: TimbreCritereModel, total: boolean) {
 		this.load$.next(false);

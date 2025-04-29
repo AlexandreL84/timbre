@@ -16,7 +16,6 @@ import {TimbreModifierComponent} from "../../../modules/timbre/components/modifi
 import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
-import {cloneDeep} from "lodash";
 
 @Injectable()
 export class TimbreService {
@@ -34,7 +33,7 @@ export class TimbreService {
 		private dialog: MatDialog) {
 	}
 
-	modifAll() {
+	/*modifAll() {
 		const timbreCritereModel = new TimbreCritereModel();
 
 		const annees : number[] = []
@@ -59,7 +58,7 @@ export class TimbreService {
 					});
 			})
 		});
-	}
+	}*/
 
 	getTimbre(id: number): Observable<any> {
 		return this.firestore.collection(BaseEnum.TIMBRE, ref => ref.where('id', '==', id)).valueChanges();
