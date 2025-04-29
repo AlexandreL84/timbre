@@ -35,7 +35,8 @@
 		"sass": "^1.79.3",
 		"tslib": "^2.7.0",
 		"xlsx": "^0.18.5",
-		"zone.js": "~0.14.10"
+		"zone.js": "~0.14.10",
+		"reflect-metadata": "^0.2.2"
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "^18.2.3",
