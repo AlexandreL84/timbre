@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, first, map, Observable} from "rxjs";
-import {isNotNullOrUndefined} from "../../utils/utils";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../../utils/utils";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {BaseEnum} from "../../enum/base.enum";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";
@@ -92,6 +92,15 @@ export class TimbreUtilsService {
 						ajout = false;
 					}
 					if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreModel.getTimbreAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreModel.getTimbreAcquisModel().isDoublon()))) {
+						ajout = false;
+					}
+				}
+				if (isNotNullOrUndefined(timbreCritereModel?.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
+					if (isNullOrUndefined(timbreModel?.getTimbreBlocModel())) {
+						ajout = false;
+					} else if (timbreCritereModel.getCarnet() == "OUI" && !timbreModel.getTimbreBlocModel().isCarnet()) {
+						ajout = false;
+					} else if (timbreCritereModel.getCarnet() == "NON" && timbreModel.getTimbreBlocModel().isCarnet()) {
 						ajout = false;
 					}
 				}

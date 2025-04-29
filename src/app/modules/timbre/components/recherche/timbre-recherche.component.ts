@@ -24,7 +24,7 @@ export class TimbreRechercheComponent implements OnInit {
 	}
 
 	filtreByCritere() {
-		if (this.timbreUtilsService.timbreCritereModel.getCarnet() == "OUI") {
+		if (this.timbreUtilsService.timbreCritereModel.getCarnet() != "TOUS") {
 			this.timbreUtilsService.timbreCritereModel.setBloc("OUI");
 		}
 		if (this.timbreUtilsService.timbreCritereModel.getAcquis() == "NON") {
