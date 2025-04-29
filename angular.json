@@ -108,8 +108,9 @@
           "builder": "angular-cli-ghpages:deploy"
         }
 			}
-		}
-  },
+		},
+		"serviceWorker": true
+	},
   "cli": {
     "analytics": false
   }

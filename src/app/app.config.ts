@@ -12,6 +12,7 @@ import {MatPaginatorIntl} from "@angular/material/paginator";
 import {PaginatorIntlService} from "./shared/services/paginator-intl.service";
 import {HeaderService} from "./shared/services/header.service";
 import {SimpleNotificationModule} from "./modules/simple-notification/simple-notification.module";
+import {provideServiceWorker} from "@angular/service-worker";
 
 
 export const appConfig: ApplicationConfig = {
@@ -26,6 +27,10 @@ export const appConfig: ApplicationConfig = {
 		{provide: FIREBASE_OPTIONS, useValue: environment.firebase},
 		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
 		HeaderService,
-		SimpleNotificationModule
+		SimpleNotificationModule,
+		provideServiceWorker('ngsw-worker.js', {
+			enabled: environment.production,
+			registrationStrategy: 'registerWhenStable:30000'
+		})
 	]
 };

@@ -24,6 +24,7 @@
 		"@angular/platform-browser-dynamic": "^18.2.0",
 		"@angular/pwa": "^0.5.3",
 		"@angular/router": "^18.2.0",
+		"@angular/service-worker": "^19.2.8",
 		"angular-svg-icon": "^18.0.2",
 		"angular2-notifications": "^16.0.1",
 		"class-transformer": "^0.5.1",
@@ -31,12 +32,12 @@
 		"file-saver": "^2.0.5",
 		"firebase": "^10.13.1",
 		"papaparse": "^5.5.1",
+		"reflect-metadata": "^0.2.2",
 		"rxjs": "~7.8.0",
 		"sass": "^1.79.3",
 		"tslib": "^2.7.0",
 		"xlsx": "^0.18.5",
-		"zone.js": "~0.14.10",
-		"reflect-metadata": "^0.2.2"
+		"zone.js": "~0.14.10"
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "^18.2.3",
