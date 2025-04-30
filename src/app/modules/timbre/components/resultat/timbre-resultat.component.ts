@@ -31,7 +31,7 @@ export class TimbreResultatComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
+		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE)
 		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 	}
 }
