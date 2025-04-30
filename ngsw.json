@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1746025579657,
+  "timestamp": 1746026880110,
   "index": "/timbre/index.html",
   "assetGroups": [
     {
@@ -41,16 +41,16 @@
         "ignoreVary": true
       },
       "urls": [
-        "/timbre/assets/icons/icon-192x192.png.png",
-        "/timbre/assets/icons/icon-512x512.png.png"
+        "/timbre/assets/icons/icon-192x192.png",
+        "/timbre/assets/icons/icon-512x512.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "/timbre/assets/icons/icon-192x192.png.png": "2af582d47d4937a2152600a52718a777074f572e",
-    "/timbre/assets/icons/icon-512x512.png.png": "90309cc9f363771e0860e65a34187e89a1630729",
+    "/timbre/assets/icons/icon-192x192.png": "2af582d47d4937a2152600a52718a777074f572e",
+    "/timbre/assets/icons/icon-512x512.png": "90309cc9f363771e0860e65a34187e89a1630729",
     "/timbre/chunk-2ONWK2BH.js": "2add087b649f491dbc954675a2e13a78d885e82b",
     "/timbre/chunk-5KB644DK.js": "96e501f9fd3904242dc764ded8c7f722cb2d9e7d",
     "/timbre/chunk-B4ZNLNLR.js": "767277fc70d72c27ab9912d3d15f1cb2e79c0db5",
