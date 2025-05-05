@@ -25,10 +25,9 @@ export class TimbreLayoutComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		console.log("ngOnInit layout")
-		//this.timbreService.timbres$.next(null);
-		//this.headerService.titre$.next("TIMBRES");
-		/*this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
+		/*this.timbreService.timbres$.next(null);
+		this.headerService.titre$.next("TIMBRES");
+		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
 		this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect=> {
 			this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 				this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);

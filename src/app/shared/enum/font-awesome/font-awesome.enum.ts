@@ -12,6 +12,8 @@ export enum FontAwesomeEnum {
     EYE = "fa-eye",
     EYE_SLASH = "fa-eye-slash",
 
+	HEXAGON_EXCLAMATION = "fa-hexagon-exclamation",
+
 	IMAGE_POLAROID = "fa-image-polaroid",
 
     FILE_EXEL = "fa-file-excel",

@@ -45,8 +45,6 @@ export class AuthService {
 	getUser(): Observable<UserModel> {
 		const collectionUser = this.firestore.collection(BaseEnum.USER).valueChanges();
 		return combineLatest([this.afAuth.authState, collectionUser, this.user$]).pipe(map(([user, users, userConnect]) => {
-
-			console.log(userConnect)
 				if (isNotNullOrUndefined(userConnect)) {
 					return userConnect;
 				} else {

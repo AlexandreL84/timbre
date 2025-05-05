@@ -109,7 +109,6 @@ export class TimbreModifierComponent implements OnInit {
 				if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
 					this.timbreModel.setImageZoom(imageZoom);
 				}
-				console.log(ajout)
 				if (!ajout) {
 					this.timbreService.modifier(this.timbreModel);
 				} else {

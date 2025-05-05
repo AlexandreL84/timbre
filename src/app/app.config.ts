@@ -18,12 +18,13 @@ import {provideHttpClient} from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
 	providers: [
-		provideRouter(routes), provideAnimations(),
+		provideRouter(routes),
+		provideAuth(() => getAuth()),
+		provideAnimations(),
 		provideFirestore(() => getFirestore()),
 		provideZoneChangeDetection({eventCoalescing: true}),
 		AngularFireStorageModule,
 		AngularFireAuthModule,
-		provideAuth(() => getAuth()),
 		{provide: FIREBASE_OPTIONS, useValue: environment.firebase},
 		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
 		HeaderService,

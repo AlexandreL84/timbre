@@ -31,13 +31,7 @@ export class MenuComponent {
 	readonly ModeEnum = ModeEnum;
 
 	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
-
-		console.log("constructor")
 		this.verifRoute();
-	}
-
-	ngOnInit(): void {
-		console.log("ngOnInit")
 	}
 
 	ajouter() {
@@ -91,7 +85,6 @@ export class MenuComponent {
 				});
 			}
 		} else {
-			console.log("ici")
 			//this.timbreService.modifAll();
 			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
 				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);

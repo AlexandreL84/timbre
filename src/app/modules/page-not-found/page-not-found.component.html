@@ -1,0 +1,16 @@
+<div class="error404">
+	<lib-icon
+		[classIcone]="'primary'"
+		[icone]="FontAwesomeEnum.HEXAGON_EXCLAMATION"
+		[type]="FontAwesomeTypeEnum.TYPE_LIGHT">
+	</lib-icon>
+	<span class="textPrincipal primary">Erreur 404</span>
+	<span class="textSecondaire primary">Page introuvable</span>
+	<button
+		mat-raised-button
+		color="accent"
+		class="rounded large"
+		(click)="navigate()">
+		Retour à l'accueil
+	</button>
+</div>

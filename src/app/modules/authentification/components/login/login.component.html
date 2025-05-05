@@ -1,68 +1,62 @@
-<ng-template [ngIf]="(redirection$ | async) == true" [ngIfElse]="load">
-	<lib-spinner fxFlexFill [textSpec]="'Redirection en cours ...'" [classSpinner]="'primary'"></lib-spinner>
-</ng-template>
-<ng-template #load>
-	<div fxFlexFill fxLayout="column" fxLayoutAlign="center center" fxFlexOffset="40px">
+<section class="formlogin">
+	<ng-template [ngIf]="(redirection$ | async) == true" [ngIfElse]="load">
+		<lib-spinner [textSpec]="'Redirection en cours ...'" [classSpinner]="'primary'"></lib-spinner>
+	</ng-template>
+	<ng-template #load>
 		<form
 			#formLogin="ngForm"
 			ngForm="formLogin"
 			(ngSubmit)="onSignIn()"
-			class="formulaire-box-elevation height100"
+			class="formulaire-box-elevation"
 			[ngClass]="formLogin?.submitted  ?'red-color' : 'blue-color'"
-			fxLayoutGap="20px"
-			fxFlex="100"
-			fxLayout="column"
-			fxLayoutAlign="space-between stretch"
 		>
 			<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 
-			<div fxLayout="column" fxLayoutGap="30px">
-				<div fxLayout="column" class="form-input">
-					<label>
-						Login
-					</label>
-					<input
-						name="email"
-						[(ngModel)]="email"
-						type="text"
-						style="max-width: 400px; width: 100%"
-						required
-						zControl
-					/>
-				</div>
-
-				<div fxLayout="column" class="form-input">
-					<label>
-						Mot de passe
-					</label>
-
-					<div fxLayout="row" fxLayoutAlign="start center">
-						<input
-							[type]="showPswd ? 'text' : 'password'"
-							[(ngModel)]="password"
-							name="password"
-							#passwordModel="ngModel"
-							style="max-width: 400px; width: 100%"
-							required
-						/>
-						<lib-icon
-							class="eyeMdp click"
-							[classIcone]="'primary'"
-							noEspace
-							[icone]="showPswd ? FontAwesomeEnum.EYE_SLASH : FontAwesomeEnum.EYE"
-							(click)="showPassword()">
-						</lib-icon>
-					</div>
-					<app-control-error [control]="passwordModel"></app-control-error>
-				</div>
+			<div class="form-input">
+				<label>
+					Login
+				</label>
+				<input
+					name="email"
+					[(ngModel)]="email"
+					type="text"
+					style="max-width: 400px; width: 100%"
+					required
+					zControl
+				/>
 			</div>
 
-			<div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="center end">
+			<div class="form-input">
+				<label>
+					Mot de passe
+				</label>
+
+				<div>
+					<input
+						[type]="showPswd ? 'text' : 'password'"
+						[(ngModel)]="password"
+						name="password"
+						#passwordModel="ngModel"
+						noEspace
+						style="max-width: 400px; width: 100%"
+						required
+					/>
+					<lib-icon
+						class="eyeMdp click"
+						[classIcone]="'primary'"
+						[icone]="showPswd ? FontAwesomeEnum.EYE_SLASH : FontAwesomeEnum.EYE"
+						(click)="showPassword()">
+					</lib-icon>
+				</div>
+				<app-control-error [control]="passwordModel"></app-control-error>
+			</div>
+
+			<div class="boutonMdp">
 				<button
 					type="submit" class="rounded large color-white" mat-raised-button color="accent">
 					Enregistrer
 				</button>
 			</div>
 		</form>
-	</div>
-</ng-template>
+	</ng-template>
+</section>

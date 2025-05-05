@@ -1,0 +1,22 @@
+.error404 {
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+
+	.textPrincipal {
+		font-size: 3em;
+		font-weight: bold;
+	}
+
+	.textSecondaire {
+		font-size: 1.5em;
+	}
+
+	lib-icon {
+		font-size: 10em;
+	}
+}
