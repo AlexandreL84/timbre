@@ -25,6 +25,7 @@ export class TimbreLayoutComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		console.log("ngOnInit layout")
 		//this.timbreService.timbres$.next(null);
 		//this.headerService.titre$.next("TIMBRES");
 		/*this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
