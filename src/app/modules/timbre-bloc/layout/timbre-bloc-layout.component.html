@@ -1,8 +1,7 @@
-<div fxLayout="row" fxLayoutAlign="space-between stretch">
-	<div fxFlex="5"></div>
-	<div fxFlex fxLayout="column" fxLayoutGap="20px">
+<div class="timbreLayout">
+	<div class="timbreBody">
 		<app-menu></app-menu>
 		<app-timbre-bloc-resultat *ngIf="headerService.mode == ModeEnum.GRAPH"></app-timbre-bloc-resultat>
 		<app-timbre-bloc-resultat-table *ngIf="headerService.mode == ModeEnum.TABLE"></app-timbre-bloc-resultat-table>
 	</div>
-	<div fxFlex="5"></div>
+</div>

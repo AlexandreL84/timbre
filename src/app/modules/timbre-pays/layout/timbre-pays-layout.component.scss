@@ -1,0 +1,17 @@
+.timbrePaysLayout {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-content: stretch;
+	padding: 0px 2% 0px 2%;
+	width: 96%;
+	height: 97%;
+	margin-top: 20px;
+
+	.timbreBody {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: 20px;
+	}
+}

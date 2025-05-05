@@ -14,7 +14,7 @@ import {ModeEnum} from "../../../shared/enum/mode.enum";
 @Component({
 	selector: "app-timbre-layout",
 	templateUrl: "./timbre-layout.component.html",
-	styleUrls: ["./timbre-layout.component.scss"],
+	styleUrls: ["./../../styles/timbre-layout.component.scss"],
 })
 export class TimbreLayoutComponent implements OnInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
