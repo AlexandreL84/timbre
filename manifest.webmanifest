@@ -1,7 +1,7 @@
 {
 	"name": "Timbres",
 	"short_name": "Timbres",
-	"theme_color": "#0e526e",
+	"theme_color": "#FFFFFF",
 	"background_color": "#0e526e",
 	"display": "standalone",
 	"scope": "./",
