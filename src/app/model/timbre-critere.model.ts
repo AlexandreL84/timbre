@@ -22,6 +22,8 @@ export class TimbreCritereModel extends ProprieteModel {
 	@Label("User")
 	user: UserModel;
 
+	sort: string;
+
 	getAnnees(): number[] {
 		return this.annees;
 	}
@@ -68,5 +70,21 @@ export class TimbreCritereModel extends ProprieteModel {
 
 	setType(value: TypeTimbreEnum[]) {
 		this.type = value;
+	}
+
+	getSort(): string {
+		return this.sort;
+	}
+
+	setSort(value: string) {
+		this.sort = value;
+	}
+
+	initCritere() {
+		this.setType([TypeTimbreEnum.TIMBRE, TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
+	}
+
+	initCritereBloc() {
+		this.setType([TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
 	}
 }

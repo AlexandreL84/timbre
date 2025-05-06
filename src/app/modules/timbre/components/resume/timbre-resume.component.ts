@@ -65,12 +65,13 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	}
 
 	filtreParAnnee(timbreResumeModel: TimbreResumeModel) {
+		let timbreCritereModel = new TimbreCritereModel();
 		if (window.location.href.indexOf("bloc") > 0) {
-			this.timbreUtilsService.initCritereBloc();
+			timbreCritereModel.initCritereBloc();
 			this.timbreUtilsService.timbreCritereBlocModel.setAnnees([timbreResumeModel.getAnnee()]);
 			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
 		} else {
-			this.timbreUtilsService.initCritere();
+			timbreCritereModel.initCritere();
 			this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
 			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
 		}

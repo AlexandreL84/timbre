@@ -96,7 +96,7 @@ export class TimbreBlocService {
 				filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", false);
 			}*/
 		}
-		filteredQuery = filteredQuery.orderBy('id', 'asc');
+		filteredQuery = filteredQuery.orderBy("id", timbreCritereModel?.getSort() == "desc" ? "desc": "asc");
 		return filteredQuery;
 	}
 

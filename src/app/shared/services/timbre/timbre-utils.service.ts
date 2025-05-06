@@ -21,20 +21,10 @@ export class TimbreUtilsService {
 	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(private authService: AuthService, private firestore: AngularFirestore) {
-		this.initCritere();
+		this.timbreCritereModel.initCritere();
 		this.timbreCritereModel.setAcquis("NON");
-		this.initCritereBloc();
+		this.timbreCritereBlocModel.initCritereBloc();
 		this.timbreCritereBlocModel.setAcquis("NON");
-	}
-
-	initCritere() {
-		this.timbreCritereModel = new TimbreCritereModel();
-		this.timbreCritereModel.setType([TypeTimbreEnum.TIMBRE, TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
-	}
-
-	initCritereBloc() {
-		this.timbreCritereBlocModel = new TimbreCritereModel();
-		this.timbreCritereBlocModel.setType([TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
 	}
 
 	initUpload(): FileUploadModel {

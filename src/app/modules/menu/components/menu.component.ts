@@ -38,6 +38,7 @@ export class MenuComponent {
 		const refDialog = this.dialog.open(TimbreModifierComponent, {
 			maxHeight: "95vh",
 			width: "30%",
+			minWidth: "300px"
 		});
 
 		refDialog.afterClosed().subscribe(() => {
@@ -49,6 +50,7 @@ export class MenuComponent {
 		const refDialog = this.dialog.open(TimbreModifierBlocComponent, {
 			maxHeight: "95vh",
 			width: "30%",
+			minWidth: "300px"
 		});
 
 		refDialog.afterClosed().subscribe(() => {
