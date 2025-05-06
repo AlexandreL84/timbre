@@ -1,11 +1,19 @@
 <div *ngIf="modif" class="menuRecherche">
-	<!--
-	<div  style="width: 75px">
-		<mat-checkbox color="primary" [(ngModel)]="timbreUtilsService.timbreCritereModel.acquis" (ngModelChange)="filtreByCritere()">
-			<lib-libelle-model [object]="timbreUtilsService.timbreCritereModel" [key]="'acquis'"></lib-libelle-model>
-		</mat-checkbox>
+	<div class="form-input select" style="width: 100px">
+		<mat-select name="type"
+					class="scrollBarAccent"
+					[(ngModel)]="timbreUtilsService.timbreCritereModel.type"
+					[placeholder]="'Type'"
+					multiple
+					(ngModelChange)="filtreByCritereEvent($event)">
+			<mat-option *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray"
+						class="selectMin"
+						[value]="typeTimbre.value">
+				{{ typeTimbre.value }}
+			</mat-option>
+		</mat-select>
 	</div>
-	-->
+
 
 	<div class="form-input select" style="width: 100px">
 		<mat-select name="acquis"
@@ -23,30 +31,6 @@
 					class="scrollBarAccent"
 					[(ngModel)]="timbreUtilsService.timbreCritereModel.doublon"
 					[placeholder]="'Doublon'"
-					(ngModelChange)="filtreByCritere()">
-			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-			<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-			<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-		</mat-select>
-	</div>
-
-	<div class="form-input select" style="width: 100px">
-		<mat-select name="carnet"
-					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereModel.carnet"
-					[placeholder]="'Carnet'"
-					(ngModelChange)="filtreByCritere()">
-			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-			<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-			<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-		</mat-select>
-	</div>
-
-	<div class="form-input select" style="width: 100px">
-		<mat-select name="bloc"
-					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereModel.bloc"
-					[placeholder]="'Bloc'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
 			<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>

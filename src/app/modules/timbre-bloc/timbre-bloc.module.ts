@@ -22,6 +22,7 @@ import {TimbreBlocTotalComponent} from "./components/total/timbre-bloc-total.com
 import {TimbreBlocRechercheComponent} from "./components/recherche/timbre-bloc-recherche.component";
 import {TimbreService} from "../../shared/services/timbre/timbre.service";
 import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.service";
+import {PipeModule} from "../../shared/pipes/pipe.module";
 
 @NgModule({
 	declarations: [
@@ -46,6 +47,7 @@ import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.se
         LibUploadModule,
         SimpleNotificationModule,
         MenuModule,
+        PipeModule,
     ],
 	exports: [],
 	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService]

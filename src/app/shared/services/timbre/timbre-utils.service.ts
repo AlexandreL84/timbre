@@ -12,6 +12,7 @@ import {AuthService} from "../auth.service";
 import {FileDetailUploadModel} from "../../../model/file/file-detail-upload.model";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 import {FileUploadModel} from "../../../model/file/file-upload.model";
+import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 
 @Injectable()
 export class TimbreUtilsService {
@@ -20,6 +21,20 @@ export class TimbreUtilsService {
 	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(private authService: AuthService, private firestore: AngularFirestore) {
+		this.initCritere();
+		this.timbreCritereModel.setAcquis("NON");
+		this.initCritereBloc();
+		this.timbreCritereBlocModel.setAcquis("NON");
+	}
+
+	initCritere() {
+		this.timbreCritereModel = new TimbreCritereModel();
+		this.timbreCritereModel.setType([TypeTimbreEnum.TIMBRE, TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
+	}
+
+	initCritereBloc() {
+		this.timbreCritereBlocModel = new TimbreCritereModel();
+		this.timbreCritereBlocModel.setType([TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
 	}
 
 	initUpload(): FileUploadModel {
@@ -42,7 +57,7 @@ export class TimbreUtilsService {
 		return fileUploadModel;
 	}
 
-	getAnneesAsync(baseEmun: BaseEnum): Observable<number[]>  {
+	getAnneesAsync(baseEmun: BaseEnum): Observable<number[]> {
 		return this.firestore.collection(baseEmun, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			filteredQuery = filteredQuery.orderBy('annee', 'desc');
@@ -69,8 +84,11 @@ export class TimbreUtilsService {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
 					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
 				}
-				if (isNotNullOrUndefined(timbreCritereModel.getBloc()) && timbreCritereModel.getBloc() != 'TOUS') {
-					filteredQuery = filteredQuery.where("idBloc", timbreCritereModel.getBloc() != "OUI" ? "==" : "!=", null);
+
+				if (timbreCritereModel?.getType()?.length == 0 || (timbreCritereModel?.getType()?.length == 1 && timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE))) {
+					filteredQuery = filteredQuery.where("idBloc", "==", null);
+				} else if (timbreCritereModel?.getType()?.length > 0 && !timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE)) {
+					filteredQuery = filteredQuery.where("idBloc", "!=", null);
 				} else if (isNotNullOrUndefined(timbreCritereModel.getIdBloc())) {
 					filteredQuery = filteredQuery.where("idBloc", "==", timbreCritereModel.getIdBloc());
 				}
@@ -86,24 +104,28 @@ export class TimbreUtilsService {
 			timbres.forEach((timbre: any) => {
 				const timbreModel: TimbreModel = this.constructTimbre(timbre, timbresAcquis, timbresBlocModel);
 
-				let ajout: boolean = true;
-				if (isNotNullOrUndefined(timbreCritereModel) && isNotNullOrUndefined(timbreModel.getTimbreAcquisModel())) {
-					if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreModel.getTimbreAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreModel.getTimbreAcquisModel().isAcquis()))) {
-						ajout = false;
+				let ajout: boolean = false;
+				if (isNotNullOrUndefined(timbreCritereModel)) {
+					if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE) && isNullOrUndefined(timbreModel?.getTimbreBlocModel())) {
+						ajout = true;
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.BLOC) && isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()) && !timbreModel?.getTimbreBlocModel()?.isCarnet()) {
+						ajout = true;
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.CARNET) && isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()) && timbreModel?.getTimbreBlocModel()?.isCarnet()) {
+						ajout = true;
 					}
-					if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreModel.getTimbreAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreModel.getTimbreAcquisModel().isDoublon()))) {
-						ajout = false;
+
+					if (isNotNullOrUndefined(timbreModel.getTimbreAcquisModel())) {
+						if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreModel.getTimbreAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreModel.getTimbreAcquisModel().isAcquis()))) {
+							ajout = false;
+						}
+						if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreModel.getTimbreAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreModel.getTimbreAcquisModel().isDoublon()))) {
+							ajout = false;
+						}
 					}
+				} else {
+					ajout = true;
 				}
-				if (isNotNullOrUndefined(timbreCritereModel?.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
-					if (isNullOrUndefined(timbreModel?.getTimbreBlocModel())) {
-						ajout = false;
-					} else if (timbreCritereModel.getCarnet() == "OUI" && !timbreModel.getTimbreBlocModel().isCarnet()) {
-						ajout = false;
-					} else if (timbreCritereModel.getCarnet() == "NON" && timbreModel.getTimbreBlocModel().isCarnet()) {
-						ajout = false;
-					}
-				}
+
 				if (ajout == true) {
 					timbresModel.push(timbreModel);
 				}
@@ -160,38 +182,38 @@ export class TimbreUtilsService {
 	acquis(timbreModel: TimbreModel, doublon: boolean, force?: boolean) {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			//if (isNotNullOrUndefined(timbreModel?.getTimbreAcquisModel()?.getIdUser())) {
-				this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
-					.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', user.getId())
-					//.limit(1)
-					.get()
-					.then(snapshot => {
-						if (snapshot?.size == 0) {
-							this.addAcquis(user.getId(), timbreModel, doublon);
-						}
-						snapshot.forEach(doc => {
-							//const timbreAcquisModel: TimbreAcquisModel = timbreModel.getTimbreAcquisModel();
-							const timbreAcquisModel = plainToInstance(TimbreAcquisModel, doc.data());
-							if (doublon) {
-								timbreAcquisModel.setAcquis(true);
-								timbreAcquisModel.setDoublon(force? force : !timbreAcquisModel.isDoublon());
-							} else {
-								timbreAcquisModel.setAcquis(force? force : !timbreAcquisModel.isAcquis());
-								if (!timbreAcquisModel.isAcquis()) {
-									timbreAcquisModel.setDoublon(false);
-								}
+			this.firestore.collection(BaseEnum.TIMBRE_ACQUIS)
+				.ref.where('idTimbre', '==', timbreModel.getId()).where('idUser', '==', user.getId())
+				//.limit(1)
+				.get()
+				.then(snapshot => {
+					if (snapshot?.size == 0) {
+						this.addAcquis(user.getId(), timbreModel, doublon);
+					}
+					snapshot.forEach(doc => {
+						//const timbreAcquisModel: TimbreAcquisModel = timbreModel.getTimbreAcquisModel();
+						const timbreAcquisModel = plainToInstance(TimbreAcquisModel, doc.data());
+						if (doublon) {
+							timbreAcquisModel.setAcquis(true);
+							timbreAcquisModel.setDoublon(force ? force : !timbreAcquisModel.isDoublon());
+						} else {
+							timbreAcquisModel.setAcquis(force ? force : !timbreAcquisModel.isAcquis());
+							if (!timbreAcquisModel.isAcquis()) {
+								timbreAcquisModel.setDoublon(false);
 							}
-							doc.ref.update(Object.assign(new Object(), timbreAcquisModel))
-								.then(snapshot => {
-									timbreModel.setTimbreAcquisModel(timbreAcquisModel);
-								})
-								.catch(error => {
-									console.error('Erreur de mise à jour:', error);
-								});
-						});
-					})
-					.catch(error => {
-						console.error('Erreur de mise à jour id introuvable :', error);
+						}
+						doc.ref.update(Object.assign(new Object(), timbreAcquisModel))
+							.then(snapshot => {
+								timbreModel.setTimbreAcquisModel(timbreAcquisModel);
+							})
+							.catch(error => {
+								console.error('Erreur de mise à jour:', error);
+							});
 					});
+				})
+				.catch(error => {
+					console.error('Erreur de mise à jour id introuvable :', error);
+				});
 			/*} else {
 				this.addAcquis(user?.getId(), timbreModel, doublon);
 			}*/

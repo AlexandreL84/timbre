@@ -5,6 +5,7 @@ import {Observable} from "rxjs";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
+import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 
 @Component({
 	selector: "app-timbre-recherche",
@@ -16,6 +17,8 @@ export class TimbreRechercheComponent implements OnInit {
 
 	annees$: Observable<number[]>
 
+	readonly TypeTimbreEnum = TypeTimbreEnum;
+
 	constructor(public authService: AuthService, public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService) {
 	}
 
@@ -23,13 +26,19 @@ export class TimbreRechercheComponent implements OnInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
 	}
 
+	filtreByCritereEvent(code) {
+		this.timbreUtilsService.timbreCritereModel[code] = "OUI";
+		this.recherche();
+	}
+
 	filtreByCritere() {
-		if (this.timbreUtilsService.timbreCritereModel.getCarnet() != "TOUS") {
-			this.timbreUtilsService.timbreCritereModel.setBloc("OUI");
-		}
 		if (this.timbreUtilsService.timbreCritereModel.getAcquis() == "NON") {
 			this.timbreUtilsService.timbreCritereModel.setDoublon("TOUS");
 		}
+		this.recherche();
+	}
+
+	recherche(){
 		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
 			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
 		}

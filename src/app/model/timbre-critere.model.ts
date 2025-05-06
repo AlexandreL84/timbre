@@ -1,6 +1,7 @@
 import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
 import {UserModel} from "./user.model";
+import {TypeTimbreEnum} from "../shared/enum/type-timbre.enum";
 
 export class TimbreCritereModel extends ProprieteModel {
 	@Label("Année")
@@ -15,11 +16,8 @@ export class TimbreCritereModel extends ProprieteModel {
 	@Label("Ident bloc")
 	idBloc: number;
 
-	@Label("Bloc")
-	bloc: string;
-
-	@Label("Carnet")
-	carnet: string;
+	@Label("Type")
+	type: TypeTimbreEnum[];
 
 	@Label("User")
 	user: UserModel;
@@ -56,27 +54,19 @@ export class TimbreCritereModel extends ProprieteModel {
 		this.idBloc = value;
 	}
 
-	getCarnet(): string {
-		return this.carnet;
-	}
-
-	setCarnet(value: string) {
-		this.carnet = value;
-	}
-
-	getBloc(): string {
-		return this.bloc;
-	}
-
-	setBloc(value: string) {
-		this.bloc = value;
-	}
-
 	getUser(): UserModel {
 		return this.user;
 	}
 
 	setUser(value: UserModel) {
 		this.user = value;
+	}
+
+	getType(): TypeTimbreEnum[] {
+		return this.type;
+	}
+
+	setType(value: TypeTimbreEnum[]) {
+		this.type = value;
 	}
 }

@@ -6,6 +6,17 @@
 		</mat-checkbox>
 	</div>
 	-->
+	<div class="form-input select" style="width: 100px">
+		<mat-select name="type"
+					class="scrollBarAccent"
+					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.type"
+					[placeholder]="'Type'"
+					multiple
+					(ngModelChange)="filtreByCritereEvent($event)">
+			<mat-option class="selectMin" [value]="TypeTimbreEnum.BLOC"> {{ TypeTimbreEnum.BLOC }}</mat-option>
+			<mat-option class="selectMin" [value]="TypeTimbreEnum.CARNET"> {{ TypeTimbreEnum.CARNET }}</mat-option>
+		</mat-select>
+	</div>
 
 	<div class="form-input select" style="width: 100px">
 		<mat-select name="acquis"
@@ -23,18 +34,6 @@
 					class="scrollBarAccent"
 					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.doublon"
 					[placeholder]="'Doublon'"
-					(ngModelChange)="filtreByCritere()">
-			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
-			<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
-			<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
-		</mat-select>
-	</div>
-
-	<div fxLayout="row" fxLayoutAlign="end center" class="form-input select" style="width: 100px">
-		<mat-select name="carnet"
-					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.carnet"
-					[placeholder]="'Carnet'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
 			<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>

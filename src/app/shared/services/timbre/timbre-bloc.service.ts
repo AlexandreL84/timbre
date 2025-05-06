@@ -19,6 +19,7 @@ import {LibModalComponent} from "../../components/lib-modal/lib-modal.component"
 import {MatDialog} from "@angular/material/dialog";
 import {DroitEnum} from "../../enum/droit.enum";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
+import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 
 @Injectable()
 export class TimbreBlocService {
@@ -90,9 +91,10 @@ export class TimbreBlocService {
 			if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
 				filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
 			}
-			if (isNotNullOrUndefined(timbreCritereModel.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
+
+			/*if (isNotNullOrUndefined(timbreCritereModel.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
 				filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", false);
-			}
+			}*/
 		}
 		filteredQuery = filteredQuery.orderBy('id', 'asc');
 		return filteredQuery;
@@ -194,15 +196,26 @@ export class TimbreBlocService {
 					timbreBlocModel.setNbTimbres(timbres?.length);
 				});
 
-				let ajout: boolean = true;
-				if (isNotNullOrUndefined(timbreCritereModel) && isNotNullOrUndefined(timbreBlocModel.getTimbreBlocAcquisModel())) {
-					if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()))) {
-						ajout = false;
+				let ajout: boolean = false;
+				if (isNotNullOrUndefined(timbreCritereModel)) {
+					if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.CARNET) && timbreBlocModel?.isCarnet()) {
+						ajout = true;
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.BLOC) && !timbreBlocModel?.isCarnet()) {
+						ajout = true;
 					}
-					if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isDoublon()))) {
-						ajout = false;
+
+					if (isNotNullOrUndefined(timbreBlocModel.getTimbreBlocAcquisModel())) {
+						if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()))) {
+							ajout = false;
+						}
+						if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isDoublon()) || (timbreCritereModel.getDoublon() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isDoublon()))) {
+							ajout = false;
+						}
 					}
+				} else {
+					ajout = true;
 				}
+
 				if (ajout == true) {
 					timbresBlocModel.push(timbreBlocModel);
 				}

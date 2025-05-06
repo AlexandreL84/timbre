@@ -12,6 +12,7 @@ import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-util
 import {MatDialogRef} from "@angular/material/dialog";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
+import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 
 @Component({
 	selector: "app-timbre-resume",
@@ -29,7 +30,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
+	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -64,9 +65,15 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	}
 
 	filtreParAnnee(timbreResumeModel: TimbreResumeModel) {
-		this.timbreUtilsService.timbreCritereModel = new TimbreCritereModel();
-		this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
-		this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
+		if (window.location.href.indexOf("bloc") > 0) {
+			this.timbreUtilsService.initCritereBloc();
+			this.timbreUtilsService.timbreCritereBlocModel.setAnnees([timbreResumeModel.getAnnee()]);
+			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+		} else {
+			this.timbreUtilsService.initCritere();
+			this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
+			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
+		}
 		this.dialogRef.close();
 	}
 }

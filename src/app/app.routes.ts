@@ -3,7 +3,7 @@ import {AuthGuard} from "./shared/guards/auth.guard";
 import {RouteEnum} from "./shared/enum/route.enum";
 
 export const routes: Routes = [
-	{path: "", redirectTo: "/login", pathMatch: "full"},
+	{path: "", redirectTo: "/timbre", pathMatch: "full"},
 	{
 		path: RouteEnum.LOGIN,
 		loadChildren: () => import("./modules/authentification/authentification.module").then(m => m.AuthentificationModule),
