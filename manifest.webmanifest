@@ -1,7 +1,7 @@
 {
 	"name": "Timbres",
 	"short_name": "Timbres",
-	"theme_color": "#FFFFFF",
+	"theme_color": "#0e526e",
 	"background_color": "#0e526e",
 	"display": "standalone",
 	"scope": "./",
@@ -16,6 +16,12 @@
 		{
 			"src": "assets/icons/icon-512x512.png",
 			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable any"
+		},
+		{
+			"src": "assets/icons/icon-1024x1024.png",
+			"sizes": "1024x1024",
 			"type": "image/png",
 			"purpose": "maskable any"
 		}
