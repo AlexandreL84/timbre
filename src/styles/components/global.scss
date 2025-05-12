@@ -5,6 +5,7 @@
 	$color-config: mat.m2-get-color-config($theme);
 	$accent-palette: map.get($color-config, "accent");
 	$accent: mat.m2-get-color-from-palette($accent-palette);
+	$accentA200: mat.m2-get-color-from-palette($accent-palette, A200);
 	$primary-palette: map.get($color-config, "primary");
 	$primary: mat.m2-get-color-from-palette($primary-palette);
 
@@ -18,6 +19,10 @@
 		background-color: $primary !important;
 	}
 
+	.border-accent {
+		border-color: $accent !important;
+	}
+
 	.border-primary {
 		border-color: $primary !important;
 	}
@@ -28,5 +33,9 @@
 
 	.bg-accent {
 		background-color: $accent !important;
+	}
+
+	.bg-accentA200 {
+		background-color: $accentA200 !important;
 	}
 }

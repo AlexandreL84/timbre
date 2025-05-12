@@ -8,7 +8,10 @@
 
 <section [fxHide]="(load$ | async) == false">
 	<div class="listeTimbre primary">
-		<div *ngFor="let timbre of timbres$ | async" class="detailTimbre border-primary">
+		<div *ngFor="let timbre of timbres$ | async"
+			 class="detailTimbre"
+			 [ngClass]="timbre?.getTimbreAcquisModel()?.isAcquis() ? 'border-accent bg-accentA200' : 'border-primary'"
+		>
 			<div class="headerTimbre">
 				<div class="actionTimbre">
 					<lib-icon
