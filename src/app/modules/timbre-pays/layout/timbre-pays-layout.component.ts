@@ -29,6 +29,7 @@ export class TimbrePaysLayoutComponent implements OnInit {
 		const refDialog = this.dialog.open(TimbrePaysModifierComponent, {
 			maxHeight: "95vh",
 			width: "30%",
+			minWidth: "300px"
 		});
 
 		refDialog.afterClosed().subscribe(() => {
@@ -50,6 +51,7 @@ export class TimbrePaysLayoutComponent implements OnInit {
 			//width: "20%",
 			height: "90vh",
 			width: "70%",
+			minWidth: "300px"
 		});
 
 		refDialog.afterClosed().subscribe(() => {

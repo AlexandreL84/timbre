@@ -68,6 +68,7 @@ export class MenuComponent {
 			//width: "20%",
 			height: "90vh",
 			width: "70%",
+			minWidth: "300px"
 		});
 
 		refDialog.afterClosed().subscribe(() => {

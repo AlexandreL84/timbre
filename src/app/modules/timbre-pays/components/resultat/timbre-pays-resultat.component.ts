@@ -78,6 +78,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 			height: "75vh",
 			maxHeight: "750px",
 			width: "30%",
+			minWidth: "300px"
 		});
 		refDialog.componentInstance.id = timbrePaysModel.id;
 		//refDialog.componentInstance.code = timbrePaysModel.code;
