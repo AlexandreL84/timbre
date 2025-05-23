@@ -15,10 +15,10 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 @Component({
 	selector: "app-timbre-pays-modifier",
 	templateUrl: "./timbre-pays-modifier.component.html",
-	styleUrls: ["./timbre-pays-modifier.component.scss"],
 })
 export class TimbrePaysModifierComponent implements OnInit {
 	@ViewChild('canvas', {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
+	@ViewChild("formModif") formModif: NgForm;
 
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
@@ -52,9 +52,9 @@ export class TimbrePaysModifierComponent implements OnInit {
 		}
 	}
 
-	valider(formModif: NgForm) {
+	valider( ) {
 		this.messageError$.next(null)
-		if (formModif?.valid) {
+		if (this.formModif?.valid) {
 			if (isNotNullOrUndefined(this.timbrePaysModel.getDrapeau())) {
 				this.saveData();
 			} else {

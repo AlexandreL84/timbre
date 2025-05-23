@@ -21,10 +21,11 @@ import {LibModalModule} from "../../shared/components/lib-modal/lib-modal.module
 import {LibIconModule} from "../../shared/components/lib-icon";
 import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
 import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.module";
+import {TimbrePaysAjoutTimbreComponent} from "./components/ajout-timbre/timbre-pays-ajout-timbre.component";
 
 @NgModule({
 	declarations: [
-		TimbrePaysLayoutComponent, TimbrePaysModifierComponent, TimbrePaysImporterComponent, TimbrePaysResultatComponent
+		TimbrePaysLayoutComponent, TimbrePaysModifierComponent, TimbrePaysImporterComponent, TimbrePaysResultatComponent, TimbrePaysAjoutTimbreComponent
 	],
     imports: [
         MaterialModule,

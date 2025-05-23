@@ -15,6 +15,7 @@ import {UtilsService} from "../../../../shared/services/utils.service";
 import {LibModalComponent} from "../../../../shared/components/lib-modal/lib-modal.component";
 import {UploadService} from "../../../../shared/services/upload.service";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
+import {TimbrePaysAjoutTimbreComponent} from "../ajout-timbre/timbre-pays-ajout-timbre.component";
 
 @Component({
 	selector: "app-timbre-pays-resultat",
@@ -73,10 +74,22 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
 
+	ajouterTimbre(timbrePaysModel: TimbrePaysModel) {
+		const refDialog = this.dialog.open(TimbrePaysAjoutTimbreComponent, {
+			height: "200px",
+			width: "300px"
+		});
+		refDialog.componentInstance.id = timbrePaysModel.id;
+
+		refDialog.afterClosed().subscribe(() => {
+			refDialog.close();
+		});
+	}
+
 	modifier(timbrePaysModel: TimbrePaysModel) {
 		const refDialog = this.dialog.open(TimbrePaysModifierComponent, {
 			height: "75vh",
-			maxHeight: "750px",
+			maxHeight: "800px",
 			width: "30%",
 			minWidth: "300px"
 		});

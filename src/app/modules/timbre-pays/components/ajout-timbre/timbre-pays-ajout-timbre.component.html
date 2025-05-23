@@ -1,0 +1,62 @@
+<div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
+	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="space-between center" class="titre-modal bg-primary color-white">
+		<span>{{ 'AJOUT TIMBRES' }} </span>
+		<img *ngIf="timbrePaysModel?.getDrapeau()" [src]="timbrePaysModel?.getDrapeau()"fxLayoutAlign="end center" />
+	</div>
+
+	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
+		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+	</ng-template>
+	<ng-template #load>
+		<form
+			#formAjoutTimbre="ngForm"
+			ngForm="formAjoutTimbre"
+			(ngSubmit)="valider()"
+			class="formulaire-box-elevation"
+			[ngClass]="formAjoutTimbre?.submitted  ?'red-color' : 'blue-color'"
+			fxFlex="100"
+			fxLayout="column"
+			fxLayoutAlign="space-between stretch"
+		>
+			<div fxLayout="column" class="bloc-modal">
+
+				<div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="space-between center">
+					<div fxLayout="column" class="form-input noError">
+						<label>
+							Nombre de timbres
+						</label>
+						<input
+							name="nbTimbres"
+							[(ngModel)]="nbTimbres"
+							(ngModelChange)="setTotal()"
+							type="number"
+							class="numberOnly"
+							minlength="1"
+							maxlength="5"
+							zControl
+						/>
+					</div>
+
+					<div fxLayout="column" class="form-input noError">
+						<label>
+							Total
+						</label>
+						<span class="bold" style="height: 32px; font-size: 1.2em" fxLayoutAlign="start center">{{timbrePaysModel.getTotal()}}</span>
+					</div>
+				</div>
+				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
+			</div>
+
+			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
+				<button
+					type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">
+					Annuler
+				</button>
+				<button
+					type="submit" class="rounded large color-white" mat-raised-button color="accent">
+					Ajouter
+				</button>
+			</div>
+		</form>
+	</ng-template>
+</div>
