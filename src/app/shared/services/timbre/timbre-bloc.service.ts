@@ -20,11 +20,12 @@ import {MatDialog} from "@angular/material/dialog";
 import {DroitEnum} from "../../enum/droit.enum";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
+import {TotalModel} from "../../../model/total.model";
+
 
 @Injectable()
 export class TimbreBlocService {
-	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-	totalCarnet$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+	total$: BehaviorSubject<TotalModel[]> = new BehaviorSubject<TotalModel[]>([]);
 	timbresBlocModel$: BehaviorSubject<TimbreBlocModel[]> = new BehaviorSubject<TimbreBlocModel[]>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -34,7 +35,7 @@ export class TimbreBlocService {
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
 		private timbreUtilsService: TimbreUtilsService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
 	) {
 	}
 
@@ -52,24 +53,28 @@ export class TimbreBlocService {
 	}
 
 	setTotal(timbreBlocModel: TimbreBlocModel, number: number) {
-		if (timbreBlocModel.isCarnet()) {
-			this.total$.pipe(first()).subscribe(total => {
-				this.total$.next(total + 1);
-			});
-		} else {
-			this.totalCarnet$.pipe(first()).subscribe(totalCarnet => {
-				this.totalCarnet$.next(totalCarnet + number);
-			});
-		}
+		this.total$.pipe(first()).subscribe(total => {
+			const findTotal: TotalModel = total.find(total => total.getType() == timbreBlocModel?.getType());
+			if (isNotNullOrUndefined(findTotal)) {
+				findTotal.setTotal(findTotal.getTotal() + 1);
+			} else {
+				total.push(new TotalModel(timbreBlocModel?.getType(), 1))
+			}
+			this.total$.next(total );
+		});
 	}
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
-		this.totalCarnet$.next(null);
 		this.getAllBlocs(timbreCritereModel)
 			.subscribe(timbesBloc => {
-				this.total$.next(timbesBloc?.filter(timbesBloc => !timbesBloc["carnet"])?.length);
-				this.totalCarnet$.next(timbesBloc?.filter(timbesBloc => timbesBloc["carnet"])?.length);
+				let total: TotalModel[] = [];
+				Object.keys(TypeTimbreEnum).forEach(type=> {
+					if (type != TypeTimbreEnum.TIMBRE) {
+						total.push(new TotalModel(type, timbesBloc?.filter(timbesBloc => timbesBloc["type"] == type)?.length));
+					}
+				})
+				this.total$.next(total);
 			});
 	}
 
@@ -91,12 +96,15 @@ export class TimbreBlocService {
 			if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
 				filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
 			}
+			if (isNotNullOrUndefined(timbreCritereModel.getType()) && timbreCritereModel.getType()?.length > 0) {
+				filteredQuery = filteredQuery.where("type", "in", timbreCritereModel.getType());
+			}
 
 			/*if (isNotNullOrUndefined(timbreCritereModel.getCarnet()) && timbreCritereModel.getCarnet() != "TOUS") {
 				filteredQuery = filteredQuery.where("carnet", timbreCritereModel.getCarnet() != "OUI" ? "==" : "!=", false);
 			}*/
 		}
-		filteredQuery = filteredQuery.orderBy("id", timbreCritereModel?.getSort() == "desc" ? "desc": "asc");
+		filteredQuery = filteredQuery.orderBy("id", timbreCritereModel?.getSort() == "desc" ? "desc" : "asc");
 		return filteredQuery;
 	}
 
@@ -196,13 +204,15 @@ export class TimbreBlocService {
 					timbreBlocModel.setNbTimbres(timbres?.length);
 				});
 
-				let ajout: boolean = false;
+				let ajout: boolean = true;
 				if (isNotNullOrUndefined(timbreCritereModel)) {
-					if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.CARNET) && timbreBlocModel?.isCarnet()) {
+					/*if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.CARNET) && timbreBlocModel?.getType() == TypeTimbreEnum.CARNET) {
 						ajout = true;
-					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.BLOC) && !timbreBlocModel?.isCarnet()) {
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.BLOC) && timbreBlocModel?.getType() == TypeTimbreEnum.BLOC) {
 						ajout = true;
-					}
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.COLLECTOR) && timbreBlocModel?.getType() == TypeTimbreEnum.COLLECTOR) {
+						ajout = true;
+					}*/
 
 					if (isNotNullOrUndefined(timbreBlocModel.getTimbreBlocAcquisModel())) {
 						if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.getTimbreBlocAcquisModel().isAcquis()))) {
@@ -291,13 +301,15 @@ export class TimbreBlocService {
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
 					Object.assign(new Object(), timbreBlocModel)
 				).then((result) => {
-					this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
-						timbresBlocModel.push(timbreBlocModel);
-						this.setTotal(timbreBlocModel, 1);
-					});
-					/*if (refresh) {
-						this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
-					}*/
+					if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees().find(annee => annee == timbreBlocModel.getAnnee()))) {
+						this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
+							timbresBlocModel.push(timbreBlocModel);
+							this.setTotal(timbreBlocModel, 1);
+						});
+						/*if (refresh) {
+							this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+						}*/
+					}
 					this.timbreUtilsService.reinitResume$.next(true);
 				})
 					.catch((error) => {
@@ -312,7 +324,13 @@ export class TimbreBlocService {
 	isCarnet(timbreBlocModel: TimbreBlocModel) {
 		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
-				timbreBlocModel.setCarnet(!timbreBlocModel.isCarnet());
+				if (timbreBlocModel.getType() == TypeTimbreEnum.BLOC) {
+					timbreBlocModel.setType(TypeTimbreEnum.CARNET);
+				} else if (timbreBlocModel.getType() == TypeTimbreEnum.CARNET) {
+					timbreBlocModel.setType(TypeTimbreEnum.COLLECTOR);
+				} else {
+					timbreBlocModel.setType(TypeTimbreEnum.BLOC);
+				}
 				this.modifier(timbreBlocModel);
 			} else {
 				this.utilsService.droitInsuffisant();
@@ -416,7 +434,7 @@ export class TimbreBlocService {
 	acquisDoublon(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
 		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
-				if (timbreBlocModel?.isCarnet()) {
+				if (timbreBlocModel?.getType() == TypeTimbreEnum.CARNET) {
 					this.acquisCarnetDialog(timbreBlocModel, doublon);
 				} else {
 					this.acquis(timbreBlocModel, doublon);
@@ -504,6 +522,35 @@ export class TimbreBlocService {
 					this.supprimer(timbreBlocModel)
 				}
 			});
+		});
+	}
+
+	modifAll() {
+		const timbreCritereModel = new TimbreCritereModel();
+
+		/*const annees: number[] = []
+		for (let i = 1849; i < 1850; i++) {
+			annees.push(i);
+		}
+		timbreCritereModel.setAnnees(annees);*/
+
+		this.getAllBlocs(timbreCritereModel).pipe(first(blocs => blocs?.length > 0)).subscribe(blocs => {
+			blocs.forEach(bloc => {
+				if (bloc["carnet"] == true) {
+					bloc["type"] = TypeTimbreEnum.CARNET;
+				} else {
+					bloc["type"] = TypeTimbreEnum.BLOC;
+				}
+
+				this.firestore.collection(BaseEnum.TIMBRE_BLOC)
+					.ref.where('id', '==', bloc["id"])
+					.get()
+					.then(snapshot => {
+						snapshot.forEach(doc => {
+							doc.ref.update(bloc);
+						});
+					});
+			})
 		});
 	}
 }

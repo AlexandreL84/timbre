@@ -98,9 +98,9 @@ export class TimbreUtilsService {
 				if (isNotNullOrUndefined(timbreCritereModel)) {
 					if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE) && isNullOrUndefined(timbreModel?.getTimbreBlocModel())) {
 						ajout = true;
-					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.BLOC) && isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()) && !timbreModel?.getTimbreBlocModel()?.isCarnet()) {
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.BLOC) && isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()) && timbreModel?.getTimbreBlocModel()?.getType() == TypeTimbreEnum.BLOC) {
 						ajout = true;
-					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.CARNET) && isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()) && timbreModel?.getTimbreBlocModel()?.isCarnet()) {
+					} else if (timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.CARNET) && isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()) && timbreModel?.getTimbreBlocModel()?.getType() == TypeTimbreEnum.CARNET) {
 						ajout = true;
 					}
 

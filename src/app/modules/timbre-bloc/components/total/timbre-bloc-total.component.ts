@@ -22,7 +22,7 @@ export class TimbreBlocTotalComponent {
 			height: "auto",
 			//maxHeight: "750px",
 			maxHeight: "95vh",
-			width: "1000px",
+			width: "1200px",
 		});
 	}
 }

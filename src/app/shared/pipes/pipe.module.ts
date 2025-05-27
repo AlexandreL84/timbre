@@ -2,18 +2,21 @@ import {NgModule} from "@angular/core";
 import {ReduireChainePipe} from "./reduire-chaine.pipe";
 import {BooleanPipe} from "./boolean.pipe";
 import {EnumToArrayPipe} from "./enum.pipe";
+import {CapitalizePipe} from "./capitalize.pipe";
 
 @NgModule({
 	imports: [],
 	declarations: [
 		ReduireChainePipe,
 		BooleanPipe,
-		EnumToArrayPipe
+		EnumToArrayPipe,
+		CapitalizePipe
 	],
 	exports: [
 		ReduireChainePipe,
 		BooleanPipe,
-		EnumToArrayPipe
+		EnumToArrayPipe,
+		CapitalizePipe
 	],
 	providers: [],
 })

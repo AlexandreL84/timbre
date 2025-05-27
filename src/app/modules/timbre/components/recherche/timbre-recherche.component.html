@@ -1,15 +1,15 @@
 <div *ngIf="modif" class="menuRecherche">
-	<div class="form-input select" style="width: 100px">
+	<div class="form-input select" style="width: 120px">
 		<mat-select name="type"
 					class="scrollBarAccent"
 					[(ngModel)]="timbreUtilsService.timbreCritereModel.type"
 					[placeholder]="'Type'"
 					multiple
-					(ngModelChange)="filtreByCritereEvent($event)">
+					(ngModelChange)="filtreByCritere()">
 			<mat-option *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray"
 						class="selectMin"
 						[value]="typeTimbre.value">
-				{{ typeTimbre.value }}
+				{{ typeTimbre.value | capitalize }}
 			</mat-option>
 		</mat-select>
 	</div>

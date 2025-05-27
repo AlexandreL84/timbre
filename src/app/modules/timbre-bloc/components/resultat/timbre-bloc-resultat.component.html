@@ -60,16 +60,17 @@
 				{{ timbreBloc?.getAnnee() }}
 
 				<div class="infoTimbre">
-					{{ timbreBloc?.getNbTimbres() }}
+					<ng-container *ngIf="timbreBloc?.getType() != TypeTimbreEnum.COLLECTOR">
+						{{ timbreBloc?.getNbTimbres() }}
+					</ng-container>
 
 					<lib-icon
 						class="click"
-						[classIcone]="timbreBloc?.isCarnet() ? 'accent' : 'primary'"
+						[classIcone]="timbreBloc?.getType() == TypeTimbreEnum.CARNET ? 'accent' : timbreBloc?.getType() == TypeTimbreEnum.COLLECTOR ? 'accent900' : 'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-						[icone]="timbreBloc?.isCarnet()? FontAwesomeEnum.CIRCLE_C: FontAwesomeEnum.CIRCLE_B"
+						[icone]="timbreBloc?.getType() == TypeTimbreEnum.BLOC? FontAwesomeEnum.CIRCLE_B: FontAwesomeEnum.CIRCLE_C"
 						(click)="timbreBlocService.isCarnet(timbreBloc)"
-					>
-					</lib-icon>
+					></lib-icon>
 
 					<lib-icon
 						*ngIf="timbreBloc?.getYt()"

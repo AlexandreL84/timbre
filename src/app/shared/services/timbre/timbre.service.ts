@@ -149,10 +149,12 @@ export class TimbreService {
 					Object.assign(new Object(), timbreModel)
 				).then((result) => {
 					if (refresh) {
-						this.timbres$.pipe(first()).subscribe(timbres => {
-							timbres.push(timbreModel);
-							this.setTotal(1);
-						});
+						if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees().find(annee => annee == timbreModel.getAnnee()))) {
+							this.timbres$.pipe(first()).subscribe(timbres => {
+								timbres.push(timbreModel);
+								this.setTotal(1);
+							});
+						}
 						/*if (refresh) {
 							this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 						}*/

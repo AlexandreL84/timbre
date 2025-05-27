@@ -6,6 +6,7 @@ import {TimbreBlocService} from './timbre-bloc.service';
 import {TimbreUtilsService} from './timbre-utils.service';
 import {TimbreService} from "./timbre.service";
 import {TimbreResumeModel} from "../../../model/timbre-resume.model";
+import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 
 @Injectable()
 export class TimbreResumeService {
@@ -57,8 +58,10 @@ export class TimbreResumeService {
 
 				const findBloc = isNotNullOrUndefined(timbre["idBloc"])? timbresBloc.find(timbreBloc => timbreBloc["id"] == timbre["idBloc"]): null;
 				if (isNotNullOrUndefined(timbre["idBloc"])) {
-					if (isNotNullOrUndefined(findBloc) && findBloc["carnet"]) {
+					if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.CARNET) {
 						timbreResumeModel.setNombreTimbresCarnet(timbreResumeModel.getNombreTimbresCarnet() + 1);
+					} else if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.COLLECTOR) {
+						timbreResumeModel.setNombreTimbresCollector(timbreResumeModel.getNombreTimbresCollector() + 1);
 					} else {
 						timbreResumeModel.setNombreTimbresBloc(timbreResumeModel.getNombreTimbresBloc() + 1);
 					}
@@ -71,8 +74,10 @@ export class TimbreResumeService {
 					if (isNotNullOrUndefined(findTimbreAcquis)) {
 						if (findTimbreAcquis["acquis"] == true) {
 							if (isNotNullOrUndefined(timbre["idBloc"])) {
-								if (isNotNullOrUndefined(findBloc) && findBloc["carnet"]) {
+								if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.CARNET) {
 									timbreResumeModel.setAcquisTimbresCarnet(timbreResumeModel.getAcquisTimbresCarnet() + 1);
+								} else if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.COLLECTOR) {
+									timbreResumeModel.setAcquisTimbresCollector(timbreResumeModel.getAcquisTimbresCollector() + 1);
 								} else {
 									timbreResumeModel.setAcquisTimbresBloc(timbreResumeModel.getAcquisTimbresBloc() + 1);
 								}
@@ -82,8 +87,10 @@ export class TimbreResumeService {
 						}
 						if (findTimbreAcquis["doublon"] == true) {
 							if (isNotNullOrUndefined(timbre["idBloc"])) {
-								if (isNotNullOrUndefined(findBloc) && findBloc["carnet"]) {
+								if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.CARNET) {
 									timbreResumeModel.setDoublonTimbresCarnet(timbreResumeModel.getDoublonTimbresCarnet() + 1);
+								} else if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.COLLECTOR) {
+									timbreResumeModel.setDoublonTimbresCollector(timbreResumeModel.getDoublonTimbresCollector() + 1);
 								} else {
 									timbreResumeModel.setDoublonTimbresBloc(timbreResumeModel.getDoublonTimbresBloc() + 1);
 								}
@@ -103,8 +110,10 @@ export class TimbreResumeService {
 					timbreResumeModels.push(timbreResumeModel);
 				}
 
-				if (bloc["carnet"]) {
+				if (bloc["type"] == TypeTimbreEnum.CARNET) {
 					timbreResumeModel.setNombreCarnet(timbreResumeModel.getNombreCarnet() + 1);
+				} else if (bloc["type"] == TypeTimbreEnum.COLLECTOR) {
+					timbreResumeModel.setNombreCollector(timbreResumeModel.getNombreCollector() + 1);
 				} else {
 					timbreResumeModel.setNombreBloc(timbreResumeModel.getNombreBloc() + 1);
 				}
@@ -113,13 +122,17 @@ export class TimbreResumeService {
 					const findTimbreBlocAcquis = timbresBlocAcquis.find(timbreBlocAcquis => timbreBlocAcquis['idBloc'] == bloc["id"]);
 					if (isNotNullOrUndefined(findTimbreBlocAcquis)) {
 						if (findTimbreBlocAcquis["acquis"] == true) {
-							if (!bloc["carnet"]) {
+							if (isNullOrUndefined(bloc["type"]) || bloc["type"] == TypeTimbreEnum.BLOC) {
 								timbreResumeModel.setAcquisBloc(timbreResumeModel.getAcquisBloc() + 1);
+							} else if (bloc["type"] == TypeTimbreEnum.COLLECTOR) {
+								timbreResumeModel.setAcquisCollector(timbreResumeModel.getAcquisCollector() + 1);
 							}
 						}
 						if (findTimbreBlocAcquis["doublon"] == true) {
-							if (!bloc["carnet"]) {
+							if (isNullOrUndefined(bloc["type"]) || bloc["type"] == TypeTimbreEnum.BLOC) {
 								timbreResumeModel.setDoublonBloc(timbreResumeModel.getDoublonBloc() + 1);
+							} else if (bloc["type"] == TypeTimbreEnum.COLLECTOR) {
+								timbreResumeModel.setDoublonCollector(timbreResumeModel.getDoublonCollector() + 1);
 							}
 						}
 					}
@@ -134,16 +147,25 @@ export class TimbreResumeService {
 				totalTimbreResume.setNombre(totalTimbreResume.getNombre() + timbreResumeModel.getNombre());
 				totalTimbreResume.setAcquis(totalTimbreResume.getAcquis() + timbreResumeModel.getAcquis());
 				totalTimbreResume.setDoublon(totalTimbreResume.getDoublon() + timbreResumeModel.getDoublon());
+
 				totalTimbreResume.setNombreCarnet(totalTimbreResume.getNombreCarnet() + timbreResumeModel.getNombreCarnet());
 				totalTimbreResume.setNombreTimbresCarnet(totalTimbreResume.getNombreTimbresCarnet() + timbreResumeModel.getNombreTimbresCarnet());
 				totalTimbreResume.setAcquisTimbresCarnet(totalTimbreResume.getAcquisTimbresCarnet() + timbreResumeModel.getAcquisTimbresCarnet());
 				totalTimbreResume.setDoublonTimbresCarnet(totalTimbreResume.getDoublonTimbresCarnet() + timbreResumeModel.getDoublonTimbresCarnet());
+
 				totalTimbreResume.setNombreBloc(totalTimbreResume.getNombreBloc() + timbreResumeModel.getNombreBloc());
 				totalTimbreResume.setAcquisBloc(totalTimbreResume.getAcquisBloc() + timbreResumeModel.getAcquisBloc());
 				totalTimbreResume.setDoublonBloc(totalTimbreResume.getDoublonBloc() + timbreResumeModel.getDoublonBloc());
 				totalTimbreResume.setNombreTimbresBloc(totalTimbreResume.getNombreTimbresBloc() + timbreResumeModel.getNombreTimbresBloc());
 				totalTimbreResume.setAcquisTimbresBloc(totalTimbreResume.getAcquisTimbresBloc() + timbreResumeModel.getAcquisTimbresBloc());
 				totalTimbreResume.setDoublonTimbresBloc(totalTimbreResume.getDoublonTimbresBloc() + timbreResumeModel.getDoublonTimbresBloc());
+
+				totalTimbreResume.setNombreCollector(totalTimbreResume.getNombreCollector() + timbreResumeModel.getNombreCollector());
+				totalTimbreResume.setAcquisCollector(totalTimbreResume.getAcquisCollector() + timbreResumeModel.getAcquisCollector());
+				totalTimbreResume.setDoublonCollector(totalTimbreResume.getDoublonCollector() + timbreResumeModel.getDoublonCollector());
+				totalTimbreResume.setNombreTimbresCollector(totalTimbreResume.getNombreTimbresCollector() + timbreResumeModel.getNombreTimbresCollector());
+				totalTimbreResume.setAcquisTimbresCollector(totalTimbreResume.getAcquisTimbresCollector() + timbreResumeModel.getAcquisTimbresCollector());
+				totalTimbreResume.setDoublonTimbresCollector(totalTimbreResume.getDoublonTimbresCollector() + timbreResumeModel.getDoublonTimbresCollector());
 			})
 			this.totalTimbreResume$.next(totalTimbreResume);
 		}

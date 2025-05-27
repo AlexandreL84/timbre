@@ -6,15 +6,20 @@
 		</mat-checkbox>
 	</div>
 	-->
-	<div class="form-input select" style="width: 100px">
+	<div class="form-input select" style="width: 120px">
 		<mat-select name="type"
 					class="scrollBarAccent"
 					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.type"
 					[placeholder]="'Type'"
 					multiple
-					(ngModelChange)="filtreByCritereEvent($event)">
-			<mat-option class="selectMin" [value]="TypeTimbreEnum.BLOC"> {{ TypeTimbreEnum.BLOC }}</mat-option>
-			<mat-option class="selectMin" [value]="TypeTimbreEnum.CARNET"> {{ TypeTimbreEnum.CARNET }}</mat-option>
+					(ngModelChange)="filtreByCritere()">
+			<ng-container *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray">
+				<mat-option *ngIf="typeTimbre.value != TypeTimbreEnum.TIMBRE"
+							class="selectMin"
+							[value]="typeTimbre.value">
+					{{ typeTimbre.value | capitalize }}
+				</mat-option>
+			</ng-container>
 		</mat-select>
 	</div>
 

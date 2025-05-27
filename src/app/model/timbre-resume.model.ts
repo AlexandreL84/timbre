@@ -29,7 +29,25 @@ export class TimbreResumeModel extends ProprieteModel {
 	@Label("Total timbres carnet en doublon")
 	doublonTimbresCarnet: number;
 
-	@Label("Bloc")
+	@Label("Collector")
+	nombreCollector: number;
+
+	@Label("Total bloc collector")
+	acquisCollector: number;
+
+	@Label("Total bloc en collector")
+	doublonCollector: number;
+
+	@Label("Timbres collector")
+	nombreTimbresCollector: number;
+
+	@Label("Total timbres collector acquis")
+	acquisTimbresCollector: number;
+
+	@Label("Total timbres collector en doublon")
+	doublonTimbresCollector: number;
+
+	@Label("Collector")
 	nombreBloc: number;
 
 	@Label("Total bloc acquis")
@@ -48,7 +66,7 @@ export class TimbreResumeModel extends ProprieteModel {
 	doublonTimbresBloc: number;
 
 
-	constructor(annee?: number, total?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, nombreTimbresCarnet?: number, acquisTimbresCarnet?: number, doublonTimbresCarnet?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number, nombreTimbresBloc?: number, acquisTimbresBloc?: number, doublonTimbresBloc?: number) {
+	constructor(annee?: number, total?: number, nombre?: number, acquis?: number, doublon?: number, nombreCarnet?: number, nombreTimbresCarnet?: number, acquisTimbresCarnet?: number, doublonTimbresCarnet?: number, nombreCollector?: number, acquisCollector?: number, doublonCollector?: number, nombreTimbresCollector?: number, acquisTimbresCollector?: number, doublonTimbresCollector?: number, nombreBloc?: number, acquisBloc?: number, doublonBloc?: number, nombreTimbresBloc?: number, acquisTimbresBloc?: number, doublonTimbresBloc?: number) {
 		super();
 		this.annee = annee ? annee : null;
 		this.total = total ? total : 0;
@@ -59,6 +77,12 @@ export class TimbreResumeModel extends ProprieteModel {
 		this.nombreTimbresCarnet = nombreTimbresCarnet ? nombreTimbresCarnet : 0;
 		this.acquisTimbresCarnet = acquisTimbresCarnet ? acquisTimbresCarnet : 0;
 		this.doublonTimbresCarnet = doublonTimbresCarnet ? doublonTimbresCarnet : 0;
+		this.nombreCollector = nombreCollector ? nombreCollector : 0;
+		this.nombreCollector = nombreCollector ? nombreCollector : 0;
+		this.acquisCollector = acquisCollector ? acquisCollector : 0;
+		this.nombreTimbresCollector = nombreTimbresCollector ? nombreTimbresCollector : 0;
+		this.acquisTimbresCollector = acquisTimbresCollector ? acquisTimbresCollector : 0;
+		this.doublonTimbresCollector = doublonTimbresCollector ? doublonTimbresCollector : 0;
 		this.nombreBloc = nombreBloc ? nombreBloc : 0;
 		this.acquisBloc = acquisBloc ? acquisBloc : 0;
 		this.doublonBloc = doublonBloc ? doublonBloc : 0;
@@ -138,6 +162,54 @@ export class TimbreResumeModel extends ProprieteModel {
 
 	setDoublonTimbresCarnet(value: number) {
 		this.doublonTimbresCarnet = value;
+	}
+
+	getNombreCollector(): number {
+		return this.nombreCollector;
+	}
+
+	setNombreCollector(value: number) {
+		this.nombreCollector = value;
+	}
+
+	getAcquisCollector(): number {
+		return this.acquisCollector;
+	}
+
+	setAcquisCollector(value: number) {
+		this.acquisCollector = value;
+	}
+
+	getDoublonCollector(): number {
+		return this.doublonCollector;
+	}
+
+	setDoublonCollector(value: number) {
+		this.doublonCollector = value;
+	}
+
+	getNombreTimbresCollector(): number {
+		return this.nombreTimbresCollector;
+	}
+
+	setNombreTimbresCollector(value: number) {
+		this.nombreTimbresCollector = value;
+	}
+
+	getAcquisTimbresCollector(): number {
+		return this.acquisTimbresCollector;
+	}
+
+	setAcquisTimbresCollector(value: number) {
+		this.acquisTimbresCollector = value;
+	}
+
+	getDoublonTimbresCollector(): number {
+		return this.doublonTimbresCollector;
+	}
+
+	setDoublonTimbresCollector(value: number) {
+		this.doublonTimbresCollector = value;
 	}
 
 	getNombreBloc(): number {

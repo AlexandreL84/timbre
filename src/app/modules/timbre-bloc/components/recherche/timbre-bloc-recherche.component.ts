@@ -26,11 +26,6 @@ export class TimbreBlocRechercheComponent implements OnInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 	}
 
-	filtreByCritereEvent(code) {
-		this.timbreUtilsService.timbreCritereBlocModel[code] = "OUI";
-		this.recherche();
-	}
-
 	filtreByCritere() {
 		if (this.timbreUtilsService.timbreCritereBlocModel.getAcquis() == "NON") {
 			this.timbreUtilsService.timbreCritereBlocModel.setDoublon("TOUS");

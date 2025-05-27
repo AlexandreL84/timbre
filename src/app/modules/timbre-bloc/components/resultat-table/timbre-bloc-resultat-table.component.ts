@@ -14,6 +14,7 @@ import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awe
 import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
+import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 
 @Component({
 	selector: "app-timbre-bloc-resultat-table",
@@ -32,6 +33,7 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+	readonly TypeTimbreEnum = TypeTimbreEnum;
 
 	constructor(public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
@@ -41,7 +43,7 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 		this.timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "carnet", "monnaie", "yt", "nbTimbres" ,"acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "type", "monnaie", "yt", "nbTimbres" ,"acquis", "doublon"];
 		if (this.modif) {
 			this.displayedColumns.push("modifier", "supprimer");
 		}

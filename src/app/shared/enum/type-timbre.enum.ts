@@ -1,5 +1,6 @@
 export enum TypeTimbreEnum {
-	TIMBRE = "Timbre",
-	BLOC = "Bloc",
-	CARNET = "Carnet",
+	TIMBRE = "TIMBRE",
+	BLOC = "BLOC",
+	CARNET = "CARNET",
+	COLLECTOR = "COLLECTOR",
 }

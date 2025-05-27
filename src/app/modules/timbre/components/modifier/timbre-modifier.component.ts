@@ -17,6 +17,7 @@ import {UtilsService} from "../../../../shared/services/utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
+import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -32,6 +33,7 @@ export class TimbreModifierComponent implements OnInit {
 	timbreModel: TimbreModel = new TimbreModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
+	readonly TypeTimbreEnum = TypeTimbreEnum;
 	readonly DimensionImageEnum = DimensionImageEnum;
 
 	constructor(

@@ -17,6 +17,7 @@ import {UtilsService} from '../../../../shared/services/utils.service';
 import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
 import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
+import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 
 @Component({
 	selector: 'app-timbre-importer',
@@ -165,7 +166,7 @@ export class TimbreImporterComponent implements OnInit {
 					timbreBlocModel.setId(this.identBloc);
 					timbreBlocModel.setAnnee(annee);
 					timbreBlocModel.setMonnaie(monnaie);
-					timbreBlocModel.setCarnet(item["CARNET"] == "1");
+					timbreBlocModel.setType(item["CARNET"] == "1"? TypeTimbreEnum.CARNET: TypeTimbreEnum.BLOC);
 					timbreBlocModel.idOrigine = idBloc;
 
 					const timbreBlocAcquisModel: TimbreBlocAcquisModel = new TimbreBlocAcquisModel();

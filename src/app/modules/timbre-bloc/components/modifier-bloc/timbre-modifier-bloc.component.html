@@ -22,6 +22,7 @@
 			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
 				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 
+				<!--
 				<div *ngIf="timbreBlocModel?.getId()" fxLayout="column" class="form-input">
 					<label>
 						<lib-libelle-model [object]="timbreBlocModel" [key]="'id'"></lib-libelle-model>
@@ -38,26 +39,49 @@
 						[disabled]="!!timbreBlocModel?.getId()"
 					/>
 				</div>
+				-->
 
-				<div fxLayout="column" class="form-input">
-					<label>
-						<lib-libelle-model [object]="timbreBlocModel" [key]="'annee'"></lib-libelle-model>
-					</label>
-					<input
-						name="page"
-						[(ngModel)]="timbreBlocModel.annee"
-						type="number"
-						style="width: 60px !important;"
-						class="annee"
-						minlength="4"
-						maxlength="4"
-						min="1900"
-						zMin="1900"
-						[max]="maxAnnee"
-						[zMax]="maxAnnee"
-						required
-						zControl
-					/>
+				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
+					<div fxLayout="column" class="form-input">
+						<label>
+							<lib-libelle-model [object]="timbreBlocModel" [key]="'annee'"></lib-libelle-model>
+						</label>
+						<input
+							name="page"
+							[(ngModel)]="timbreBlocModel.annee"
+							type="number"
+							style="width: 60px !important;"
+							class="annee"
+							minlength="4"
+							maxlength="4"
+							min="1900"
+							zMin="1900"
+							[max]="maxAnnee"
+							[zMax]="maxAnnee"
+							required
+							zControl
+						/>
+					</div>
+
+					<div class="form-input select">
+						<label>
+							<lib-libelle-model [object]="timbreBlocModel" [key]="'type'"></lib-libelle-model>
+						</label>
+						<mat-select name="type"
+									class="scrollBarAccent"
+									[(ngModel)]="timbreBlocModel.type"
+									[placeholder]="'Type'"
+									style="width: 100px"
+						>
+							<ng-container *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray">
+								<mat-option *ngIf="typeTimbre.value != TypeTimbreEnum.TIMBRE"
+											class="selectMin"
+											[value]="typeTimbre.value">
+									{{ typeTimbre.value | capitalize }}
+								</mat-option>
+							</ng-container>
+						</mat-select>
+					</div>
 				</div>
 
 				<!--

@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
-import {isNotNullOrUndefined, isNullOrUndefined} from "../../../../shared/utils/utils";
+import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {BehaviorSubject, first} from "rxjs";
+import {first} from "rxjs";
 import {TimbreResumeService} from "../../../../shared/services/timbre/timbre-resume.service";
 import {TimbreResumeModel} from "../../../../model/timbre-resume.model";
 import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
@@ -24,7 +24,11 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
-	displayedColumns: string[] = ["annee", "total", "nombre", "acquis", "doublon", "nombreCarnet", "nombreTimbresCarnet",  "acquisTimbresCarnet", "doublonTimbresCarnet", "nombreBloc", "acquisBloc", "doublonBloc", "nombreTimbresBloc", "acquisTimbresBloc", "doublonTimbresBloc"];
+	displayedColumns: string[] = ["annee", "total", "nombre", "acquis", "doublon",
+		"nombreCarnet", "nombreTimbresCarnet",  "acquisTimbresCarnet", "doublonTimbresCarnet",
+		"nombreBloc", "acquisBloc", "doublonBloc", "nombreTimbresBloc", "acquisTimbresBloc", "doublonTimbresBloc",
+		"nombreCollector", "acquisCollector"/*, "doublonCollector", "nombreTimbresCollector", "acquisTimbresCollector", "doublonTimbresCollector"*/,
+	];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;

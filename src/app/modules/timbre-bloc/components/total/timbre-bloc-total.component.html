@@ -1,13 +1,10 @@
 <div class="timbreTotal">
-	<div class="nbTimbre">
-		<span>Nombre de blocs : </span>
-		<span class="bold">{{ (timbreBlocService.total$ | async) ? (timbreBlocService.total$ | async) : 0 }}</span>
-	</div>
-
-	<div class="nbTimbre">
-		<span>Nombre de carnets : </span>
-		<span class="bold">{{ (timbreBlocService.totalCarnet$ | async) ? (timbreBlocService.totalCarnet$ | async) : 0 }}</span>
-	</div>
+	<ng-container *ngFor="let total of (timbreBlocService.total$ | async); let isFirst = first; let isOdd = odd">
+		<div class="nbTimbre">
+			<span>{{isFirst? 'Nombre de ': ' / '}}{{ total?.getType() | capitalize }} : </span>
+			<span class="bold">{{ total?.getTotal() ? total?.getTotal() : 0 }}</span>
+		</div>
+	</ng-container>
 
 	<lib-icon [icone]="FontAwesomeEnum.CHART_LINE_UP"
 			  [type]="FontAwesomeTypeEnum.TYPE_SOLID"

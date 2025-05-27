@@ -235,6 +235,110 @@
 				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonTimbresBloc() }} </b></td>
 		</ng-container>
 
+
+
+		<ng-container matColumnDef="nombreCollector">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreCollector'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index"
+				[ngClass]="element?.getNombreCollector() == 0? 'gray25': 'primary25'">
+				{{ element?.getNombreCollector() > 0 ? element?.getNombreCollector() : '' }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef>
+				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreCollector() }} </b>
+			</td>
+		</ng-container>>
+		<ng-container matColumnDef="acquisCollector">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-icon
+					class="click"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.CHECK"
+					[info]="timbreResumeModel.getPropertyLibelle('acquisCollector')"
+				>
+				</lib-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index"
+				[ngClass]="element?.getNombreCollector() == 0? 'gray25': element.getNombreCollector() == element?.getAcquisCollector()? 'accent50': ''"
+			>
+				{{ element?.getNombreCollector() > 0 ? element?.getAcquisCollector() : '' }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef>
+				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisCollector() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="doublonCollector">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-icon
+					class="click"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
+					[info]="timbreResumeModel.getPropertyLibelle('doublonCollector')"
+				>
+				</lib-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index"
+				[ngClass]="element?.getNombreCollector() == 0? 'gray25': element.getNombreCollector() == element?.getDoublonCollector()? 'accent50': ''"
+			>
+				{{ element?.getNombreCollector() > 0 ? element?.getDoublonCollector() : '' }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef>
+				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonCollector() }} </b></td>
+		</ng-container>
+		<ng-container matColumnDef="nombreTimbresCollector">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreTimbresCollector'"></lib-libelle-model>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index"
+				[ngClass]="element?.getNombreCollector() == 0? 'gray25': 'primary25'">
+				{{ element?.getNombreCollector() > 0 ? element?.getNombreTimbresCollector() : '' }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef>
+				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreTimbresCollector() }} </b>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="acquisTimbresCollector">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-icon
+					class="click"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.CHECK"
+					[info]="timbreResumeModel.getPropertyLibelle('acquisTimbresCollector')"
+				>
+				</lib-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index"
+				[ngClass]="element?.getNombreTimbresCollector() == 0? 'gray25': element?.getNombreTimbresCollector() == element?.getAcquisTimbresCollector()? 'accent50': 'primary25'"
+			>
+				{{ element?.getNombreCollector() > 0 ? element?.getAcquisTimbresCollector() : '' }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef>
+				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisTimbresCollector() }} </b>
+			</td>
+		</ng-container>
+		<ng-container matColumnDef="doublonTimbresCollector">
+			<th mat-header-cell *matHeaderCellDef>
+				<lib-icon
+					class="click"
+					style="font-size: 1.2em"
+					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
+					[info]="timbreResumeModel.getPropertyLibelle('doublonTimbresCollector')"
+				>
+				</lib-icon>
+			</th>
+			<td mat-cell *matCellDef="let element; let i = index"
+				[ngClass]="element?.getNombreTimbresCollector() == 0? 'gray25': element?.getNombreTimbresCollector() == element?.getDoublonTimbresCollector()? 'accent50': 'primary25'"
+			>
+				{{ element?.getNombreCollector() > 0 ? element?.getDoublonTimbresCollector() : '' }}
+			</td>
+			<td mat-footer-cell *matFooterCellDef>
+				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonTimbresCollector() }} </b></td>
+		</ng-container>
+
 		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="bg-primary color-white"></tr>
 		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row"
 			(click)="filtreParAnnee(element)"></tr>

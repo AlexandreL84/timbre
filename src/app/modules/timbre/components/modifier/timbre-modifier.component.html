@@ -81,7 +81,7 @@
 								<mat-option class="selectMin"
 											*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
 											[value]="bloc">
-									{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc.isCarnet() ? " (carnet)" : "" }}
+									{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc?.getType() == TypeTimbreEnum.CARNET ? " (carnet)" : "" }}
 								</mat-option>
 							</mat-select>
 

@@ -14,6 +14,7 @@ import {TimbreBlocModel} from "../../../../model/timbre-bloc.model";
 import {FileUploadModel} from "../../../../model/file/file-upload.model";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
+import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 
 @Component({
 	selector: 'app-timbre-modifier-bloc',
@@ -30,6 +31,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
 	readonly DimensionImageEnum = DimensionImageEnum;
+	readonly TypeTimbreEnum = TypeTimbreEnum;
 
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
