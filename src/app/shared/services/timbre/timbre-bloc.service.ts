@@ -459,7 +459,7 @@ export class TimbreBlocService {
 			maxHeight: "95vh",
 			data: {
 				titre: "Confirmation",
-				message: "Souhaitez-vous <b>" + text + "</b> les timbres du carnet ?",
+				message: "Souhaitez-vous <b>" + text + "</b> les timbres du " + timbreBlocModel?.getType()?.toLowerCase() + " ?",
 				btnDroite: "Oui",
 				btnGauche: "Non",
 			},
