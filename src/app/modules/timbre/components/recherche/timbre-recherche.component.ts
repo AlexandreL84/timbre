@@ -6,6 +6,8 @@ import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-util
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
+import {PreferenceService} from "../../../../shared/services/preference.service";
+import {PreferenceEnum} from "../../../../shared/enum/preference.enum";
 
 @Component({
 	selector: "app-timbre-recherche",
@@ -16,10 +18,9 @@ export class TimbreRechercheComponent implements OnInit {
 	@Input() modif: boolean = true;
 
 	annees$: Observable<number[]>
-
 	readonly TypeTimbreEnum = TypeTimbreEnum;
 
-	constructor(public authService: AuthService, public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService) {
+	constructor(public authService: AuthService, public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService, public preferenceService: PreferenceService) {
 	}
 
 	ngOnInit(): void {
@@ -27,15 +28,16 @@ export class TimbreRechercheComponent implements OnInit {
 	}
 
 	filtreByCritere() {
-		if (this.timbreUtilsService.timbreCritereModel.getAcquis() == "NON") {
-			this.timbreUtilsService.timbreCritereModel.setDoublon("TOUS");
+		if (this.preferenceService.timbreCritereModel.getAcquis() == "NON") {
+			this.preferenceService.timbreCritereModel.setDoublon("TOUS");
 		}
+		this.preferenceService.modifier(PreferenceEnum.TIMBRE_CRITERE, this.preferenceService.timbreCritereModel);
 		this.recherche();
 	}
 
 	recherche(){
-		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
-			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
+		if (isNotNullOrUndefined(this.preferenceService.timbreCritereModel.getAnnees()) && this.preferenceService.timbreCritereModel.getAnnees().length > 0) {
+			this.timbreService.getTimbres(this.preferenceService.timbreCritereModel, false);
 		}
 	}
 }

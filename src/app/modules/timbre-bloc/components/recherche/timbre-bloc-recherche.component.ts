@@ -6,6 +6,8 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
+import {PreferenceService} from "../../../../shared/services/preference.service";
+import {PreferenceEnum} from "../../../../shared/enum/preference.enum";
 
 @Component({
 	selector: "app-timbre-bloc-recherche",
@@ -19,7 +21,7 @@ export class TimbreBlocRechercheComponent implements OnInit {
 
 	readonly TypeTimbreEnum = TypeTimbreEnum;
 
-	constructor(public authService: AuthService, public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService) {
+	constructor(public authService: AuthService, public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService, public preferenceService: PreferenceService) {
 	}
 
 	ngOnInit(): void {
@@ -27,15 +29,16 @@ export class TimbreBlocRechercheComponent implements OnInit {
 	}
 
 	filtreByCritere() {
-		if (this.timbreUtilsService.timbreCritereBlocModel.getAcquis() == "NON") {
-			this.timbreUtilsService.timbreCritereBlocModel.setDoublon("TOUS");
+		if (this.preferenceService.timbreCritereBlocModel.getAcquis() == "NON") {
+			this.preferenceService.timbreCritereBlocModel.setDoublon("TOUS");
 		}
+		this.preferenceService.modifier(PreferenceEnum.BLOC_CRITERE, this.preferenceService.timbreCritereBlocModel);
 		this.recherche();
 	}
 
 	recherche(){
-		if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
-			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+		if (isNotNullOrUndefined(this.preferenceService.timbreCritereBlocModel.getAnnees()) && this.preferenceService.timbreCritereBlocModel.getAnnees().length > 0) {
+			this.timbreBlocService.getBlocs(this.preferenceService.timbreCritereBlocModel, false);
 		}
 	}
 }

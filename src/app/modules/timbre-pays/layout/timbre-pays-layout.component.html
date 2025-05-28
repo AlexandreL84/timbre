@@ -1,6 +1,6 @@
 <div class="timbrePaysLayout">
 	<div class="timbreBody">
-		<div fxLayout="row" fxLayoutGap="20px">
+		<div *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL" fxLayout="row" fxLayoutGap="20px">
 			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouter()">
 				Ajouter
 			</button>
@@ -13,6 +13,8 @@
 				Importer
 			</button>
 		</div>
+		<!--
 		<app-timbre-pays-resultat [timbres$]="timbrePaysService.getTimbres()"></app-timbre-pays-resultat>
+		-->
 	</div>
 </div>

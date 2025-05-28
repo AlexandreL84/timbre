@@ -21,6 +21,8 @@ import {DroitEnum} from "../../enum/droit.enum";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 import {TotalModel} from "../../../model/total.model";
+import {PreferenceEnum} from "../../enum/preference.enum";
+import {PreferenceService} from "../preference.service";
 
 
 @Injectable()
@@ -36,6 +38,7 @@ export class TimbreBlocService {
 		private utilsService: UtilsService,
 		private timbreUtilsService: TimbreUtilsService,
 		private dialog: MatDialog,
+		private preferenceService: PreferenceService
 	) {
 	}
 
@@ -301,15 +304,17 @@ export class TimbreBlocService {
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
 					Object.assign(new Object(), timbreBlocModel)
 				).then((result) => {
-					if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees().find(annee => annee == timbreBlocModel.getAnnee()))) {
-						this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
-							timbresBlocModel.push(timbreBlocModel);
-							this.setTotal(timbreBlocModel, 1);
-						});
-						/*if (refresh) {
-							this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
-						}*/
-					}
+					this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+						if (isNotNullOrUndefined(timbreCritereModel.getAnnees().find(annee => annee == timbreBlocModel.getAnnee()))) {
+							this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
+								timbresBlocModel.push(timbreBlocModel);
+								this.setTotal(timbreBlocModel, 1);
+							});
+						}
+					});
+					/*if (refresh) {
+						this.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+					}*/
 					this.timbreUtilsService.reinitResume$.next(true);
 				})
 					.catch((error) => {

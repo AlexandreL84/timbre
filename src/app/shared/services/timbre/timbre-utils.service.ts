@@ -17,14 +17,8 @@ import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 @Injectable()
 export class TimbreUtilsService {
 	reinitResume$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
-	public timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
-	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(private authService: AuthService, private firestore: AngularFirestore) {
-		this.timbreCritereModel.initCritere();
-		this.timbreCritereModel.setAcquis("NON");
-		this.timbreCritereBlocModel.initCritereBloc();
-		this.timbreCritereBlocModel.setAcquis("NON");
 	}
 
 	initUpload(): FileUploadModel {

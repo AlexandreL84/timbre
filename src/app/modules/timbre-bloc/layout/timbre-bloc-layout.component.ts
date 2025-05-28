@@ -3,11 +3,6 @@ import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesom
 import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {TimbreBlocService} from "../../../shared/services/timbre/timbre-bloc.service";
 import {HeaderService} from "../../../shared/services/header.service";
-import {first} from "rxjs";
-import {isNotNullOrUndefined} from "../../../shared/utils/utils";
-import {BaseEnum} from "../../../shared/enum/base.enum";
-import {AuthService} from "../../../shared/services/auth.service";
-import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.service";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
 
 @Component({
@@ -20,7 +15,7 @@ export class TimbreBlocLayoutComponent implements OnInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly ModeEnum = ModeEnum;
 
-	constructor(private authService: AuthService, private timbreUtilsService: TimbreUtilsService, public headerService: HeaderService, public timbreBlocService: TimbreBlocService) {
+	constructor(public headerService: HeaderService, public timbreBlocService: TimbreBlocService) {
 	}
 
 	ngOnInit(): void {

@@ -3,12 +3,6 @@ import {TimbreService} from "../../../shared/services/timbre/timbre.service";
 import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {HeaderService} from "../../../shared/services/header.service";
-import {TimbreCritereModel} from "../../../model/timbre-critere.model";
-import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.service";
-import {BaseEnum} from "../../../shared/enum/base.enum";
-import {first} from "rxjs";
-import {isNotNullOrUndefined} from "../../../shared/utils/utils";
-import {AuthService} from "../../../shared/services/auth.service";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
 
 @Component({
@@ -21,7 +15,7 @@ export class TimbreLayoutComponent implements OnInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly ModeEnum = ModeEnum;
 
-	constructor(private authService: AuthService, public headerService: HeaderService, public timbreService: TimbreService, private timbreUtilsService: TimbreUtilsService) {
+	constructor(public headerService: HeaderService, public timbreService: TimbreService) {
 	}
 
 	ngOnInit(): void {

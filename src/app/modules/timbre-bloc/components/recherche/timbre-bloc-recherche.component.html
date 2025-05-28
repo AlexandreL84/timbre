@@ -1,15 +1,15 @@
 <div *ngIf="modif" class="menuRecherche">
 	<!--
 	<div  style="width: 75px">
-		<mat-checkbox color="primary" [(ngModel)]="timbreUtilsService.timbreCritereBlocModel.acquis" (ngModelChange)="filtreByCritere()">
-			<lib-libelle-model [object]="timbreUtilsService.timbreCritereBlocModel" [key]="'acquis'"></lib-libelle-model>
+		<mat-checkbox color="primary" [(ngModel)]="preferenceService.timbreCritereBlocModel.acquis" (ngModelChange)="filtreByCritere()">
+			<lib-libelle-model [object]="preferenceService.timbreCritereBlocModel" [key]="'acquis'"></lib-libelle-model>
 		</mat-checkbox>
 	</div>
 	-->
 	<div class="form-input select" style="width: 120px">
 		<mat-select name="type"
 					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.type"
+					[(ngModel)]="preferenceService.timbreCritereBlocModel.type"
 					[placeholder]="'Type'"
 					multiple
 					(ngModelChange)="filtreByCritere()">
@@ -25,7 +25,7 @@
 
 	<div class="form-input select" style="width: 100px">
 		<mat-select name="acquis"
-					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.acquis"
+					[(ngModel)]="preferenceService.timbreCritereBlocModel.acquis"
 					[placeholder]="'Acquis'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -37,7 +37,7 @@
 	<div class="form-input select" style="width: 100px">
 		<mat-select name="doublon"
 					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.doublon"
+					[(ngModel)]="preferenceService.timbreCritereBlocModel.doublon"
 					[placeholder]="'Doublon'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -49,7 +49,7 @@
 	<div class="form-input select" style="width: 150px">
 		<mat-select name="anneeSelect"
 					multiple
-					[(ngModel)]="timbreUtilsService.timbreCritereBlocModel.annees"
+					[(ngModel)]="preferenceService.timbreCritereBlocModel.annees"
 					[placeholder]="'Années'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"

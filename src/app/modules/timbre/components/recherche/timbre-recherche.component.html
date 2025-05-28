@@ -2,7 +2,7 @@
 	<div class="form-input select" style="width: 120px">
 		<mat-select name="type"
 					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereModel.type"
+					[(ngModel)]="preferenceService.timbreCritereModel.type"
 					[placeholder]="'Type'"
 					multiple
 					(ngModelChange)="filtreByCritere()">
@@ -17,7 +17,7 @@
 
 	<div class="form-input select" style="width: 100px">
 		<mat-select name="acquis"
-					[(ngModel)]="timbreUtilsService.timbreCritereModel.acquis"
+					[(ngModel)]="preferenceService.timbreCritereModel.acquis"
 					[placeholder]="'Acquis'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -29,7 +29,7 @@
 	<div class="form-input select" style="width: 100px">
 		<mat-select name="doublon"
 					class="scrollBarAccent"
-					[(ngModel)]="timbreUtilsService.timbreCritereModel.doublon"
+					[(ngModel)]="preferenceService.timbreCritereModel.doublon"
 					[placeholder]="'Doublon'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
@@ -41,7 +41,7 @@
 	<div class="form-input select" style="width: 150px">
 		<mat-select name="anneeSelect"
 					multiple
-					[(ngModel)]="timbreUtilsService.timbreCritereModel.annees"
+					[(ngModel)]="preferenceService.timbreCritereModel.annees"
 					[placeholder]="'Années'"
 					(ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" *ngFor="let annee of (annees$ | async)"

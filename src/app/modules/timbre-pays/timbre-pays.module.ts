@@ -22,6 +22,7 @@ import {LibIconModule} from "../../shared/components/lib-icon";
 import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
 import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.module";
 import {TimbrePaysAjoutTimbreComponent} from "./components/ajout-timbre/timbre-pays-ajout-timbre.component";
+import {TimbreSupprimToutModule} from "../timbre/components/supprim-tout/timbre-supprim-tout.module";
 
 @NgModule({
 	declarations: [
@@ -44,7 +45,8 @@ import {TimbrePaysAjoutTimbreComponent} from "./components/ajout-timbre/timbre-p
         PipeModule,
         SimpleNotificationModule,
         LibModalModule,
-        LibUploadModule
+        LibUploadModule,
+        TimbreSupprimToutModule
     ],
 	exports: [],
 	providers: [UtilsService, TimbrePaysService, UploadService],

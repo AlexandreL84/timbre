@@ -5,6 +5,7 @@ import {first, Observable} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
 import {RouteEnum} from "../enum/route.enum";
 import {HeaderService} from "../services/header.service";
+import {isNotNullOrUndefined} from "../utils/utils";
 
 @Injectable({
 	providedIn: 'root'
@@ -20,8 +21,9 @@ export class AuthGuard implements CanActivate {
 				if (!loggedIn) {
 					this.router.navigate(["/" + RouteEnum.LOGIN]);
 				} else {
-					this.authService.getUser().pipe(first()).subscribe();
-					this.headerService.setRouteAfterLogin();
+					this.authService.getUser().pipe(first()).subscribe(user => {
+						this.headerService.setRouteAfterLogin();
+					});
 				}
 			})
 		);

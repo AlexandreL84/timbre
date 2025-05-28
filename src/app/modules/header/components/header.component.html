@@ -23,6 +23,13 @@
 				</ng-container>
 			</ng-container>
 
+			<lib-icon [icone]="FontAwesomeEnum.COOKIE_BITE"
+					  class="hide-on-mobile"
+					  [color]="'white'"
+					  [info]="'Supprimer les préférences'"
+					  (click)="supprimerPreference()">
+			</lib-icon>
+
 			<lib-icon [icone]="FontAwesomeEnum.PALETTE"
 					  class="hide-on-mobile"
 					  [color]="'white'"

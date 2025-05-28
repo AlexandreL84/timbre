@@ -13,6 +13,8 @@ import {MatDialogRef} from "@angular/material/dialog";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
+import {PreferenceEnum} from "../../../../shared/enum/preference.enum";
+import {PreferenceService} from "../../../../shared/services/preference.service";
 
 @Component({
 	selector: "app-timbre-resume",
@@ -25,7 +27,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
 	displayedColumns: string[] = ["annee", "total", "nombre", "acquis", "doublon",
-		"nombreCarnet", "nombreTimbresCarnet",  "acquisTimbresCarnet", "doublonTimbresCarnet",
+		"nombreCarnet", "nombreTimbresCarnet", "acquisTimbresCarnet", "doublonTimbresCarnet",
 		"nombreBloc", "acquisBloc", "doublonBloc", "nombreTimbresBloc", "acquisTimbresBloc", "doublonTimbresBloc",
 		"nombreCollector", "acquisCollector"/*, "doublonCollector", "nombreTimbresCollector", "acquisTimbresCollector", "doublonTimbresCollector"*/,
 	];
@@ -34,7 +36,14 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public dialogRef: MatDialogRef<TimbreResumeComponent>, public timbreResumeService: TimbreResumeService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService) {
+	constructor(
+		public dialogRef: MatDialogRef<TimbreResumeComponent>,
+		public timbreResumeService: TimbreResumeService,
+		private timbreService: TimbreService,
+		private timbreBlocService: TimbreBlocService,
+		private timbreUtilsService: TimbreUtilsService,
+		private preferenceService: PreferenceService
+	) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -50,7 +59,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	}
 
 	initData() {
-		this.timbreResumeService.timbresResume$.pipe(first(timbresResume=> isNotNullOrUndefined(timbresResume) && timbresResume?.length > 0)).subscribe(timbresResume => {
+		this.timbreResumeService.timbresResume$.pipe(first(timbresResume => isNotNullOrUndefined(timbresResume) && timbresResume?.length > 0)).subscribe(timbresResume => {
 			this.dataSource.data = timbresResume;
 		});
 	}
@@ -69,15 +78,20 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	}
 
 	filtreParAnnee(timbreResumeModel: TimbreResumeModel) {
-		let timbreCritereModel = new TimbreCritereModel();
 		if (window.location.href.indexOf("bloc") > 0) {
-			timbreCritereModel.initCritereBloc();
-			this.timbreUtilsService.timbreCritereBlocModel.setAnnees([timbreResumeModel.getAnnee()]);
-			this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, false);
+			this.preferenceService.getTimbreCritere(PreferenceEnum.BLOC_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+				timbreCritereModel.initCritereBloc();
+				timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
+				this.preferenceService.modifier(PreferenceEnum.BLOC_CRITERE, timbreCritereModel)
+				this.timbreBlocService.getBlocs(timbreCritereModel, false);
+			});
 		} else {
-			timbreCritereModel.initCritere();
-			this.timbreUtilsService.timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
-			this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, false);
+			this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+				timbreCritereModel.initCritere();
+				timbreCritereModel.setAnnees([timbreResumeModel.getAnnee()]);
+				this.preferenceService.modifier(PreferenceEnum.TIMBRE_CRITERE, timbreCritereModel)
+				this.timbreService.getTimbres(timbreCritereModel, false);
+			});
 		}
 		this.dialogRef.close();
 	}

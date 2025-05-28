@@ -16,6 +16,8 @@ import {TimbreModifierComponent} from "../../../modules/timbre/components/modifi
 import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
+import {PreferenceEnum} from "../../enum/preference.enum";
+import {PreferenceService} from "../preference.service";
 
 @Injectable()
 export class TimbreService {
@@ -30,7 +32,9 @@ export class TimbreService {
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
 		private timbreUtilsService: TimbreUtilsService,
-		private dialog: MatDialog) {
+		private dialog: MatDialog,
+		private preferenceService: PreferenceService
+	) {
 	}
 
 	/*modifAll() {
@@ -149,21 +153,23 @@ export class TimbreService {
 					Object.assign(new Object(), timbreModel)
 				).then((result) => {
 					if (refresh) {
-						if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees().find(annee => annee == timbreModel.getAnnee()))) {
-							this.timbres$.pipe(first()).subscribe(timbres => {
-								timbres.push(timbreModel);
-								this.setTotal(1);
-							});
-						}
+						this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+							if (isNotNullOrUndefined(timbreCritereModel.getAnnees().find(annee => annee == timbreModel.getAnnee()))) {
+								this.timbres$.pipe(first()).subscribe(timbres => {
+									timbres.push(timbreModel);
+									this.setTotal(1);
+								});
+							}
+						});
 						/*if (refresh) {
 							this.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
 						}*/
 						this.timbreUtilsService.reinitResume$.next(true);
 					}
 				})
-				.catch((error) => {
-					console.error("Erreur d'ajout :", error);
-				});
+					.catch((error) => {
+						console.error("Erreur d'ajout :", error);
+					});
 			} else {
 				console.error("timbre " + timbreModel.getId() + " déjà existant");
 			}
@@ -306,6 +312,6 @@ export class TimbreService {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
 				this.supprimer(timbreModel)
 			}
-		})
+		});
 	}
 }

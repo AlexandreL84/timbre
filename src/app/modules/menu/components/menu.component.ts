@@ -17,6 +17,10 @@ import {TimbreBlocService} from "../../../shared/services/timbre/timbre-bloc.ser
 import {BaseEnum} from "../../../shared/enum/base.enum";
 import {first} from "rxjs";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
+import {PreferenceService} from "../../../shared/services/preference.service";
+import {PreferenceEnum} from "../../../shared/enum/preference.enum";
+import {plainToInstance} from "class-transformer";
+import {TimbreCritereModel} from "../../../model/timbre-critere.model";
 
 @Component({
 	selector: 'app-menu',
@@ -30,7 +34,7 @@ export class MenuComponent {
 	readonly DroitEnum = DroitEnum;
 	readonly ModeEnum = ModeEnum;
 
-	constructor(public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
+	constructor(private preferenceService: PreferenceService, public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
 		this.verifRoute();
 	}
 
@@ -79,24 +83,37 @@ export class MenuComponent {
 	verifRoute() {
 		if (window.location.href.indexOf("bloc") > 0) {
 			//this.timbreBlocService.modifAll();
-			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereBlocModel.getAnnees()) && this.timbreUtilsService.timbreCritereBlocModel.getAnnees().length > 0) {
-				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
-			} else {
-				this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
-					this.timbreUtilsService.timbreCritereBlocModel.setAnnees([annees[0]]);
-					this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereBlocModel, true);
-				});
-			}
+			this.preferenceService.getTimbreCritere(PreferenceEnum.BLOC_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
+					this.timbreBlocService.getBlocs(timbreCritereModel, true);
+				} else {
+					this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
+						timbreCritereModel.initCritere();
+						timbreCritereModel.setAcquis("NON");
+						timbreCritereModel.setAnnees([annees[0]]);
+						this.preferenceService.timbreCritereBlocModel = timbreCritereModel;
+						this.preferenceService.modifier(PreferenceEnum.BLOC_CRITERE, timbreCritereModel);
+						this.timbreBlocService.getBlocs(timbreCritereModel, true);
+					});
+				}
+			});
 		} else {
 			//this.timbreService.modifAll();
-			if (isNotNullOrUndefined(this.timbreUtilsService.timbreCritereModel.getAnnees()) && this.timbreUtilsService.timbreCritereModel.getAnnees().length > 0) {
-				this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
-			} else {
-				this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
-					this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
-					this.timbreService.getTimbres(this.timbreUtilsService.timbreCritereModel, true);
-				});
-			}
+			//this.preferenceService.supprimer("timbreCritereModel2");
+			this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
+					this.timbreService.getTimbres(timbreCritereModel, true);
+				} else {
+					this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
+						timbreCritereModel.initCritere();
+						timbreCritereModel.setAcquis("NON");
+						timbreCritereModel.setAnnees([annees[0]]);
+						this.preferenceService.timbreCritereModel = timbreCritereModel;
+						this.preferenceService.modifier(PreferenceEnum.TIMBRE_CRITERE, timbreCritereModel);
+						this.timbreService.getTimbres(timbreCritereModel, true);
+					});
+				}
+			});
 		}
 	}
 

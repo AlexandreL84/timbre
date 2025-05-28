@@ -4,5 +4,6 @@ export enum BaseEnum {
 	TIMBRE_BLOC = "/timbres_bloc",
 	TIMBRE_BLOC_ACQUIS = "/timbres_bloc_acquis",
 	PAYS = "/timbres_pays",
-	USER = "/user"
+	USER = "/user",
+	PREFERENCE = "/preference",
 }

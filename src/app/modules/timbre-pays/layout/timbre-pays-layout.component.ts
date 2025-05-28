@@ -8,6 +8,9 @@ import {TimbrePaysModel} from "../../../model/timbre-pays.model";
 import {BaseEnum} from "../../../shared/enum/base.enum";
 import {UtilsService} from "../../../shared/services/utils.service";
 import {HeaderService} from "../../../shared/services/header.service";
+import {DroitEnum} from "../../../shared/enum/droit.enum";
+import {RouteEnum} from "../../../shared/enum/route.enum";
+import {AuthService} from "../../../shared/services/auth.service";
 
 @Component({
 	selector: "app-timbre-pays-layout",
@@ -15,7 +18,7 @@ import {HeaderService} from "../../../shared/services/header.service";
 	styleUrls: ["./timbre-pays-layout.component.scss"],
 })
 export class TimbrePaysLayoutComponent implements OnInit {
-	constructor(private headerService: HeaderService, public timbrePaysService: TimbrePaysService, private dialog: MatDialog, private utilsService: UtilsService) {
+	constructor(private headerService: HeaderService, public timbrePaysService: TimbrePaysService, private dialog: MatDialog, private utilsService: UtilsService, public authService: AuthService) {
 	}
 
 	ngOnInit(): void {
@@ -58,4 +61,7 @@ export class TimbrePaysLayoutComponent implements OnInit {
 			refDialog.close()
 		});
 	}
+
+	protected readonly DroitEnum = DroitEnum;
+	protected readonly RouteEnum = RouteEnum;
 }

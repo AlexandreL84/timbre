@@ -14,6 +14,7 @@ import {HeaderService} from "./shared/services/header.service";
 import {SimpleNotificationModule} from "./modules/simple-notification/simple-notification.module";
 import {provideServiceWorker} from "@angular/service-worker";
 import {provideHttpClient} from "@angular/common/http";
+import {PreferenceService} from "./shared/services/preference.service";
 
 
 export const appConfig: ApplicationConfig = {
@@ -28,6 +29,7 @@ export const appConfig: ApplicationConfig = {
 		{provide: FIREBASE_OPTIONS, useValue: environment.firebase},
 		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
 		HeaderService,
+		PreferenceService,
 		SimpleNotificationModule,
 		provideHttpClient(),
 		provideServiceWorker('ngsw-worker.js', {
