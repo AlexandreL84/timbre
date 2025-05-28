@@ -6,11 +6,13 @@
 					[placeholder]="'Type'"
 					multiple
 					(ngModelChange)="filtreByCritere()">
-			<mat-option *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray"
-						class="selectMin"
-						[value]="typeTimbre.value">
-				{{ typeTimbre.value | capitalize }}
-			</mat-option>
+			<ng-container *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray">
+				<mat-option *ngIf="typeTimbre.value != TypeTimbreEnum.COLLECTOR"
+							class="selectMin"
+							[value]="typeTimbre.value">
+					{{ typeTimbre.value | capitalize }}
+				</mat-option>
+			</ng-container>
 		</mat-select>
 	</div>
 
