@@ -1,5 +1,5 @@
 export enum DossierEnum {
-	TIMBRE = "timbre2/",
+	TIMBRE = "timbre/",
 	PAYS = "pays/",
 	AUTRE = "autre",
     TABLE = "table",
