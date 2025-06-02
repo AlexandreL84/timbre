@@ -23,6 +23,7 @@ import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 import {TotalModel} from "../../../model/total.model";
 import {PreferenceEnum} from "../../enum/preference.enum";
 import {PreferenceService} from "../preference.service";
+import {MonnaieEnum} from "../../enum/monnaie.enum";
 
 
 @Injectable()
@@ -432,7 +433,7 @@ export class TimbreBlocService {
 	getBouchon(): TimbreBlocModel {
 		let timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
 		timbreBlocModel.setAnnee(new Date().getFullYear());
-		timbreBlocModel.setMonnaie('E');
+		timbreBlocModel.setMonnaie(MonnaieEnum.EURO);
 		return timbreBlocModel;
 	}
 

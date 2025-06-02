@@ -2,6 +2,7 @@ import {Label} from "./utils/utils-model";
 import {ProprieteModel} from "./utils/propriete-model";
 import {TimbreAcquisModel} from "./timbre-acquis.model";
 import {TimbreBlocModel} from './timbre-bloc.model';
+import {MonnaieEnum} from "../shared/enum/monnaie.enum";
 
 export class TimbreModel extends ProprieteModel {
 	@Label("Identifiant")
@@ -14,7 +15,7 @@ export class TimbreModel extends ProprieteModel {
 	annee: number;
 
 	@Label("Monnaie")
-	monnaie: string;
+	monnaie: MonnaieEnum;
 
 	@Label("Type")
 	type: string;
@@ -38,7 +39,7 @@ export class TimbreModel extends ProprieteModel {
 	timbreBlocModel: TimbreBlocModel;
 
 
-	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: string, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel, timbreBlocModel?: TimbreBlocModel) {
+	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel, timbreBlocModel?: TimbreBlocModel) {
 		super();
 		this.id = id ? id : null;
 		this.idBloc = idBloc ? idBloc : null;
@@ -78,11 +79,11 @@ export class TimbreModel extends ProprieteModel {
 	}
 
 
-	getMonnaie(): string {
+	getMonnaie(): MonnaieEnum {
 		return this.monnaie;
 	}
 
-	setMonnaie(value: string) {
+	setMonnaie(value: MonnaieEnum) {
 		this.monnaie = value;
 	}
 

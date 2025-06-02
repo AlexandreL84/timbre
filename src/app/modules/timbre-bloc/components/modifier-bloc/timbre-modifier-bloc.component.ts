@@ -15,6 +15,7 @@ import {FileUploadModel} from "../../../../model/file/file-upload.model";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
+import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
 
 @Component({
 	selector: 'app-timbre-modifier-bloc',
@@ -52,7 +53,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 			});
 		} else {
 			this.timbreBlocModel.setAnnee(new Date().getFullYear());
-			this.timbreBlocModel.setMonnaie('E');
+			this.timbreBlocModel.setMonnaie(MonnaieEnum.EURO);
 			this.load$.next(true);
 		}
 	}
@@ -86,6 +87,13 @@ export class TimbreModifierBlocComponent implements OnInit {
 	}
 
 	save(ajout?: boolean) {
+		if (this.timbreBlocModel.getAnnee() >= 2002) {
+			this.timbreBlocModel.setMonnaie(MonnaieEnum.EURO);
+		} else if (this.timbreBlocModel.getAnnee() >= 1999) {
+			this.timbreBlocModel.setMonnaie(MonnaieEnum.FRANC_EURO);
+		} else {
+			this.timbreBlocModel.setMonnaie(MonnaieEnum.FRANC);
+		}
 		try {
 			combineLatest([
 				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.AUTRE),

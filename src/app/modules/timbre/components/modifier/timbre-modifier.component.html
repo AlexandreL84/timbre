@@ -98,6 +98,19 @@
 				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
 					<div fxLayout="column" class="form-input">
 						<label>
+							<lib-libelle-model [object]="timbreModel" [key]="'yt'"></lib-libelle-model>
+						</label>
+						<input
+							name="yt"
+							[(ngModel)]="timbreModel.yt"
+							type="text"
+							trim
+							zControl
+						/>
+					</div>
+
+					<div fxLayout="column" class="form-input">
+						<label>
 							<lib-libelle-model [object]="timbreModel" [key]="'type'"></lib-libelle-model>
 						</label>
 						<input
@@ -109,6 +122,7 @@
 						/>
 					</div>
 
+					<!--
 					<div fxLayout="column" class="form-input">
 						<label>
 							<lib-libelle-model [object]="timbreModel" [key]="'monnaie'"></lib-libelle-model>
@@ -127,23 +141,7 @@
 							zControl
 						/>
 					</div>
-				</div>
-
-				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
-					<div fxLayout="column" class="form-input">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'yt'"></lib-libelle-model>
-						</label>
-						<input
-							name="yt"
-							[(ngModel)]="timbreModel.yt"
-							type="text"
-							trim
-							zControl
-						/>
-					</div>
-					<div fxHide.lt-lg fxLayout="column" class="form-input">
-					</div>
+					-->
 				</div>
 
 				<lib-upload

@@ -18,6 +18,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 import {PreferenceEnum} from "../../enum/preference.enum";
 import {PreferenceService} from "../preference.service";
+import {MonnaieEnum} from "../../enum/monnaie.enum";
 
 @Injectable()
 export class TimbreService {
@@ -239,7 +240,7 @@ export class TimbreService {
 	getBouchon(): TimbreModel {
 		let timbre: TimbreModel = new TimbreModel();
 		timbre.setAnnee(new Date().getFullYear());
-		timbre.setMonnaie('E');
+		timbre.setMonnaie(MonnaieEnum.EURO);
 		timbre.setType('');
 		timbre.setYt('');
 		return timbre;

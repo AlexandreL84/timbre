@@ -18,6 +18,7 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
+import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -61,7 +62,7 @@ export class TimbreModifierComponent implements OnInit {
 			});
 		} else {
 			this.timbreModel.setAnnee(new Date().getFullYear());
-			this.timbreModel.setMonnaie('E');
+			this.timbreModel.setMonnaie(MonnaieEnum.EURO);
 			this.load$.next(true);
 		}
 		this.changeAnnee(this.timbreModel.getAnnee());
@@ -96,6 +97,13 @@ export class TimbreModifierComponent implements OnInit {
 	}
 
 	save(ajout?: boolean) {
+		if (this.timbreModel.getAnnee() >= 2002) {
+			this.timbreModel.setMonnaie(MonnaieEnum.EURO);
+		} else if (this.timbreModel.getAnnee() >= 1999) {
+			this.timbreModel.setMonnaie(MonnaieEnum.FRANC_EURO);
+		} else {
+			this.timbreModel.setMonnaie(MonnaieEnum.FRANC);
+		}
 		try {
 			combineLatest([
 				this.timbreService.upload(this.timbreModel, DossierEnum.AUTRE),
@@ -151,7 +159,7 @@ export class TimbreModifierComponent implements OnInit {
 			this.timbreModel.setIdBloc(null);
 			this.timbreModel.setTimbreBlocModel(null);
 			//this.timbreModel.setAnnee(new Date().getFullYear());
-			this.timbreModel.setMonnaie('E');
+			this.timbreModel.setMonnaie(MonnaieEnum.EURO);
 		}
 	}
 }
