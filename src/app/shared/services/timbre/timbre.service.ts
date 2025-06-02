@@ -157,6 +157,9 @@ export class TimbreService {
 						this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
 							if (isNotNullOrUndefined(timbreCritereModel.getAnnees().find(annee => annee == timbreModel.getAnnee()))) {
 								this.timbres$.pipe(first()).subscribe(timbres => {
+									if (isNullOrUndefined(timbres)) {
+										timbres = [];
+									}
 									timbres.push(timbreModel);
 									this.setTotal(1);
 								});

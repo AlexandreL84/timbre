@@ -16,6 +16,8 @@ import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-util
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
+import {TimbreModel} from "../../../../model/timbre.model";
+import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 
 @Component({
 	selector: 'app-timbre-modifier-bloc',
@@ -39,6 +41,7 @@ export class TimbreModifierBlocComponent implements OnInit {
 		public dialogRef: MatDialogRef<TimbreModifierBlocComponent>,
 		private utilsService: UtilsService,
 		public timbreBlocService: TimbreBlocService,
+		private timbreService: TimbreService,
 		public timbreUtilsService: TimbreUtilsService,
 	) {
 	}
@@ -114,9 +117,13 @@ export class TimbreModifierBlocComponent implements OnInit {
 				} else {
 					this.timbreBlocService.ajouter(this.timbreBlocModel, true);
 				}
-				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
-				this.load$.next(true);
-				this.dialogRef.close();
+
+				if (this.timbreBlocModel?.getTimbres()?.length > 0) {
+					this.saveTimbres();
+				} else {
+					this.validSuccess();
+				}
+
 			});
 		} catch (error) {
 			this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, NotificationMessageEnum.TIMBRE_MODIF_NOK);
@@ -124,7 +131,63 @@ export class TimbreModifierBlocComponent implements OnInit {
 		}
 	}
 
+	validSuccess() {
+		this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
+		this.load$.next(true);
+		this.dialogRef.close();
+	}
+
+	saveTimbres() {
+		if (this.timbreBlocModel?.getTimbres()?.length > 0) {
+			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE).pipe(first()).subscribe(id => {
+				this.timbreBlocModel?.getTimbres().forEach((timbreModel, index) => {
+					timbreModel.setIdBloc(this.timbreBlocModel.getId());
+					timbreModel.setTimbreBlocModel(this.timbreBlocModel);
+					timbreModel.setMonnaie(this.timbreBlocModel.getMonnaie());
+					timbreModel.setAnnee(this.timbreBlocModel.getAnnee());
+					timbreModel.setId(id);
+					id++;
+
+					combineLatest([
+						this.timbreService.upload(timbreModel, DossierEnum.AUTRE),
+						this.timbreService.upload(timbreModel, DossierEnum.TABLE),
+						this.timbreService.upload(timbreModel, DossierEnum.ZOOM),
+					]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
+						if (isNotNullOrUndefined(image) && image != 'nok') {
+							timbreModel.setImage(image);
+						}
+						if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
+							timbreModel.setImageTable(imageTable);
+						}
+						if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
+							timbreModel.setImageZoom(imageZoom);
+						}
+						this.timbreService.ajouter(timbreModel, true);
+
+						this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
+
+						if (index == this.timbreBlocModel.getTimbres().length - 1) {
+							this.validSuccess();
+						}
+					});
+				});
+			});
+		}
+	}
+
 	close() {
 		this.dialogRef.close();
+	}
+
+	selectTimbres(files: File[]) {
+		this.timbreBlocModel.setTimbres(null);
+		if (isNotNullOrUndefined(files) && files?.length > 0) {
+			files.forEach(file => {
+				const timbre = new TimbreModel();
+				timbre.setImage(file);
+				timbre.setYt(file?.name?.replace(/\.([a-z]+)$/, ''));
+				this.timbreBlocModel.addTimbre(timbre);
+			});
+		}
 	}
 }

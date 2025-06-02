@@ -1,0 +1,28 @@
+$width: 100;
+$height: 150;
+
+.uploadMultiple {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	align-items: stretch;
+	gap: 10px;
+	width: 100%;
+
+	.listeImage {
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: left;
+		width: 100%;
+
+		.imgSelect {
+			margin: 5px;
+			max-width: $width * 1px;
+			max-height: $height * 1px;
+		}
+	}
+}
+
+@media screen and (max-width: 800px) {
+
+}

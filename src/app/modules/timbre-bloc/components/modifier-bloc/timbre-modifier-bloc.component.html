@@ -72,6 +72,7 @@
 									[(ngModel)]="timbreBlocModel.type"
 									[placeholder]="'Type'"
 									style="width: 100px"
+									required
 						>
 							<ng-container *ngFor="let typeTimbre of TypeTimbreEnum | enumToArray">
 								<mat-option *ngIf="typeTimbre.value != TypeTimbreEnum.TIMBRE"
@@ -147,7 +148,25 @@
 					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
 					(outPutObject)="timbreBlocModel = $event">
 				</lib-upload>
+
+				<lib-upload-multiple
+					[label]="'Timbres'"
+					[maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
+					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
+					(outPutFiles)="selectTimbres($event)">
+				</lib-upload-multiple>
 			</div>
+
+
+			<!--
+			<input
+				id="test"
+				type="file"
+				accept="image/*"
+				multiple
+				(change)="ajoutTimbres($event)"
+			/>
+			-->
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
 				<button

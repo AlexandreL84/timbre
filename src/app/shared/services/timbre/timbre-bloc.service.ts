@@ -24,7 +24,7 @@ import {TotalModel} from "../../../model/total.model";
 import {PreferenceEnum} from "../../enum/preference.enum";
 import {PreferenceService} from "../preference.service";
 import {MonnaieEnum} from "../../enum/monnaie.enum";
-
+import {cloneDeep} from "lodash";
 
 @Injectable()
 export class TimbreBlocService {
@@ -296,10 +296,12 @@ export class TimbreBlocService {
 		});
 	}
 
-	ajouter(timbreBlocModel: TimbreBlocModel, refresh: boolean) {
+	ajouter(timbreBlocModelOrigine: TimbreBlocModel, refresh: boolean) {
+		const  timbreBlocModel = cloneDeep(timbreBlocModelOrigine);
 		this.getBloc(timbreBlocModel.getId()).pipe(first()).subscribe(data => {
 			if (isNullOrUndefined(data) || isNullOrUndefined(data[0]) || (isNotNullOrUndefined(data[0]) && data[0]?.length == 0)) {
 				timbreBlocModel.setTimbreBlocAcquisModel(null);
+				timbreBlocModel.setTimbres(null);
 				timbreBlocModel.setIdOrigine(null);
 
 				this.firestore.collection(BaseEnum.TIMBRE_BLOC).add(
@@ -308,6 +310,9 @@ export class TimbreBlocService {
 					this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
 						if (isNotNullOrUndefined(timbreCritereModel.getAnnees().find(annee => annee == timbreBlocModel.getAnnee()))) {
 							this.timbresBlocModel$.pipe(first()).subscribe(timbresBlocModel => {
+								if (isNullOrUndefined(timbresBlocModel)) {
+									timbresBlocModel = [];
+								}
 								timbresBlocModel.push(timbreBlocModel);
 								this.setTotal(timbreBlocModel, 1);
 							});
@@ -344,8 +349,10 @@ export class TimbreBlocService {
 		});
 	}
 
-	modifier(timbreBlocModel: TimbreBlocModel) {
+	modifier(timbreBlocModelOrigine: TimbreBlocModel) {
+		const  timbreBlocModel = cloneDeep(timbreBlocModelOrigine);
 		timbreBlocModel.setTimbreBlocAcquisModel(null);
+		timbreBlocModel.setTimbres(null);
 		this.firestore.collection(BaseEnum.TIMBRE_BLOC)
 			.ref.where('id', '==', timbreBlocModel.getId())
 			.get()

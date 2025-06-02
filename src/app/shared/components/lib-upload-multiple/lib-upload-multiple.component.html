@@ -1,0 +1,23 @@
+<div class="form-input uploadMultiple">
+	<input
+		id="{{id}}"
+		type="file"
+		accept="image/*"
+		multiple
+		(change)="onFileSelected($event)"
+		hidden
+	/>
+
+	<button
+		type="button" class="rounded large color-white" mat-raised-button color="accent"
+		(click)="triggerFileInput()">
+		{{ label }}
+	</button>
+
+	<div *ngIf="selectedImages.length" class="listeImage">
+		<ng-container *ngFor="let image of selectedImages">
+			<img [src]="image" alt="Image preview" class="imgSelect"/>
+		</ng-container>
+	</div>
+</div>
+

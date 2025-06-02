@@ -3,6 +3,8 @@ import { ProprieteModel } from './utils/propriete-model';
 import {TimbreBlocAcquisModel} from "./timbre-bloc-acquis.model";
 import {TypeTimbreEnum} from "../shared/enum/type-timbre.enum";
 import {MonnaieEnum} from "../shared/enum/monnaie.enum";
+import {TimbreModel} from "./timbre.model";
+import {isNullOrUndefined} from "../shared/utils/utils";
 
 export class TimbreBlocModel extends ProprieteModel {
 	@Label('Identifiant')
@@ -36,6 +38,9 @@ export class TimbreBlocModel extends ProprieteModel {
 	nbTimbres: number;
 
 	idOrigine: number;
+
+	@Label("Timbres")
+	timbres: TimbreModel[];
 
 
 	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageTable?: string, imageZoom?: string, yt?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
@@ -137,5 +142,22 @@ export class TimbreBlocModel extends ProprieteModel {
 
 	setNbTimbres(value: number) {
 		this.nbTimbres = value;
+	}
+
+	getTimbres(): TimbreModel[] {
+		return this.timbres;
+	}
+
+	setTimbres(value: TimbreModel[]) {
+		this.timbres = value;
+	}
+
+	addTimbre(value: TimbreModel) {
+		let timbres = this.getTimbres();
+		if (isNullOrUndefined(timbres)) {
+			timbres = [];
+		}
+		timbres.push(value);
+		this.setTimbres(timbres);
 	}
 }
