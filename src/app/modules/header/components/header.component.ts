@@ -7,7 +7,6 @@ import {HeaderService} from "../../../shared/services/header.service";
 import {RouteEnum} from "../../../shared/enum/route.enum";
 import {DroitEnum} from "../../../shared/enum/droit.enum";
 import {PreferenceService} from "../../../shared/services/preference.service";
-import {TimbreModel} from "../../../model/timbre.model";
 import {LibModalComponent} from "../../../shared/components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
 

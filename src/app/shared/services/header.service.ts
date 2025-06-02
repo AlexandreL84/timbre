@@ -28,11 +28,14 @@ export class HeaderService {
 		if (route == RouteEnum.BLOC) {
 			iconeModelsTimbre.push(this.iconeTimbre());
 			iconeModels.push(this.iconePays());
+			this.titre$.next("TIMBRES - BLOC");
 		} else if (route == RouteEnum.TIMBRE) {
 			iconeModelsTimbre.push(this.iconeBloc());
+			this.titre$.next("TIMBRES");
 			iconeModels.push(this.iconePays());
 		} else if (route == RouteEnum.PAYS) {
 			iconeModels.push(this.iconeTimbre());
+			this.titre$.next("TIMBRES PAR PAYS");
 		}
 		this.choixRoutes$.next(iconeModels);
 		this.route$.next(route);

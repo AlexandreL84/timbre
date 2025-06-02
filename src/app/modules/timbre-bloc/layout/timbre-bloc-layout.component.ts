@@ -19,7 +19,6 @@ export class TimbreBlocLayoutComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		this.headerService.titre$.next("TIMBRES - BLOC");
 		//this.timbreBlocService.getBlocs();
 		/*this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect => {
 			this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {

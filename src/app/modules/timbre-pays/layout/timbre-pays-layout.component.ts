@@ -7,10 +7,11 @@ import {first} from "rxjs";
 import {TimbrePaysModel} from "../../../model/timbre-pays.model";
 import {BaseEnum} from "../../../shared/enum/base.enum";
 import {UtilsService} from "../../../shared/services/utils.service";
-import {HeaderService} from "../../../shared/services/header.service";
 import {DroitEnum} from "../../../shared/enum/droit.enum";
 import {RouteEnum} from "../../../shared/enum/route.enum";
 import {AuthService} from "../../../shared/services/auth.service";
+import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
+import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
 
 @Component({
 	selector: "app-timbre-pays-layout",
@@ -18,11 +19,10 @@ import {AuthService} from "../../../shared/services/auth.service";
 	styleUrls: ["./timbre-pays-layout.component.scss"],
 })
 export class TimbrePaysLayoutComponent implements OnInit {
-	constructor(private headerService: HeaderService, public timbrePaysService: TimbrePaysService, private dialog: MatDialog, private utilsService: UtilsService, public authService: AuthService) {
+	constructor(public timbrePaysService: TimbrePaysService, private dialog: MatDialog, private utilsService: UtilsService, public authService: AuthService) {
 	}
 
 	ngOnInit(): void {
-		this.headerService.titre$.next("TIMBRE PAR PAYS");
 		//this.timbrePaysResultatService.timbres$ = this.timbrePaysService.getTimbres2();
 		//this.timbrePaysService.getTimbres2();
 		//this.timbrePaysService.supprimerbyCode("FR")
@@ -64,4 +64,6 @@ export class TimbrePaysLayoutComponent implements OnInit {
 
 	protected readonly DroitEnum = DroitEnum;
 	protected readonly RouteEnum = RouteEnum;
+	protected readonly FontAwesomeEnum = FontAwesomeEnum;
+	protected readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 }
