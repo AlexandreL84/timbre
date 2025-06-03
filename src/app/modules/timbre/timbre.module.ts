@@ -55,7 +55,9 @@ import {TimbreService} from "../../shared/services/timbre/timbre.service";
         MenuModule,
         ReactiveFormsModule
     ],
-	exports: [],
+    exports: [
+        TimbreTotalComponent
+    ],
 	providers: [TimbreService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService]
 })
 export class TimbreModule {

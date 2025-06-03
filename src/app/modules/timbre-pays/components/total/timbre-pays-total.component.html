@@ -1,0 +1,6 @@
+<div class="timbreTotal">
+	<div *ngIf="(timbrePaysService.total$ | async)" class="nbTimbre">
+		<span class="hide-on-mobile">Nombre de </span><span>Timbres : </span>
+		<span class="bold">{{ timbrePaysService.total$ |async }}</span>
+	</div>
+</div>

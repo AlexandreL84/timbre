@@ -23,6 +23,7 @@
 						(click)="timbreService.acquisDoublon(timbre, false)"
 					>
 					</lib-icon>
+
 					<lib-icon
 						class="click"
 						[classIcone]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
@@ -42,6 +43,7 @@
 						(click)="timbreService.modifierDialog(timbre)"
 					>
 					</lib-icon>
+
 					<lib-icon
 						class="primary click"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.TRASH"

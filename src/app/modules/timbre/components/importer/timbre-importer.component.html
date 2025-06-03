@@ -31,7 +31,7 @@
 
 			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="end end">
 				<div *ngIf="!(timbres$ |async) || (timbres$ |async)?.length == 0"
-					 fxLayout="row" fxLayoutAlign="end center" class="form-input select noError" style="width: 150px">
+					 fxLayout="row" fxLayoutAlign="end center" class="form-input select noError" style="width: 100px">
 					<mat-select name="anneeSelect"
 								multiple
 								[(ngModel)]="annees"

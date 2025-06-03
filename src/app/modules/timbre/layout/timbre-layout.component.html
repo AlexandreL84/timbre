@@ -1,6 +1,7 @@
 <div class="timbreLayout">
 	<div class="timbreBody">
 		<app-menu></app-menu>
+
 		<app-timbre-resultat
 			*ngIf="headerService.mode == ModeEnum.GRAPH"
 			[load$]="timbreService.load$"

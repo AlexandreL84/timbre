@@ -23,10 +23,11 @@ import {LibLibelleModelModule} from "../../shared/components/lib-libelle-model";
 import {LibUploadModule} from "../../shared/components/lib-upload/lib-upload.module";
 import {TimbrePaysAjoutTimbreComponent} from "./components/ajout-timbre/timbre-pays-ajout-timbre.component";
 import {TimbreSupprimToutModule} from "../timbre/components/supprim-tout/timbre-supprim-tout.module";
+import {TimbrePaysTotalComponent} from "./components/total/timbre-pays-total.component";
 
 @NgModule({
 	declarations: [
-		TimbrePaysLayoutComponent, TimbrePaysModifierComponent, TimbrePaysImporterComponent, TimbrePaysResultatComponent, TimbrePaysAjoutTimbreComponent
+		TimbrePaysLayoutComponent, TimbrePaysModifierComponent, TimbrePaysImporterComponent, TimbrePaysResultatComponent, TimbrePaysAjoutTimbreComponent, TimbrePaysTotalComponent
 	],
     imports: [
         MaterialModule,

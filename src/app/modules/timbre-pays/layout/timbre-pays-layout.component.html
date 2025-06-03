@@ -1,6 +1,6 @@
 <div class="timbrePaysLayout">
 	<div class="timbreBody">
-		<div *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL" fxLayout="row" fxLayoutGap="20px">
+		<div *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
 			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouter()">
 				Ajouter
 			</button>

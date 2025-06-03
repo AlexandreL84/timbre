@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
-import {BehaviorSubject, first, Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {TimbreAcquisModel} from "../../../../model/timbre-acquis.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";

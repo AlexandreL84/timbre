@@ -23,10 +23,6 @@ select {
 	.mat-mdc-select-arrow-wrapper {
 		margin-right: 5px;
 	}
-
-	.mat-mdc-select-panel {
-		//@extend .scrollBarAccent;
-	}
 }
 
 .selectMin {
@@ -38,3 +34,13 @@ select {
 	}
 }
 
+@media screen and (max-width: 800px) {
+	.select mat-select,
+	select {
+		font-size: 0.9em;
+	}
+
+	.mat-mdc-option {
+		min-height: 30px !important;
+	}
+}

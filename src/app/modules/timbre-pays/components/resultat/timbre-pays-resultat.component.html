@@ -2,10 +2,7 @@
 
 <section [fxHide]="(load$ | async) == false">
 	<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
-		<div fxFlex style="font-size: 1.2em">
-			<span>Nombre de timbres : </span>
-			<span class="bold">{{ timbrePaysService.total$ |async }}</span>
-		</div>
+		<app-timbre-pays-total></app-timbre-pays-total>
 		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
 			 style="width: 200px; min-height:55px; height: 55px">
 			<input
@@ -15,7 +12,7 @@
 			/>
 		</div>
 		<lib-icon
-			class="exportTable primary click"
+			class="exportTable primary click hide-on-mobile"
 			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
 			[info]="'Exporter tableau'"
 			(click)="exportTable()"
@@ -171,5 +168,5 @@
 		<tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-primary color-white"></tr>
 		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row"></tr>
 	</table>
-	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 15, 50, 300]"></mat-paginator>
 </section>
