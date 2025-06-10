@@ -6,7 +6,7 @@
 
 	$accent-palette: map.get($color-config, "accent");
 	$accent: mat.m2-get-color-from-palette($accent-palette);
-	
+
 	mat-spinner {
 		color: $accent;
 	}
@@ -15,4 +15,16 @@
 .spinner {
 	height: 300px;
 	width: 100%;
+}
+
+@media screen and (min-height: 400px) and (max-height: 799px) {
+	.spinner {
+		height: 300px;
+	}
+}
+
+@media screen and (min-height: 800px) {
+	.spinner {
+		height: 650px;
+	}
 }
