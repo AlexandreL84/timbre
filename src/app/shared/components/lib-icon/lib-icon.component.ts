@@ -1,6 +1,5 @@
 import {AfterViewChecked, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SecurityContext, SimpleChanges} from "@angular/core";
 import {DomSanitizer} from "@angular/platform-browser";
-import {MatBadgeSize} from "@angular/material/badge";
 import {TooltipPosition} from "@angular/material/tooltip";
 import {isNotNullOrUndefined, Utils} from "../../utils/utils";
 import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../../enum/font-awesome";
@@ -12,22 +11,13 @@ import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enu
     styleUrls: ["./lib-icon.component.scss"],
 })
 export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
-    @Input() icone: string;
-    @Input() type: string;
+    @Input() icone: FontAwesomeEnum;
+    @Input() type: FontAwesomeTypeEnum;
     @Input() info: string;
     @Input() infoPosition: TooltipPosition;
-    @Input() size: "sm" | "lg" | "2x" | "3x" | "5x" | "6x" | "7x" | "10x";
     @Input() classInfo: string = "tooltiptextDescription tooltiptextBgWhite widthAuto";
-    @Input() matBadgeHidden: boolean;
-    @Input() matBadgeColor;
-    @Input() matBadgeClass: string = null;
-    @Input() matBadgeSize: MatBadgeSize = "medium";
-    @Input() badge: string;
-    @Input() rotation: number = 0;
-    @Input() svg: boolean = false;
     @Input() color: string;
     @Input() classIcone: string;
-    @Input() lienExterne: boolean = false;
     @Input() attribs: FontAwesomeAttributEnum[];
 
     classToolTip: string;
@@ -56,13 +46,10 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
             if (isNotNullOrUndefined(this.info)) {
                 classIcon += " click";
             }
-            if (isNotNullOrUndefined(this.type) && this.type.length !== 0 && this.type != "" && this.type != FontAwesomeTypeEnum.TYPE_SOLID?.toString()) {
+            if (isNotNullOrUndefined(this.type) && this.type.length !== 0 && isNotNullOrUndefined(this.type) && this.type != FontAwesomeTypeEnum.TYPE_SOLID?.toString()) {
                 classIcon += " fa-" + this.type;
             } else {
                 classIcon += " fa-" + FontAwesomeTypeEnum.TYPE_SOLID;
-            }
-            if (isNotNullOrUndefined(this.size)) {
-                classIcon += " fa-" + this.size;
             }
             if (isNotNullOrUndefined(this.attribs) && this.attribs.length > 0) {
                 this.attribs.forEach(attrib => {
@@ -71,10 +58,6 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
             }
 
             this.selectedIconHtml = this.sanitizer.sanitize(SecurityContext.HTML, this.sanitizer.bypassSecurityTrustHtml(`<i class="${classIcon}"></i>`));
-        }
-
-        if (this.lienExterne) {
-            this.info = "Ouvrir dans un nouvel onglet";
         }
     }
 
