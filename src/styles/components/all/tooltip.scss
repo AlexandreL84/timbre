@@ -6,27 +6,19 @@
 	$primary-palette: map.get($color-config, "primary");
 	$primary: mat.m2-get-color-from-palette($primary-palette);
 
-	.tooltiptextDescription {
+	.mdc-tooltip {
 		color: $primary !important;
 		background-color: white;
-	}
-}
 
-.tooltip {
-	position: relative;
-	display: inline-block;
-	&:hover {
-		.tooltiptext {
-			visibility: visible;
+		.mat-mdc-tooltip-surface {
+			color: $primary !important;
+			background-color: white;
 		}
 	}
-
-	.contentTooltip {
-		padding: 10px !important;
-	}
 }
 
-.tooltiptextDescription {
+.mdc-tooltip {
+	white-space: break-spaces;
 	width: auto;
 	height: auto;
 	left: 5px;
@@ -42,10 +34,6 @@
 		padding-inline-start: 20px !important;
 		margin-bottom: 7px !important;
 	}
-}
-
-.mat-tooltip {
-	white-space: break-spaces;
 }
 
 

@@ -47,7 +47,7 @@ export class TimbreResumeModel extends ProprieteModel {
 	@Label("Total timbres collector en doublon")
 	doublonTimbresCollector: number;
 
-	@Label("Collector")
+	@Label("Nombre bloc")
 	nombreBloc: number;
 
 	@Label("Total bloc acquis")

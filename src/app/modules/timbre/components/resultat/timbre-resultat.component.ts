@@ -9,6 +9,7 @@ import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awe
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
+import {DroitEnum} from "../../../../shared/enum/droit.enum";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -24,6 +25,7 @@ export class TimbreResultatComponent implements OnInit {
 	public timbre: TimbreModel = new TimbreModel();
 	annees$: Observable<number[]>
 
+	readonly DroitEnum = DroitEnum;
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
@@ -34,4 +36,5 @@ export class TimbreResultatComponent implements OnInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
 		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 	}
+
 }

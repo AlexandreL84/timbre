@@ -47,10 +47,15 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
 		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type", "yt", "acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type", "yt", "acquis"];
 		if (this.modif) {
-			this.authService.user$.pipe(first(user => isNotNullOrUndefined(user) && user?.getDroit() == DroitEnum.TOTAL)).subscribe(user=> {
-				this.displayedColumns.push("modifier", "supprimer");
+			this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user=> {
+				if (user?.getDroit() >= DroitEnum.PARTIEL) {
+					this.displayedColumns.push("doublon");
+				}
+				if (user?.getDroit() == DroitEnum.TOTAL) {
+					this.displayedColumns.push("modifier", "supprimer");
+				}
 			});
 		}
 

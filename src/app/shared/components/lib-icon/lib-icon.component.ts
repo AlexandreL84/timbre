@@ -15,7 +15,7 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
     @Input() type: FontAwesomeTypeEnum;
     @Input() info: string;
     @Input() infoPosition: TooltipPosition;
-    @Input() classInfo: string = "tooltiptextDescription tooltiptextBgWhite widthAuto";
+    @Input() classInfo: string = "";
     @Input() color: string;
     @Input() classIcone: string;
     @Input() attribs: FontAwesomeAttributEnum[];

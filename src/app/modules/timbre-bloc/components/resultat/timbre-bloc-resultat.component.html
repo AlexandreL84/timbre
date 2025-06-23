@@ -13,6 +13,7 @@
 			<div class="headerTimbre">
 				<div class="actionTimbre">
 					<lib-icon
+						*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
 						class="click"
 						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
@@ -22,6 +23,7 @@
 					>
 					</lib-icon>
 					<lib-icon
+						*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
 						class="click"
 						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
@@ -52,7 +54,7 @@
 			<div class="imgTimbre">
 				<img *ngIf="timbreBloc?.getImage()"
 					 [src]="timbreBloc?.getImage()"
-					 class="image click"
+					 class="image zoomIn"
 					 (click)="utilsService.zoom(timbreBloc?.getImageZoom())"/>
 			</div>
 

@@ -6,7 +6,6 @@ import {MatPaginator} from "@angular/material/paginator";
 import {first} from "rxjs";
 import {TimbreResumeService} from "../../../../shared/services/timbre/timbre-resume.service";
 import {TimbreResumeModel} from "../../../../model/timbre-resume.model";
-import {TimbreCritereModel} from "../../../../model/timbre-critere.model";
 import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {MatDialogRef} from "@angular/material/dialog";
@@ -15,6 +14,8 @@ import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awe
 import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 import {PreferenceEnum} from "../../../../shared/enum/preference.enum";
 import {PreferenceService} from "../../../../shared/services/preference.service";
+import {DroitEnum} from "../../../../shared/enum/droit.enum";
+import {AuthService} from "../../../../shared/services/auth.service";
 
 @Component({
 	selector: "app-timbre-resume",
@@ -26,17 +27,14 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 
 	dataSource: MatTableDataSource<TimbreResumeModel> = new MatTableDataSource<TimbreResumeModel>();
-	displayedColumns: string[] = ["annee", "total", "nombre", "acquis", "doublon",
-		"nombreCarnet", "nombreTimbresCarnet", "acquisTimbresCarnet", "doublonTimbresCarnet",
-		"nombreBloc", "acquisBloc", "doublonBloc", "nombreTimbresBloc", "acquisTimbresBloc", "doublonTimbresBloc",
-		"nombreCollector", "acquisCollector"/*, "doublonCollector", "nombreTimbresCollector", "acquisTimbresCollector", "doublonTimbresCollector"*/,
-	];
+	displayedColumns: string[] = [];
 	public timbreResumeModel: TimbreResumeModel = new TimbreResumeModel();
 
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
 	constructor(
+		private authService: AuthService,
 		public dialogRef: MatDialogRef<TimbreResumeComponent>,
 		public timbreResumeService: TimbreResumeService,
 		private timbreService: TimbreService,
@@ -48,14 +46,42 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit(): void {
+		this.initColumns();
 		this.timbreUtilsService.reinitResume$.pipe(first()).subscribe(reinit => {
 			if (reinit == true) {
 				this.timbreResumeService.getResume();
 			}
-
 			this.initData();
 		});
 
+	}
+
+	initColumns() {
+		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			const displayedColumns: string[] = [];
+			displayedColumns.push("annee", "total", "nombre", "acquis");
+			if (user?.getDroit() == DroitEnum.TOTAL) {
+				displayedColumns.push("doublon");
+			}
+			displayedColumns.push("nombreCarnet", "nombreTimbresCarnet", "acquisTimbresCarnet");
+			if (user?.getDroit() == DroitEnum.TOTAL) {
+				displayedColumns.push("doublonTimbresCarnet");
+			}
+			displayedColumns.push("nombreBloc", "acquisBloc");
+			if (user?.getDroit() == DroitEnum.TOTAL) {
+				displayedColumns.push("doublonBloc");
+			}
+			displayedColumns.push("nombreTimbresBloc", "acquisTimbresBloc");
+			if (user?.getDroit() == DroitEnum.TOTAL) {
+				displayedColumns.push("doublonTimbresBloc");
+			}
+			displayedColumns.push();
+			if (user?.getDroit() == DroitEnum.CONSULT_TOTAL || user?.getDroit() == DroitEnum.TOTAL) {
+				displayedColumns.push("nombreCollector", "acquisCollector"/*, "doublonCollector", "nombreTimbresCollector", "acquisTimbresCollector", "doublonTimbresCollector"*/);
+			}
+
+			this.displayedColumns = displayedColumns;
+		});
 	}
 
 	initData() {

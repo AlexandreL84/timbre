@@ -45,11 +45,17 @@
 				</lib-icon>
 			</th>
 			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="{'accent50': element?.getNombre() == element?.getAcquis()}">
-				{{ element?.getAcquis() }}
+				[ngClass]="{'accent50': element?.getNombre() == element?.getAcquis()}"
+				[matTooltip]="element?.getAcquis() > 0? ((element?.getAcquis() / element?.getNombre()) | percent) : ''">
+				<ng-container *ngIf="element?.getAcquis() > 0">
+					{{ element?.getAcquis() }}
+				</ng-container>
 			</td>
 			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquis() }} </b></td>
+				<ng-container *ngIf="(timbreResumeService.totalTimbreResume$ | async)?.getAcquis() > 0">
+					<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquis() }} ({{ ((timbreResumeService.totalTimbreResume$ | async)?.getAcquis() / (timbreResumeService.totalTimbreResume$ | async)?.getNombre()) | percent  }})</b>
+				</ng-container>
+			</td>
 		</ng-container>
 		<ng-container matColumnDef="doublon">
 			<th mat-header-cell *matHeaderCellDef>

@@ -5,7 +5,7 @@ import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {Observable} from "rxjs";
+import {first, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
@@ -15,6 +15,8 @@ import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
+import {DroitEnum} from "../../../../shared/enum/droit.enum";
+import {AuthService} from "../../../../shared/services/auth.service";
 
 @Component({
 	selector: "app-timbre-bloc-resultat-table",
@@ -35,7 +37,7 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly TypeTimbreEnum = TypeTimbreEnum;
 
-	constructor(public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(private authService: AuthService, public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -43,9 +45,16 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 		this.timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "type", "monnaie", "yt", "nbTimbres" ,"acquis", "doublon"];
+		this.displayedColumns = ["image", "id", "annee", "type", "monnaie", "yt", "nbTimbres" ,"acquis"];
 		if (this.modif) {
-			this.displayedColumns.push("modifier", "supprimer");
+			this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+				if (user?.getDroit() >= DroitEnum.PARTIEL) {
+					this.displayedColumns.push("doublon");
+				}
+				if (user?.getDroit() == DroitEnum.TOTAL) {
+					this.displayedColumns.push("modifier", "supprimer");
+				}
+			});
 		}
 
 		this.timbreBlocService.timbresBlocModel$.subscribe(timbres => {

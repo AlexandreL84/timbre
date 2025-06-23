@@ -26,7 +26,7 @@
 			</ng-container>
 		</ng-container>
 
-		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && ((headerService.route$ | async) == RouteEnum.TIMBRE || (headerService.route$ | async) == RouteEnum.BLOC)">
+		<ng-container *ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && ((headerService.route$ | async) == RouteEnum.TIMBRE || (headerService.route$ | async) == RouteEnum.BLOC)">
 			<ng-template [ngIf]="headerService.mode == ModeEnum.GRAPH" [ngIfElse]="modeTable">
 				<lib-icon
 					[icone]="FontAwesomeEnum.TABLE"
