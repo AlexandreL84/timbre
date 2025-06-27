@@ -146,7 +146,7 @@
 					[zoom]="timbreBlocModel.getImageZoom()"
 					[maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
 					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
-					(outPutObject)="timbreBlocModel = $event">
+					(outPutObject)="setImageBloc($event)">
 				</lib-upload>
 
 				<lib-upload-multiple

@@ -18,6 +18,7 @@ import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
+import {TypeImageTimbreEnum} from "../../../../shared/enum/type-image-timbre.enum";
 
 @Component({
 	selector: 'app-timbre-modifier-bloc',
@@ -58,6 +59,17 @@ export class TimbreModifierBlocComponent implements OnInit {
 			this.timbreBlocModel.setAnnee(new Date().getFullYear());
 			this.timbreBlocModel.setMonnaie(MonnaieEnum.EURO);
 			this.load$.next(true);
+		}
+	}
+
+	setImageBloc(timbreBlocModel: TimbreBlocModel) {
+		this.timbreBlocModel = timbreBlocModel;
+		if (timbreBlocModel.getYt()?.includes(TypeImageTimbreEnum.BK)) {
+			timbreBlocModel.setType(TypeTimbreEnum.BLOC);
+		} else if (timbreBlocModel.getYt()?.includes(TypeImageTimbreEnum.CARNET)) {
+			timbreBlocModel.setType(TypeTimbreEnum.CARNET);
+		} else if (timbreBlocModel.getYt()?.includes(TypeImageTimbreEnum.MTAM)) {
+			timbreBlocModel.setType(TypeTimbreEnum.COLLECTOR);
 		}
 	}
 
