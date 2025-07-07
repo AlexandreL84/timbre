@@ -10,7 +10,7 @@
 	<div class="listeTimbre primary">
 		<div *ngFor="let timbre of timbres$ | async"
 			 class="detailTimbre"
-			 [ngClass]="timbre?.getTimbreAcquisModel()?.isAcquis() ? 'border-accent bg-accentA200' : 'border-primary'"
+			 [ngClass]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'border-accent900 bg-accentA400' : timbre?.getTimbreAcquisModel()?.isAcquis() ? 'border-accent bg-accentA200' : 'border-primary'"
 		>
 			<div class="headerTimbre">
 				<div class="actionTimbre">
@@ -28,7 +28,7 @@
 					<lib-icon
 						*ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL"
 						class="click"
-						[classIcone]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
+						[classIcone]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'accent900' : 'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="timbre?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 						[info]="timbre?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
@@ -76,7 +76,7 @@
 					<lib-icon
 						*ngIf="timbre?.getIdBloc()"
 						class="click"
-						[classIcone]="'primary'"
+						[classIcone]="timbre?.getTimbreBlocModel()?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent900' : (timbre?.getTimbreBlocModel()?.getTimbreBlocAcquisModel()?.isAcquis()? 'accent'  : 'primary')"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="FontAwesomeEnum.IMAGE_POLAROID"
 						(click)="utilsService.zoom(timbre?.getTimbreBlocModel()?.getImageZoom() )"

@@ -145,7 +145,7 @@
 			<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 				<lib-icon
 					class="click"
-					[classIcone]="element?.getTimbreAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
+					[classIcone]="element?.getTimbreAcquisModel()?.isDoublon() ? 'accent900' : 'primary'"
 					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 					[icone]="element?.getTimbreAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 					[info]="element?.getTimbreAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"

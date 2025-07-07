@@ -255,7 +255,7 @@ export class TimbreImporterComponent implements OnInit {
 				timbreBlocModel.setImageZoom(imageZoom);
 			}
 			if (timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis()) {
-				this.timbreBlocService.addAcquis(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser(), timbreBlocModel, timbreBlocModel?.getTimbreBlocAcquisModel()?.isDoublon());
+				this.timbreUtilsService.addAcquisBloc(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser(), timbreBlocModel, timbreBlocModel?.getTimbreBlocAcquisModel()?.isDoublon());
 			}
 			this.timbreBlocService.ajouter(timbreBlocModel, false);
 		});

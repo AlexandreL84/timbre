@@ -37,13 +37,17 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label("Nombre de timbres")
 	nbTimbres: number;
 
+	@Label("Nombre de timbres acquis")
+	nbTimbresAcquis: number;
+
 	idOrigine: number;
 
 	@Label("Timbres")
 	timbres: TimbreModel[];
 
 
-	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageTable?: string, imageZoom?: string, yt?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number) {		super();
+	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageTable?: string, imageZoom?: string, yt?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number, nbTimbresAcquis?: number) {
+		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
 		this.type = type ? type : null;
@@ -54,6 +58,7 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.yt = yt ? yt : null;
 		this.timbreBlocAcquisModel = timbreBlocAcquisModel ? timbreBlocAcquisModel : null;
 		this.nbTimbres = nbTimbres ? nbTimbres : null;
+		this.nbTimbresAcquis = nbTimbresAcquis ? nbTimbresAcquis : null;
 	}
 
 	getId(): number {
@@ -142,6 +147,14 @@ export class TimbreBlocModel extends ProprieteModel {
 
 	setNbTimbres(value: number) {
 		this.nbTimbres = value;
+	}
+
+	getNbTimbresAcquis(): number {
+		return this.nbTimbresAcquis;
+	}
+
+	setNbTimbresAcquis(value: number) {
+		this.nbTimbresAcquis = value;
 	}
 
 	getTimbres(): TimbreModel[] {

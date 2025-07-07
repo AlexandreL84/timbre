@@ -26,7 +26,7 @@ export class TimbreResumeService {
 		this.totalTimbreResume$.next(null);
 		combineLatest([
 			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
-			this.timbreService.getTimbreAcquis(),
+			this.timbreUtilsService.getTimbreAcquis(),
 			this.timbreBlocService.getAllBlocs(timbreCritereModel),
 			this.timbreBlocService.getTimbreBlocAcquis()
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBloc, timbresBlocAcquis]) => {

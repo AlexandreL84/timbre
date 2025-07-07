@@ -9,7 +9,7 @@
 <section [fxHide]="(timbreBlocService.load$ | async) == false">
 	<div class="listeTimbre primary">
 		<div *ngFor="let timbreBloc of timbreBlocService.timbresBlocModel$ | async" class="detailTimbre"
-			 [ngClass]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'border-accent bg-accentA200' : 'border-primary'">
+			 [ngClass]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'border-accent900 bg-accentA400' : timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'border-accent bg-accentA200' : 'border-primary'">
 			<div class="headerTimbre">
 				<div class="actionTimbre">
 					<lib-icon
@@ -25,7 +25,7 @@
 					<lib-icon
 						*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
 						class="click"
-						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent' : 'primary'"
+						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent900' : 'primary'"
 						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
 						[icone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 						[info]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
@@ -63,7 +63,7 @@
 
 				<div class="infoTimbre">
 					<ng-container *ngIf="timbreBloc?.getType() != TypeTimbreEnum.COLLECTOR">
-						{{ timbreBloc?.getNbTimbres() }}
+						{{ timbreBloc?.getNbTimbresAcquis() }}/{{ timbreBloc?.getNbTimbres() }}
 					</ng-container>
 
 					<lib-icon

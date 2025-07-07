@@ -99,7 +99,7 @@ export class TimbreService {
 		this.load$.next(false);
 		combineLatest([
 			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
-			this.getTimbreAcquis(),
+			this.timbreUtilsService.getTimbreAcquis(),
 			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel);
@@ -113,24 +113,6 @@ export class TimbreService {
 			this.timbres$.next(timbresRetour);
 			this.load$.next(true);
 		});
-	}
-
-	getTimbreAcquis(): Observable<any> {
-		return this.authService.userSelect$.pipe(
-			first(userSelect => isNotNullOrUndefined(userSelect)),
-			switchMap((user) => {
-				if (isNotNullOrUndefined(user)) {
-					return this.getTimbreAcquisByUser(user.getId()).pipe(first(),
-						map(result => {
-							return result;
-						}));
-				}
-				return null;
-			}));
-	}
-
-	getTimbreAcquisByUser(id): Observable<any> {
-		return this.firestore.collection(BaseEnum.TIMBRE_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
 	}
 
 	ajouterSansId(timbreModel: TimbreModel) {

@@ -25,6 +25,7 @@ import {PreferenceEnum} from "../../enum/preference.enum";
 import {PreferenceService} from "../preference.service";
 import {MonnaieEnum} from "../../enum/monnaie.enum";
 import {cloneDeep} from "lodash";
+import {TimbreModel} from "../../../model/timbre.model";
 
 @Injectable()
 export class TimbreBlocService {
@@ -180,10 +181,19 @@ export class TimbreBlocService {
 
 	getBlocsAsync(timbreCritereModel?: TimbreCritereModel): Observable<TimbreBlocModel[]> {
 		this.timbresBlocModel$.next(null);
-		return this.getAllBlocs(timbreCritereModel).pipe(first(), map(blocs => {
-				return this.constructBlocs(blocs, null, timbreCritereModel);
+
+		return  combineLatest([
+			this.getAllBlocs(timbreCritereModel),
+			this.getTimbreBlocAcquis()
+		]).pipe(first(), map(([timbresBloc, timbresBlocAcquis]) => {
+				return this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel);
 			}
 		));
+
+		/*return this.getAllBlocs(timbreCritereModel).pipe(first(), map(blocs => {
+				return this.constructBlocs(blocs, null, timbreCritereModel);
+			}
+		));*/
 	}
 
 	constructBloc(bloc: TimbreBlocModel, timbresBlocAcquis): TimbreBlocModel {
@@ -206,6 +216,9 @@ export class TimbreBlocService {
 				const timbreBlocModel: TimbreBlocModel = this.constructBloc(bloc, timbresBlocAcquis);
 				this.getTimbresByBlocAsync(timbreBlocModel.getId()).subscribe(timbres => {
 					timbreBlocModel.setNbTimbres(timbres?.length);
+					const nbTimbresAcquis: number = timbres?.filter(timbre => timbre?.getTimbreAcquisModel()?.isAcquis())?.length;
+					timbreBlocModel.setNbTimbresAcquis(nbTimbresAcquis);
+					//this.timbreUtilsService.verifBloc(timbreBlocModel);
 				});
 
 				let ajout: boolean = true;
@@ -236,57 +249,6 @@ export class TimbreBlocService {
 			});
 		}
 		return timbresBlocModel;
-	}
-
-	acquis(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
-		return this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
-			if (isNotNullOrUndefined(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser())) {
-				this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS)
-					.ref.where('idBloc', '==', timbreBlocModel.getId()).where('idUser', '==', user.getId())
-					//.limit(1)
-					.get()
-					.then(snapshot => {
-						snapshot.forEach(doc => {
-							// Mise à jour du document
-							const timbreBlocAcquisModel: TimbreBlocAcquisModel = timbreBlocModel.getTimbreBlocAcquisModel();
-							if (doublon) {
-								timbreBlocAcquisModel.setAcquis(true);
-								timbreBlocAcquisModel.setDoublon(!timbreBlocAcquisModel.isDoublon());
-							} else {
-								timbreBlocAcquisModel.setAcquis(!timbreBlocAcquisModel.isAcquis());
-								if (!timbreBlocAcquisModel.isAcquis()) {
-									timbreBlocAcquisModel.setDoublon(false);
-								}
-							}
-							doc.ref.update(Object.assign(new Object(), timbreBlocAcquisModel))
-								.then(snapshot => {
-									timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
-								})
-								.catch(error => {
-									console.error('Erreur de mise à jour:', error);
-								});
-						});
-					})
-					.catch(error => {
-						console.error('Erreur de mise à jour:', error);
-					});
-			} else {
-				this.addAcquis(user?.getId(), timbreBlocModel, doublon);
-			}
-			this.timbreUtilsService.reinitResume$.next(true);
-		});
-	}
-
-	addAcquis(idUser: string, timbreBlocModel: TimbreBlocModel, doublon: boolean) {
-		const timbreBlocAcquisModel = new TimbreBlocAcquisModel();
-		timbreBlocAcquisModel.setIdUser(idUser);
-		timbreBlocAcquisModel.setIdBloc(timbreBlocModel.getId());
-		timbreBlocAcquisModel.setAcquis(true);
-		timbreBlocAcquisModel.setDoublon(doublon);
-		timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
-		this.firestore.collection(BaseEnum.TIMBRE_BLOC_ACQUIS).add(
-			Object.assign(new Object(), timbreBlocAcquisModel)
-		);
 	}
 
 	ajouterSansId(timbreBlocModel: TimbreBlocModel) {
@@ -377,12 +339,11 @@ export class TimbreBlocService {
 			});
 	}
 
-	getTimbresByBlocAsync(idBloc: number) {
+	getTimbresByBlocAsync(idBloc: number): Observable<TimbreModel[]> {
 		const timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
 		timbreCritereModel.setIdBloc(idBloc);
 		return this.timbreUtilsService.getTimbresByCritereAsync(timbreCritereModel);
 	}
-
 
 	supprimer(timbreBlocModel: TimbreBlocModel) {
 		this.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
@@ -450,7 +411,7 @@ export class TimbreBlocService {
 				if (timbreBlocModel?.getType() == TypeTimbreEnum.CARNET) {
 					this.acquisCarnetDialog(timbreBlocModel, doublon);
 				} else {
-					this.acquis(timbreBlocModel, doublon);
+					this.timbreUtilsService.acquisBloc(timbreBlocModel, doublon);
 				}
 			} else {
 				this.utilsService.droitInsuffisant();
@@ -487,8 +448,10 @@ export class TimbreBlocService {
 							//this.timbreUtilsService.supprimerAcquisTimbreByUser(user.getId(), timbreModel, doublon, !timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis());
 						});
 					});
-					this.acquis(timbreBlocModel, doublon);
+					this.timbreUtilsService.acquisBloc(timbreBlocModel, doublon);
 				});
+			} else {
+				this.timbreUtilsService.acquisBloc(timbreBlocModel, doublon);
 			}
 		})
 	}
