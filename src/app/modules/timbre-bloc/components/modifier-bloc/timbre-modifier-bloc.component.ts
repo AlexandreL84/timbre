@@ -1,5 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {BehaviorSubject, combineLatest, first} from 'rxjs';
+import {BehaviorSubject, catchError, combineLatest, EMPTY, filter, first} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../shared/utils/utils';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -19,6 +19,7 @@ import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {TypeImageTimbreEnum} from "../../../../shared/enum/type-image-timbre.enum";
+import {take} from "rxjs/operators";
 
 @Component({
 	selector: 'app-timbre-modifier-bloc',
@@ -109,47 +110,52 @@ export class TimbreModifierBlocComponent implements OnInit {
 		} else {
 			this.timbreBlocModel.setMonnaie(MonnaieEnum.FRANC);
 		}
-		try {
-			combineLatest([
-				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.AUTRE),
-				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.TABLE),
-				this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.ZOOM),
-			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
-				if (isNotNullOrUndefined(image) && image != 'nok') {
-					this.timbreBlocModel.setImage(image);
-				}
-				if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
-					this.timbreBlocModel.setImageTable(imageTable);
-				}
-				if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
-					this.timbreBlocModel.setImageZoom(imageZoom);
-				}
-				if (!ajout) {
-					this.timbreBlocService.modifier(this.timbreBlocModel);
-				} else {
-					this.timbreBlocService.ajouter(this.timbreBlocModel, true);
-				}
 
-				if (this.timbreBlocModel?.getTimbres()?.length > 0) {
-					this.saveTimbres();
-				} else {
-					this.validSuccess();
-				}
+		combineLatest([
+			this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.AUTRE),
+			this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.TABLE),
+			this.timbreBlocService.upload(this.timbreBlocModel, DossierEnum.ZOOM),
+		]).pipe(
+			filter(([image, imageTable, imageZoom]) =>
+				isNotNullOrUndefined(image) &&
+				isNotNullOrUndefined(imageTable) &&
+				isNotNullOrUndefined(imageZoom)
+			),
+			take(1),
+			catchError(error => {
+				this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, ajout? NotificationMessageEnum.BLOC_AJOUT_NOK: NotificationMessageEnum.BLOC_MODIF_NOK);
+				return EMPTY; // ou throwError si tu veux propager
+			})).subscribe(([image, imageTable, imageZoom]) => {
+			if (this.timbreUtilsService.isValidImage(image)) {
+				this.timbreBlocModel.setImage(image);
+			}
+			if (this.timbreUtilsService.isValidImage(imageTable)) {
+				this.timbreBlocModel.setImageTable(imageTable);
+			}
+			if (this.timbreUtilsService.isValidImage(imageZoom)) {
+				this.timbreBlocModel.setImageZoom(imageZoom);
+			}
+			if (!ajout) {
+				this.timbreBlocService.modifier(this.timbreBlocModel);
+			} else {
+				this.timbreBlocService.ajouter(this.timbreBlocModel, true);
+			}
 
-			});
-		} catch (error) {
-			this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, NotificationMessageEnum.TIMBRE_MODIF_NOK);
-			this.load$.next(true);
-		}
+			if (this.timbreBlocModel?.getTimbres()?.length > 0) {
+				this.saveTimbres(ajout);
+			} else {
+				this.validSuccess(ajout);
+			}
+		});
 	}
 
-	validSuccess() {
-		this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
+	validSuccess(ajout: boolean) {
+		this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, ajout? NotificationMessageEnum.BLOC_AJOUT: NotificationMessageEnum.BLOC_MODIF);
 		this.load$.next(true);
 		this.dialogRef.close();
 	}
 
-	saveTimbres() {
+	saveTimbres(ajout: boolean) {
 		if (this.timbreBlocModel?.getTimbres()?.length > 0) {
 			this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE).pipe(first()).subscribe(id => {
 				this.timbreBlocModel?.getTimbres().forEach((timbreModel, index) => {
@@ -164,23 +170,35 @@ export class TimbreModifierBlocComponent implements OnInit {
 						this.timbreService.upload(timbreModel, DossierEnum.AUTRE),
 						this.timbreService.upload(timbreModel, DossierEnum.TABLE),
 						this.timbreService.upload(timbreModel, DossierEnum.ZOOM),
-					]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
-						if (isNotNullOrUndefined(image) && image != 'nok') {
-							timbreModel.setImage(image);
-						}
-						if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
-							timbreModel.setImageTable(imageTable);
-						}
-						if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
-							timbreModel.setImageZoom(imageZoom);
-						}
-						this.timbreService.ajouter(timbreModel, true);
+					]).pipe(
+						filter(([image, imageTable, imageZoom]) =>
+							isNotNullOrUndefined(image) &&
+							isNotNullOrUndefined(imageTable) &&
+							isNotNullOrUndefined(imageZoom)
+						),
+						take(1),
+						catchError(error => {
+							this.httpResponseHandlerService.showNotificationError(
+								NotificationTypeEnum.TRANSACTION_NOK,
+								NotificationMessageEnum.TIMBRE_AJOUT_NOK
+							);
+							this.load$.next(true);
+							return EMPTY; // stop the stream
+						})).subscribe(([image, imageTable, imageZoom]) => {
+							if (this.timbreUtilsService.isValidImage(image)) {
+								timbreModel.setImage(image);
+							}
+							if (this.timbreUtilsService.isValidImage(imageTable)) {
+								timbreModel.setImageTable(imageTable);
+							}
+							if (this.timbreUtilsService.isValidImage(imageZoom)) {
+								timbreModel.setImageZoom(imageZoom);
+							}
 
-						this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
-
-						if (index == this.timbreBlocModel.getTimbres().length - 1) {
-							this.validSuccess();
-						}
+							this.timbreService.ajouter(timbreModel, true);
+							if (index == this.timbreBlocModel.getTimbres().length - 1) {
+								this.validSuccess(ajout);
+							}
 					});
 				});
 			});

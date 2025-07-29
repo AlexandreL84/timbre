@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, combineLatest, first} from 'rxjs';
+import {BehaviorSubject, combineLatest, filter, first} from 'rxjs';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
 import * as Papa from 'papaparse';
@@ -18,6 +18,7 @@ import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.
 import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
+import {take} from "rxjs/operators";
 
 @Component({
 	selector: 'app-timbre-importer',
@@ -244,14 +245,21 @@ export class TimbreImporterComponent implements OnInit {
 			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.AUTRE),
 			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.TABLE),
 			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.ZOOM)
-		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
-			if (isNotNullOrUndefined(image) && image != 'nok') {
+		]).pipe(
+			filter(([image, imageTable, imageZoom]) =>
+				isNotNullOrUndefined(image) &&
+				isNotNullOrUndefined(imageTable) &&
+				isNotNullOrUndefined(imageZoom)
+			),
+			take(1)
+		).subscribe(([image, imageTable, imageZoom]) => {
+			if (this.timbreUtilsService.isValidImage(image)) {
 				timbreBlocModel.setImage(image);
 			}
-			if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
+			if (this.timbreUtilsService.isValidImage(imageTable)) {
 				timbreBlocModel.setImageTable(imageTable);
 			}
-			if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
+			if (this.timbreUtilsService.isValidImage(imageZoom)) {
 				timbreBlocModel.setImageZoom(imageZoom);
 			}
 			if (timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis()) {
@@ -266,14 +274,21 @@ export class TimbreImporterComponent implements OnInit {
 			this.timbreService.upload(timbreModel, DossierEnum.AUTRE),
 			this.timbreService.upload(timbreModel, DossierEnum.TABLE),
 			this.timbreService.upload(timbreModel, DossierEnum.ZOOM)
-		]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
-			if (isNotNullOrUndefined(image) && image != 'nok') {
+		]).pipe(
+			filter(([image, imageTable, imageZoom]) =>
+				isNotNullOrUndefined(image) &&
+				isNotNullOrUndefined(imageTable) &&
+				isNotNullOrUndefined(imageZoom)
+			),
+			take(1)
+		).subscribe(([image, imageTable, imageZoom]) => {
+			if (this.timbreUtilsService.isValidImage(image)) {
 				timbreModel.setImage(image);
 			}
-			if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
+			if (this.timbreUtilsService.isValidImage(imageTable)) {
 				timbreModel.setImageTable(imageTable);
 			}
-			if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
+			if (this.timbreUtilsService.isValidImage(imageZoom)) {
 				timbreModel.setImageZoom(imageZoom);
 			}
 			if (timbreModel?.getTimbreAcquisModel()?.isAcquis()) {

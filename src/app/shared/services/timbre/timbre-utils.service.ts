@@ -73,7 +73,7 @@ export class TimbreUtilsService {
 					filteredQuery = filteredQuery.where("idBloc", "==", timbreCritereModel.getIdBloc());
 				}
 			}
-			filteredQuery = filteredQuery.orderBy('id', 'asc');
+			//filteredQuery = filteredQuery.orderBy('id', 'asc');
 			return filteredQuery;
 		}).valueChanges();
 	}
@@ -350,5 +350,9 @@ export class TimbreUtilsService {
 
 	getTimbreAcquisByUser(id): Observable<any> {
 		return this.firestore.collection(BaseEnum.TIMBRE_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
+	}
+
+	isValidImage(img: string | null | undefined): boolean {
+		return isNotNullOrUndefined(img) && img !== 'nok';
 	}
 }

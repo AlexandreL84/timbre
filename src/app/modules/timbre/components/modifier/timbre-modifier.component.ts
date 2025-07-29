@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {TimbreModel} from '../../../../model/timbre.model';
 import {TimbreService} from '../../../../shared/services/timbre/timbre.service';
-import {BehaviorSubject, combineLatest, first} from 'rxjs';
+import {BehaviorSubject, catchError, combineLatest, EMPTY, filter, first} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../shared/utils/utils';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -19,6 +19,7 @@ import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-util
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
+import {take} from "rxjs/operators";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -104,19 +105,30 @@ export class TimbreModifierComponent implements OnInit {
 		} else {
 			this.timbreModel.setMonnaie(MonnaieEnum.FRANC);
 		}
-		try {
-			combineLatest([
-				this.timbreService.upload(this.timbreModel, DossierEnum.AUTRE),
-				this.timbreService.upload(this.timbreModel, DossierEnum.TABLE),
-				this.timbreService.upload(this.timbreModel, DossierEnum.ZOOM),
-			]).pipe(first(([image, imageTable, imageZoom]) => isNotNullOrUndefined(image) && isNotNullOrUndefined(imageZoom) && isNotNullOrUndefined(imageTable))).subscribe(([image, imageTable, imageZoom]) => {
-				if (isNotNullOrUndefined(image) && image != 'nok') {
+
+		combineLatest([
+			this.timbreService.upload(this.timbreModel, DossierEnum.AUTRE),
+			this.timbreService.upload(this.timbreModel, DossierEnum.TABLE),
+			this.timbreService.upload(this.timbreModel, DossierEnum.ZOOM),
+		]).pipe(
+			filter(([image, imageTable, imageZoom]) =>
+				isNotNullOrUndefined(image) &&
+				isNotNullOrUndefined(imageTable) &&
+				isNotNullOrUndefined(imageZoom)
+			),
+			take(1),
+			catchError(error => {
+				this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, ajout? NotificationMessageEnum.TIMBRE_AJOUT_NOK: NotificationMessageEnum.TIMBRE_MODIF_NOK);
+				this.load$.next(true);
+				return EMPTY; // stop the stream
+			})).subscribe(([image, imageTable, imageZoom]) => {
+				if (this.timbreUtilsService.isValidImage(image)) {
 					this.timbreModel.setImage(image);
 				}
-				if (isNotNullOrUndefined(imageTable) && imageTable != 'nok') {
+				if (this.timbreUtilsService.isValidImage(imageTable)) {
 					this.timbreModel.setImageTable(imageTable);
 				}
-				if (isNotNullOrUndefined(imageZoom) && imageZoom != 'nok') {
+				if (this.timbreUtilsService.isValidImage(imageZoom)) {
 					this.timbreModel.setImageZoom(imageZoom);
 				}
 				if (!ajout) {
@@ -124,14 +136,10 @@ export class TimbreModifierComponent implements OnInit {
 				} else {
 					this.timbreService.ajouter(this.timbreModel, true);
 				}
-				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
+				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, ajout? NotificationMessageEnum.TIMBRE_AJOUT: NotificationMessageEnum.TIMBRE_MODIF);
 				this.load$.next(true);
 				this.dialogRef.close();
-			});
-		} catch (error) {
-			this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, NotificationMessageEnum.TIMBRE_MODIF_NOK);
-			this.load$.next(true);
-		}
+		});
 	}
 
 	close() {

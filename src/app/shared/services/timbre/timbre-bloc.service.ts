@@ -182,13 +182,12 @@ export class TimbreBlocService {
 	getBlocsAsync(timbreCritereModel?: TimbreCritereModel): Observable<TimbreBlocModel[]> {
 		this.timbresBlocModel$.next(null);
 
-		return  combineLatest([
+		return combineLatest([
 			this.getAllBlocs(timbreCritereModel),
 			this.getTimbreBlocAcquis()
 		]).pipe(first(), map(([timbresBloc, timbresBlocAcquis]) => {
-				return this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel);
-			}
-		));
+			return this.constructBlocs(timbresBloc, timbresBlocAcquis, timbreCritereModel);
+		}));
 
 		/*return this.getAllBlocs(timbreCritereModel).pipe(first(), map(blocs => {
 				return this.constructBlocs(blocs, null, timbreCritereModel);
