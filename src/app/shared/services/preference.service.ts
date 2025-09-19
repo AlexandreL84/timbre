@@ -39,33 +39,20 @@ export class PreferenceService {
 
 	getPreferencesByKey(key: PreferenceEnum): Observable<PreferenceModel> {
 		const preferenceModel = new PreferenceModel(key);
+
 		return this.authService.userSelect$.pipe(
 			first(userSelect => isNotNullOrUndefined(userSelect)),
 			switchMap((userSelect) => {
 				if (isNotNullOrUndefined(userSelect)) {
+					preferenceModel.setIdUser(userSelect.getId());
+
 					return this.firestore.collection(BaseEnum.PREFERENCE, ref => {
 						return this.getRef(ref, preferenceModel);
 					}).valueChanges()
 						.pipe(first(), map(preferences => {
-								if (isNotNullOrUndefined(preferences) && preferences?.length > 0) {
-
+							if (isNotNullOrUndefined(preferences) && preferences?.length > 0) {
 									return this.constructPreferences(preferences)[0];
 								}
-							}
-						));
-				}
-				return null;
-			}));
-	}
-
-	getPreferencesByUser(): Observable<PreferenceModel[]> {
-		return this.authService.userSelect$.pipe(
-			first(userSelect => isNotNullOrUndefined(userSelect)),
-			switchMap((userSelect) => {
-				if (isNotNullOrUndefined(userSelect)) {
-					return this.firestore.collection(BaseEnum.PREFERENCE, ref => ref.where('idUser', '==', userSelect.getId())).valueChanges()
-						.pipe(first(), map(preferences => {
-								return this.constructPreferences(preferences);
 							}
 						));
 				}
@@ -103,10 +90,8 @@ export class PreferenceService {
 		}*/
 		//value.splice(value.indexOf("type"), 1);
 		const jsonString = JSON.stringify(value);
-		console.log(jsonString)
 
 		const preferenceModel = new PreferenceModel(key, jsonString);
-		console.log(preferenceModel)
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			preferenceModel.setIdUser(user.getId());
 			this.getPreference(preferenceModel).pipe(first()).subscribe(preferenceModelTrouve => {
@@ -138,6 +123,7 @@ export class PreferenceService {
 			})
 				.get()
 				.pipe().subscribe(snapshot => {
+
 				if (isNotNullOrUndefined(snapshot) && snapshot?.size > 0) {
 					snapshot.forEach(doc => {
 						doc.ref.update(Object.assign(new Object(), preferenceModel))
