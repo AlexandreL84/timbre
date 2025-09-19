@@ -105,7 +105,6 @@ export class TimbreService {
 			this.timbreBlocService.getBlocsAsync(timbreCritereBlocModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel);
-			console.log(timbresBlocModel)
 			if (timbresRetour?.length > 0) {
 				timbresRetour = timbresRetour.sort((a, b) => {
 					return a.getIdBloc() - b.getIdBloc();
