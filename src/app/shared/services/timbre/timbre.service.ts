@@ -92,6 +92,8 @@ export class TimbreService {
 	}
 
 	getTimbres(timbreCritereModel: TimbreCritereModel, total: boolean) {
+		const timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
+		timbreCritereBlocModel.setAnnees(timbreCritereModel.getAnnees())
 		if (total) {
 			this.getTotal();
 		}
@@ -100,9 +102,10 @@ export class TimbreService {
 		combineLatest([
 			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
 			this.timbreUtilsService.getTimbreAcquis(),
-			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
+			this.timbreBlocService.getBlocsAsync(timbreCritereBlocModel)
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel);
+			console.log(timbresBlocModel)
 			if (timbresRetour?.length > 0) {
 				timbresRetour = timbresRetour.sort((a, b) => {
 					return a.getIdBloc() - b.getIdBloc();
