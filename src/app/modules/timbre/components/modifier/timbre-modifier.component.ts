@@ -31,7 +31,7 @@ export class TimbreModifierComponent implements OnInit {
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 	id: number;
-	maxAnnee: number = new Date().getFullYear();
+	maxAnnee: number = new Date().getFullYear() + 1;
 	timbreModel: TimbreModel = new TimbreModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
 
