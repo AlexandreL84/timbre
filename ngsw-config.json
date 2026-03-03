@@ -24,5 +24,19 @@
 				]
 			}
 		}
+	],
+	"dataGroups": [
+		{
+			"name": "firebase-images",
+			"urls": [
+				"https://firebasestorage.googleapis.com/v0/b/book-f941b.appspot.com/o/images/**"
+			],
+			"cacheConfig": {
+				"strategy": "performance",
+				"maxSize": 100,
+				"maxAge": "365d",
+				"timeout": "0u"
+			}
+		}
 	]
 }
