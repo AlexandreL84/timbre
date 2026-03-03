@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1767082891462,
+  "timestamp": 1772530390485,
   "index": "/timbre/index.html",
   "assetGroups": [
     {
@@ -35,7 +35,7 @@
         "/timbre/index.html",
         "/timbre/main-BRULO7NY.js",
         "/timbre/polyfills-FFHMD2TL.js",
-        "/timbre/styles-N7DKBEQO.css"
+        "/timbre/styles-FMKLQNKW.css"
       ],
       "patterns": []
     },
@@ -53,7 +53,22 @@
       "patterns": []
     }
   ],
-  "dataGroups": [],
+  "dataGroups": [
+    {
+      "name": "firebase-images",
+      "patterns": [
+        "https:\\/\\/firebasestorage\\.googleapis\\.com\\/v0\\/b\\/book-f941b\\.appspot\\.com\\/o\\/images\\/.*"
+      ],
+      "strategy": "performance",
+      "maxSize": 100,
+      "maxAge": 31536000000,
+      "timeoutMs": 0,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
   "hashTable": {
     "/timbre/assets/icons/icon-192x192.png": "2af582d47d4937a2152600a52718a777074f572e",
     "/timbre/assets/icons/icon-512x512.png": "90309cc9f363771e0860e65a34187e89a1630729",
@@ -78,10 +93,10 @@
     "/timbre/chunk-Z2WRGFA4.js": "968cc7b38b78a5389c5d7a819e8a78618bad5bc9",
     "/timbre/dark-theme.css": "48bb38fbd3e038d9be9ed8b4806d271481ffec08",
     "/timbre/favicon.ico": "3c0ca2531c5fa1e052a8503ab00be35c132b9775",
-    "/timbre/index.html": "65a46f23a1004d21a04292760693f4d10bb6ce51",
+    "/timbre/index.html": "15a31bbc91a012b45fa1a1041c63926329e7d6c7",
     "/timbre/main-BRULO7NY.js": "09dba6557b1e090955bcd66e1c7a717522c6d441",
     "/timbre/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
-    "/timbre/styles-N7DKBEQO.css": "bfa0d1c3990d3f4275bfc0d4532fce667114f909"
+    "/timbre/styles-FMKLQNKW.css": "c289291112e5ddb787b5c6869da66457074c6d56"
   },
   "navigationUrls": [
     {
