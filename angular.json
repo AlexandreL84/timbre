@@ -23,7 +23,7 @@
 							"file-saver",
 							"papaparse"
 						],
-						"outputPath": "dist/timbre/timbre",
+						"outputPath": "dist/timbre",
 						"index": "src/index.html",
 						"browser": "src/main.ts",
 						"polyfills": [
