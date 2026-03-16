@@ -50,6 +50,7 @@
 					},
 					"configurations": {
 						"production": {
+							"baseHref": "/timbre/",
 							"assets": [
 								{
 									"glob": "**/*",
