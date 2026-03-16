@@ -25,7 +25,7 @@ jobs:
               run: npm install
 
             - name: Build
-              run: npx ng build --configuration production
+              run: ./node_modules/.bin/ng build --configuration production
 
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v3
