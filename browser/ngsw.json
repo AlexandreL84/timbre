@@ -1,0 +1,120 @@
+{
+  "configVersion": 1,
+  "timestamp": 1773679497492,
+  "index": "/timbre/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/timbre/chunk-2GLYVRK5.js",
+        "/timbre/chunk-2PRFEQOJ.js",
+        "/timbre/chunk-3POYJZFL.js",
+        "/timbre/chunk-4LCAWBI7.js",
+        "/timbre/chunk-5EZOH6WO.js",
+        "/timbre/chunk-5UTGBYJT.js",
+        "/timbre/chunk-BK5PRSAS.js",
+        "/timbre/chunk-C5FSM2J7.js",
+        "/timbre/chunk-EDLFD7CX.js",
+        "/timbre/chunk-G7K6NVD2.js",
+        "/timbre/chunk-GOLCFQAC.js",
+        "/timbre/chunk-H4K6RJAF.js",
+        "/timbre/chunk-HW67UIVF.js",
+        "/timbre/chunk-LQGF67VV.js",
+        "/timbre/chunk-M3HSDTMQ.js",
+        "/timbre/chunk-MDP7BQHO.js",
+        "/timbre/chunk-OVY367DH.js",
+        "/timbre/chunk-SPT35FA3.js",
+        "/timbre/chunk-Z2WRGFA4.js",
+        "/timbre/dark-theme.css",
+        "/timbre/favicon.ico",
+        "/timbre/index.html",
+        "/timbre/main-BX45YJM3.js",
+        "/timbre/polyfills-FFHMD2TL.js",
+        "/timbre/styles-FMKLQNKW.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/timbre/assets/icons/icon-192x192.png",
+        "/timbre/assets/icons/icon-512x512.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "firebase-images",
+      "patterns": [
+        "https:\\/\\/firebasestorage\\.googleapis\\.com\\/v0\\/b\\/book-f941b\\.appspot\\.com\\/o\\/images\\/.*"
+      ],
+      "strategy": "performance",
+      "maxSize": 100,
+      "maxAge": 31536000000,
+      "timeoutMs": 0,
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "/timbre/assets/icons/icon-192x192.png": "2af582d47d4937a2152600a52718a777074f572e",
+    "/timbre/assets/icons/icon-512x512.png": "90309cc9f363771e0860e65a34187e89a1630729",
+    "/timbre/chunk-2GLYVRK5.js": "4dc2e4ca725fe63e31b5be767fa881b68122c4bb",
+    "/timbre/chunk-2PRFEQOJ.js": "4dc37ffc2bfed2a3413ab7a8b414de0f119abb37",
+    "/timbre/chunk-3POYJZFL.js": "b7d922db9fa3e2bc61b67cf8cd3ef18f37e3cba1",
+    "/timbre/chunk-4LCAWBI7.js": "7b62bd05906a620d61731ed706f127793af86d6e",
+    "/timbre/chunk-5EZOH6WO.js": "d553e9039c25a9bf94b3f365b9dbd986543ae7c0",
+    "/timbre/chunk-5UTGBYJT.js": "cc5baca6713773fe3aeb3dbe550b64706b0858f9",
+    "/timbre/chunk-BK5PRSAS.js": "19b393b2b06002d1e8b83be3226dfb0afcad3908",
+    "/timbre/chunk-C5FSM2J7.js": "3a148debee02b2ef8c7922003983d6068105adb5",
+    "/timbre/chunk-EDLFD7CX.js": "0bfa4ba6ffb5034073e2819c06538a125bfc3793",
+    "/timbre/chunk-G7K6NVD2.js": "b2bf8c1aa06526c7b8f0c91016e7d7178a05e80c",
+    "/timbre/chunk-GOLCFQAC.js": "5575ab1407f69b05414d0c5360379544d5fe2461",
+    "/timbre/chunk-H4K6RJAF.js": "89f1d5a58be1696ce76bf8baf30e529efbb431a2",
+    "/timbre/chunk-HW67UIVF.js": "2da0034194ebe329bd88cd836ab45146579b06ff",
+    "/timbre/chunk-LQGF67VV.js": "5c5097b1c799a4562e40ace656262cddb90cd6c3",
+    "/timbre/chunk-M3HSDTMQ.js": "daebba5f3af6cfeac93e948a688355ef25ef5195",
+    "/timbre/chunk-MDP7BQHO.js": "f7cf21fc49d0d79b218f292a994628dca9566885",
+    "/timbre/chunk-OVY367DH.js": "a0ddfb0dcdda9d3862e87870912a90ed228b825f",
+    "/timbre/chunk-SPT35FA3.js": "1c7610763c560f529f9b64b4b6405e0290c5f7e1",
+    "/timbre/chunk-Z2WRGFA4.js": "968cc7b38b78a5389c5d7a819e8a78618bad5bc9",
+    "/timbre/dark-theme.css": "48bb38fbd3e038d9be9ed8b4806d271481ffec08",
+    "/timbre/favicon.ico": "3c0ca2531c5fa1e052a8503ab00be35c132b9775",
+    "/timbre/index.html": "c2075db6cc5d8c262216fd190061460e7316409e",
+    "/timbre/main-BX45YJM3.js": "b40856aa19d7973e6ea99ab8bcca3d0c933c8cc6",
+    "/timbre/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/timbre/styles-FMKLQNKW.css": "c289291112e5ddb787b5c6869da66457074c6d56"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
