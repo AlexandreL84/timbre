@@ -21,7 +21,7 @@ export class TimbreResumeService {
 	}
 
 	getResume(timbreCritereModel?: TimbreCritereModel) {
-		this.load$.next(false);
+		/*this.load$.next(false);
 		this.timbresResume$.next(null);
 		this.totalTimbreResume$.next(null);
 		combineLatest([
@@ -32,7 +32,7 @@ export class TimbreResumeService {
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBloc, timbresBlocAcquis]) => {
 			this.timbresResume$.next(this.construct(timbres, timbresAcquis, timbresBloc, timbresBlocAcquis));
 			this.timbreUtilsService.reinitResume$.next(false);
-		});
+		});*/
 	}
 
 	construct(timbres, timbresAcquis, timbresBloc, timbresBlocAcquis) {

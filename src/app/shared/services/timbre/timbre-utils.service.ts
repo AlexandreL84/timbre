@@ -1,28 +1,32 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, first, map, Observable, switchMap} from "rxjs";
-import {isNotNullOrUndefined, isNullOrUndefined} from "../../utils/utils";
-import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {BaseEnum} from "../../enum/base.enum";
-import {TimbreCritereModel} from "../../../model/timbre-critere.model";
-import {TimbreBlocModel} from "../../../model/timbre-bloc.model";
-import {TimbreModel} from "../../../model/timbre.model";
-import {plainToInstance} from "class-transformer";
-import {TimbreAcquisModel} from "../../../model/timbre-acquis.model";
-import {AuthService} from "../auth.service";
-import {FileDetailUploadModel} from "../../../model/file/file-detail-upload.model";
-import {DimensionImageEnum} from "../../enum/dimension-image.enum";
-import {FileUploadModel} from "../../../model/file/file-upload.model";
-import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
-import {TimbreBlocAcquisModel} from "../../../model/timbre-bloc-acquis.model";
-import {LibModalComponent} from "../../components/lib-modal/lib-modal.component";
-import {MatDialog} from "@angular/material/dialog";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, combineLatest, first, from, Observable, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { isNotNullOrUndefined, isNullOrUndefined } from '../../utils/utils';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { BaseEnum } from '../../enum/base.enum';
+import { TimbreCritereModel } from '../../../model/timbre-critere.model';
+import { TimbreBlocModel } from '../../../model/timbre-bloc.model';
+import { TimbreModel } from '../../../model/timbre.model';
+import { plainToInstance } from 'class-transformer';
+import { TimbreAcquisModel } from '../../../model/timbre-acquis.model';
+import { AuthService } from '../auth.service';
+import { FileDetailUploadModel } from '../../../model/file/file-detail-upload.model';
+import { DimensionImageEnum } from '../../enum/dimension-image.enum';
+import { FileUploadModel } from '../../../model/file/file-upload.model';
+import { TypeTimbreEnum } from '../../enum/type-timbre.enum';
+import { TimbreBlocAcquisModel } from '../../../model/timbre-bloc-acquis.model';
+import { LibModalComponent } from '../../components/lib-modal/lib-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { collection, Firestore, getCountFromServer, query, where } from '@angular/fire/firestore';
+
 
 @Injectable()
 export class TimbreUtilsService {
 	reinitResume$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
-	constructor(private authService: AuthService, private firestore: AngularFirestore, private dialog: MatDialog) {
+	constructor(private authService: AuthService, private firestore: AngularFirestore, private firestore2: Firestore, private dialog: MatDialog) {
 	}
+
 
 	initUpload(): FileUploadModel {
 		const fileUploadModel: FileUploadModel = new FileUploadModel();
@@ -44,38 +48,112 @@ export class TimbreUtilsService {
 		return fileUploadModel;
 	}
 
-	getAnneesAsync(baseEmun: BaseEnum): Observable<number[]> {
-		return this.firestore.collection(baseEmun, ref => {
+	getAnneesAsync(baseEmun: BaseEnum): BehaviorSubject<number[]> {
+		let anneeDepart = 1926;
+		if (baseEmun == BaseEnum.TIMBRE_BLOC) {
+			anneeDepart = 1849
+		}
+		const anneeActuelle = new Date().getFullYear();
+		const listeAnnees = [];
+
+		for (let annee = anneeActuelle; annee >= anneeDepart; annee--) {
+			listeAnnees.push(annee);
+		}
+
+		return  new BehaviorSubject<number[]>(listeAnnees);
+
+		/*return this.firestore.collection(baseEmun, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			filteredQuery = filteredQuery.orderBy('annee', 'desc');
 			return filteredQuery;
 		}).valueChanges().pipe(
 			map(docs => {
 				const allValues = docs.map(doc => Number(doc['annee'])).filter(doc => isNotNullOrUndefined(doc) && doc != 0);
+				console.log("getAnneesAsync", baseEmun, allValues)
+
 				return Array.from(new Set(allValues));
 			})
 		);
+
+		//bloc 1926
+		//timbre 1849*/
 	}
 
 	getAllTimbres(timbreCritereModel: TimbreCritereModel) {
+		/*console.log(timbreCritereModel)
+		this.firestore.collection(BaseEnum.TIMBRE, ref => {
+			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
+			if (isNotNullOrUndefined(timbreCritereModel)) {
+				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
+					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
+				}
+
+				if (timbreCritereModel?.getType()?.length == 0 || (timbreCritereModel?.getType()?.length == 1 && timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE))) {
+					filteredQuery = filteredQuery.where('idBloc', '==', null);
+				} else if (timbreCritereModel?.getType()?.length > 0 && !timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE)) {
+					filteredQuery = filteredQuery.where('idBloc', '!=', null);
+				} else if (isNotNullOrUndefined(timbreCritereModel.getIdBloc())) {
+					filteredQuery = filteredQuery.where('idBloc', '==', timbreCritereModel.getIdBloc());
+				}
+			}
+			//filteredQuery = filteredQuery.orderBy('id', 'asc');
+			return filteredQuery;
+		}).valueChanges().pipe().subscribe(test => {
+			console.log(test);
+		})*/
+
 		return this.firestore.collection(BaseEnum.TIMBRE, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
-					filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
+					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
 				}
 
 				if (timbreCritereModel?.getType()?.length == 0 || (timbreCritereModel?.getType()?.length == 1 && timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE))) {
-					filteredQuery = filteredQuery.where("idBloc", "==", null);
+					filteredQuery = filteredQuery.where('idBloc', '==', null);
 				} else if (timbreCritereModel?.getType()?.length > 0 && !timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE)) {
-					filteredQuery = filteredQuery.where("idBloc", "!=", null);
+					filteredQuery = filteredQuery.where('idBloc', '!=', null);
 				} else if (isNotNullOrUndefined(timbreCritereModel.getIdBloc())) {
-					filteredQuery = filteredQuery.where("idBloc", "==", timbreCritereModel.getIdBloc());
+					filteredQuery = filteredQuery.where('idBloc', '==', timbreCritereModel.getIdBloc());
 				}
 			}
 			//filteredQuery = filteredQuery.orderBy('id', 'asc');
 			return filteredQuery;
 		}).valueChanges();
+
+	}
+
+
+	getCountTimbres(timbreCritereModel: TimbreCritereModel): Observable<number> {
+		const ref = collection(this.firestore2, BaseEnum.TIMBRE);
+
+		let q: any = ref;
+
+		if (timbreCritereModel) {
+
+			if (timbreCritereModel.getAnnees()?.length > 0) {
+				q = query(q, where('annee', 'in', timbreCritereModel.getAnnees().slice(0, 10)));
+			}
+
+			if (timbreCritereModel.getIdBloc()) {
+				q = query(q, where('idBloc', '==', timbreCritereModel.getIdBloc()));
+			} else if (
+				timbreCritereModel?.getType()?.length == 0 ||
+				(timbreCritereModel?.getType()?.length == 1 &&
+					timbreCritereModel?.getType()?.includes(TypeTimbreEnum.TIMBRE))
+			) {
+				q = query(q, where('idBloc', '==', null));
+			} else if (
+				timbreCritereModel?.getType()?.length > 0 &&
+				!timbreCritereModel?.getType()?.includes(TypeTimbreEnum.TIMBRE)
+			) {
+				q = query(q, where('idBloc', '!=', null));
+			}
+		}
+
+		return from(getCountFromServer(q)).pipe(
+			map(snapshot => snapshot.data().count)
+		);
 	}
 
 	constructTimbres(timbres, timbresAcquis, timbresBlocModel?: TimbreBlocModel[], timbreCritereModel?: TimbreCritereModel): TimbreModel[] {
@@ -181,7 +259,7 @@ export class TimbreUtilsService {
 							if (!timbreAcquisModel.isAcquis()) {
 								timbreAcquisModel.setDoublon(false);
 							}
-							timbreModel.getTimbreBlocModel().setNbTimbresAcquis(timbreModel.getTimbreBlocModel().getNbTimbresAcquis() + (timbreAcquisModel.isAcquis()? 1: -1));
+							timbreModel.getTimbreBlocModel().setNbTimbresAcquis(timbreModel.getTimbreBlocModel().getNbTimbresAcquis() + (timbreAcquisModel.isAcquis() ? 1 : -1));
 
 							this.verifBloc(timbreModel.getTimbreBlocModel());
 						}
@@ -219,7 +297,7 @@ export class TimbreUtilsService {
 						if (ajout) {
 							this.supprimerTimbreAcquis(timbreModel);
 						}
-					})
+					});
 				});
 			})
 			.catch(error => {
@@ -252,20 +330,20 @@ export class TimbreUtilsService {
 	}
 
 	acquisCarnetDialog(timbreBlocModel: TimbreBlocModel) {
-		const text: string = "Incohérence sur le carnet, souhaitez-vous régulariser ?";
+		const text: string = 'Incohérence sur le carnet, souhaitez-vous régulariser ?';
 
 		const dialogModal = this.dialog.open(LibModalComponent, {
-			maxHeight: "95vh",
+			maxHeight: '95vh',
 			data: {
-				titre: "Confirmation",
-				message: "Souhaitez-vous <b>" + text + "</b> les timbres du " + timbreBlocModel?.getType()?.toLowerCase() + " ?",
-				btnDroite: "Oui",
-				btnGauche: "Non",
-			},
+				titre: 'Confirmation',
+				message: 'Souhaitez-vous <b>' + text + '</b> les timbres du ' + timbreBlocModel?.getType()?.toLowerCase() + ' ?',
+				btnDroite: 'Oui',
+				btnGauche: 'Non'
+			}
 		});
 
 		dialogModal.afterClosed().subscribe(() => {
-			if (dialogModal.componentInstance.data.resultat === "valider") {
+			if (dialogModal.componentInstance.data.resultat === 'valider') {
 				this.acquisBloc(timbreBlocModel, false, true);
 			}
 		});
@@ -325,7 +403,8 @@ export class TimbreUtilsService {
 	}
 
 	getTimbresByCritereAsync(timbreCritereModel?: TimbreCritereModel): Observable<TimbreModel[]> {
-		return  combineLatest([
+		console.log("getTimbresByCritereAsync")
+		return combineLatest([
 			this.getAllTimbres(timbreCritereModel),
 			this.getTimbreAcquis()
 		]).pipe(first(), map(([timbres, timbresAcquis]) => {
@@ -341,6 +420,7 @@ export class TimbreUtilsService {
 				if (isNotNullOrUndefined(user)) {
 					return this.getTimbreAcquisByUser(user.getId()).pipe(first(),
 						map(result => {
+							console.log("getTimbreAcquis", result)
 							return result;
 						}));
 				}
@@ -349,6 +429,7 @@ export class TimbreUtilsService {
 	}
 
 	getTimbreAcquisByUser(id): Observable<any> {
+		// a corriger remmonte TOUS
 		return this.firestore.collection(BaseEnum.TIMBRE_ACQUIS, ref => ref.where('idUser', '==', id)).valueChanges();
 	}
 

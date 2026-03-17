@@ -55,6 +55,8 @@
 			Bouchon
 		</button>
 		-->
+
+		<!--
 		<lib-icon
 			*ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
 			[icone]="FontAwesomeEnum.UPLOAD"
@@ -68,6 +70,7 @@
 		<app-timbre-supprim
 			*ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
 			class="hide-on-mobile"></app-timbre-supprim>
+		-->
 
 		<div
 			*ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"

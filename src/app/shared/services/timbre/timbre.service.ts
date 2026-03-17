@@ -86,9 +86,10 @@ export class TimbreService {
 
 	getTotal(timbreCritereModel?: TimbreCritereModel) {
 		this.total$.next(null);
-		this.timbreUtilsService.getAllTimbres(timbreCritereModel).subscribe(timbres => {
-			this.total$.next(timbres?.length);
+		this.timbreUtilsService.getCountTimbres(timbreCritereModel).subscribe(nbTotal => {
+			this.total$.next(nbTotal);
 		});
+
 	}
 
 	getTimbres(timbreCritereModel: TimbreCritereModel, total: boolean) {

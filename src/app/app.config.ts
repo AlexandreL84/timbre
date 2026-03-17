@@ -1,6 +1,6 @@
 import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
-import {getFirestore, provideFirestore} from '@angular/fire/firestore';
+import {   getFirestore, provideFirestore } from '@angular/fire/firestore';
 import {routes} from './app.routes';
 import {environment} from "../environments/environment";
 import {provideAnimations} from "@angular/platform-browser/animations";
@@ -15,6 +15,7 @@ import {SimpleNotificationModule} from "./modules/simple-notification/simple-not
 import {provideServiceWorker} from "@angular/service-worker";
 import {provideHttpClient} from "@angular/common/http";
 import {PreferenceService} from "./shared/services/preference.service";
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 
 
 export const appConfig: ApplicationConfig = {
@@ -32,6 +33,8 @@ export const appConfig: ApplicationConfig = {
 		PreferenceService,
 		SimpleNotificationModule,
 		provideHttpClient(),
+		provideFirebaseApp(() => initializeApp(environment.firebase)),
+		provideFirestore(() => getFirestore()),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: environment.production,
 			registrationStrategy: 'registerWhenStable:30000'
