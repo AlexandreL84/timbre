@@ -38,6 +38,12 @@ export class TimbreModel extends ProprieteModel {
 	@Label("Bloc")
 	timbreBlocModel: TimbreBlocModel;
 
+	@Label("acquis")
+	acquis: string[] = [];
+
+	@Label("doublon")
+	doublon: string[] = [];
+
 
 	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel, timbreBlocModel?: TimbreBlocModel) {
 		super();

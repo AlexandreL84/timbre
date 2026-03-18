@@ -19,6 +19,7 @@ import {DimensionImageEnum} from "../../enum/dimension-image.enum";
 import {PreferenceEnum} from "../../enum/preference.enum";
 import {PreferenceService} from "../preference.service";
 import {MonnaieEnum} from "../../enum/monnaie.enum";
+import { UserModel } from '../../../model/user.model';
 
 @Injectable()
 export class TimbreService {
@@ -36,6 +37,63 @@ export class TimbreService {
 		private dialog: MatDialog,
 		private preferenceService: PreferenceService
 	) {
+	}
+
+	modifAll() {
+		//Moi 6XxvHR6d2gVySbCJsu6xdqw6ZSu2
+		//Noemie fcsYNs9JhsTVm8mVfj7jEGcPgP53
+		const userModel = new UserModel();
+		userModel.setId("fcsYNs9JhsTVm8mVfj7jEGcPgP53")
+		//userModel.setId("6XxvHR6d2gVySbCJsu6xdqw6ZSu2")
+
+		this.authService.userSelect$.next(userModel);
+
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			const timbreCritereModel = new TimbreCritereModel();
+			timbreCritereModel.initCritere();
+
+			const annees : number[] = []
+			for (let i = 2010; i < 2015; i++) {
+				annees.push(i);
+			}
+			timbreCritereModel.setAnnees(annees);
+			console.log(timbreCritereModel)
+
+
+			combineLatest([
+				this.timbreUtilsService.getAllTimbres(timbreCritereModel),
+				this.timbreUtilsService.getTimbreAcquis()
+			]).pipe(first()).subscribe(([timbres, timbresAcquis]) => {
+				let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, null, timbreCritereModel);
+				if (timbresRetour?.length > 0) {
+
+					let nb = 0
+
+					timbresRetour.forEach(timbre => {
+						if (isNotNullOrUndefined(timbre.getTimbreAcquisModel()?.getIdUser())) {
+							let modif: boolean = false;
+							if (timbre.getTimbreAcquisModel().isAcquis()) {
+								timbre.acquis.push(user.getId())
+								modif = true
+								//console.log("verif acquis ", timbre)
+							}
+							if (timbre.getTimbreAcquisModel().isDoublon()) {
+								timbre.doublon.push(user.getId())
+								modif = true
+								//console.log("verif doublon ", timbre)
+							}
+							if (modif) {
+								//console.log("modif ", timbre)
+								nb++
+								//this.modifier(timbre);
+							}
+						}
+					})
+					console.log("modifs ", nb)
+				}
+			});
+		});
+
 	}
 
 	/*modifAll() {
@@ -107,6 +165,21 @@ export class TimbreService {
 		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBlocModel]) => {
 			let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(timbres, timbresAcquis, timbresBlocModel, timbreCritereModel);
 			if (timbresRetour?.length > 0) {
+
+				timbresRetour.forEach(timbre => {
+					if (isNotNullOrUndefined(timbre.getTimbreAcquisModel()?.getIdUser())) {
+						console.log("verif constructTimbres ", timbre)
+
+					}
+					/*if (timbre.getId() == 8995) {
+						timbre.acquisByUsers = []
+						//timbre.acquisByUsers.push("6XxvHR6d2gVySbCJsu6xdqw6ZSu2")
+						console.log("verif constructTimbres ", timbre)
+						//this.modifier(timbre);
+						//6XxvHR6d2gVySbCJsu6xdqw6ZSu2
+					}*/
+				})
+
 				timbresRetour = timbresRetour.sort((a, b) => {
 					return a.getIdBloc() - b.getIdBloc();
 				}).sort((a, b) => {

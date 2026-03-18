@@ -120,6 +120,7 @@ export class TimbreBlocService {
 	}
 
 	getTimbreBlocAcquis(): Observable<any> {
+		//getTimbreBlocAcquis remonte tous
 		return this.authService.userSelect$.pipe(
 			first(userSelect => isNotNullOrUndefined(userSelect)),
 			switchMap((userSelect) => {
@@ -209,6 +210,7 @@ export class TimbreBlocService {
 	}
 
 	constructBlocs(blocs, timbresBlocAcquis, timbreCritereModel: TimbreCritereModel): TimbreBlocModel[] {
+		//console.log("constructBlocs")
 		let timbresBlocModel: TimbreBlocModel[] = [];
 		if (blocs?.length > 0) {
 			blocs.forEach((bloc: any) => {

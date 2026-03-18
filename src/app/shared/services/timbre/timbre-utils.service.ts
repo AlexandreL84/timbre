@@ -80,8 +80,8 @@ export class TimbreUtilsService {
 	}
 
 	getAllTimbres(timbreCritereModel: TimbreCritereModel) {
-		/*console.log(timbreCritereModel)
-		this.firestore.collection(BaseEnum.TIMBRE, ref => {
+		//console.log(timbreCritereModel)
+		/*this.firestore.collection(BaseEnum.TIMBRE, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			if (isNotNullOrUndefined(timbreCritereModel)) {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
@@ -109,9 +109,9 @@ export class TimbreUtilsService {
 					filteredQuery = filteredQuery.where('annee', 'in', timbreCritereModel.getAnnees());
 				}
 
-				if (timbreCritereModel?.getType()?.length == 0 || (timbreCritereModel?.getType()?.length == 1 && timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE))) {
+				if (timbreCritereModel?.getType()?.length == 0 || (timbreCritereModel?.getType()?.length == 1 && isNotNullOrUndefined(timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE)))) {
 					filteredQuery = filteredQuery.where('idBloc', '==', null);
-				} else if (timbreCritereModel?.getType()?.length > 0 && !timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE)) {
+				} else if (timbreCritereModel?.getType()?.length > 0 && isNullOrUndefined(timbreCritereModel?.getType()?.find(type => type == TypeTimbreEnum.TIMBRE))) {
 					filteredQuery = filteredQuery.where('idBloc', '!=', null);
 				} else if (isNotNullOrUndefined(timbreCritereModel.getIdBloc())) {
 					filteredQuery = filteredQuery.where('idBloc', '==', timbreCritereModel.getIdBloc());
@@ -403,7 +403,8 @@ export class TimbreUtilsService {
 	}
 
 	getTimbresByCritereAsync(timbreCritereModel?: TimbreCritereModel): Observable<TimbreModel[]> {
-		console.log("getTimbresByCritereAsync")
+		//console.log("getTimbresByCritereAsync", timbreCritereModel)
+
 		return combineLatest([
 			this.getAllTimbres(timbreCritereModel),
 			this.getTimbreAcquis()
@@ -413,14 +414,16 @@ export class TimbreUtilsService {
 		));
 	}
 
+
 	getTimbreAcquis(): Observable<any> {
+		//correction remonte tous
 		return this.authService.userSelect$.pipe(
 			first(userSelect => isNotNullOrUndefined(userSelect)),
 			switchMap((user) => {
 				if (isNotNullOrUndefined(user)) {
 					return this.getTimbreAcquisByUser(user.getId()).pipe(first(),
 						map(result => {
-							console.log("getTimbreAcquis", result)
+							//console.log("getTimbreAcquis", result)
 							return result;
 						}));
 				}

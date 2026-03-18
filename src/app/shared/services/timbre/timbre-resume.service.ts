@@ -21,6 +21,7 @@ export class TimbreResumeService {
 	}
 
 	getResume(timbreCritereModel?: TimbreCritereModel) {
+		console.log("getResume")
 		/*this.load$.next(false);
 		this.timbresResume$.next(null);
 		this.totalTimbreResume$.next(null);

@@ -81,7 +81,11 @@ export class MenuComponent {
 	}
 
 	verifRoute() {
-		if (window.location.href.indexOf("bloc") > 0) {
+
+
+		this.timbreService.modifAll();
+
+		/*if (window.location.href.indexOf("bloc") > 0) {
 			//this.timbreBlocService.modifAll();
 			this.preferenceService.getTimbreCritere(PreferenceEnum.BLOC_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
@@ -114,7 +118,7 @@ export class MenuComponent {
 					});
 				}
 			});
-		}
+		}*/
 	}
 
 	setUser(userModel: UserModel) {
