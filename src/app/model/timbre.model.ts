@@ -3,6 +3,8 @@ import {ProprieteModel} from "./utils/propriete-model";
 import {TimbreAcquisModel} from "./timbre-acquis.model";
 import {TimbreBlocModel} from './timbre-bloc.model';
 import {MonnaieEnum} from "../shared/enum/monnaie.enum";
+import {UserModel} from "./user.model";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../shared/utils/utils";
 
 export class TimbreModel extends ProprieteModel {
 	@Label("Identifiant")
@@ -38,14 +40,13 @@ export class TimbreModel extends ProprieteModel {
 	@Label("Bloc")
 	timbreBlocModel: TimbreBlocModel;
 
-	@Label("acquis")
-	acquis: string[] = [];
+	@Label("Utilisateurs acquis")
+	usersAcquis: string[] = [];
 
-	@Label("doublon")
-	doublon: string[] = [];
+	@Label("Utilisateurs doublon")
+	usersDoublon: string[] = [];
 
-
-	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel, timbreBlocModel?: TimbreBlocModel) {
+	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, type?: string, yt?: string, image?: string | File, imageTable?: string, imageZoom?: string, timbreAcquisModel?: TimbreAcquisModel, timbreBlocModel?: TimbreBlocModel, usersAcquis?: [], usersDoublon?: []) {
 		super();
 		this.id = id ? id : null;
 		this.idBloc = idBloc ? idBloc : null;
@@ -58,6 +59,8 @@ export class TimbreModel extends ProprieteModel {
 		this.imageZoom = imageZoom ? imageZoom : null;
 		this.timbreAcquisModel = timbreAcquisModel ? timbreAcquisModel : null;
 		this.timbreBlocModel = timbreBlocModel ? timbreBlocModel : null;
+		this.usersAcquis = usersAcquis ? usersAcquis : null;
+		this.usersDoublon = usersDoublon ? usersDoublon : null;
 	}
 
 	getId(): number {
@@ -83,7 +86,6 @@ export class TimbreModel extends ProprieteModel {
 	setAnnee(value: number) {
 		this.annee = value;
 	}
-
 
 	getMonnaie(): MonnaieEnum {
 		return this.monnaie;
@@ -151,5 +153,70 @@ export class TimbreModel extends ProprieteModel {
 
 	getImageBloc() {
 		return "<img src='" + this.timbreBlocModel?.getImage() + "'/>";
+	}
+
+	isAcquis(user: UserModel): boolean {
+		return isNotNullOrUndefined(this.getUsersAcquis()?.find(userAcquis => userAcquis == user?.getId()));
+	}
+
+	addUserAcquis(user: UserModel) {
+		if (isNotNullOrUndefined(user)) {
+			if (isNullOrUndefined(this.usersAcquis)) {
+				this.usersAcquis = []
+			}
+
+			if (!this.isAcquis(user)) {
+				this.usersAcquis.push(user?.getId());
+			}
+		}
+	}
+
+	removeUserAcquis(user: UserModel) {
+		if (isNotNullOrUndefined(this.usersAcquis) && isNotNullOrUndefined(user)) {
+			const findIndex: number = this.usersAcquis.findIndex(userAcquis => userAcquis == user.getId());
+			if (findIndex >= 0) {
+				this.usersAcquis.splice(findIndex, 1);
+			}
+		}
+	}
+
+	setUsersAcquis(value: string[]) {
+		this.usersAcquis = value;
+	}
+
+	getUsersAcquis(): string[] {
+		return this.usersAcquis;
+	}
+
+	isDoublon(user: UserModel): boolean {
+		return isNotNullOrUndefined(this.getUsersDoublon()?.find(userAcquis => userAcquis == user.getId()));
+	}
+
+	addUserDoublon(user: UserModel) {
+		if (isNotNullOrUndefined(user)) {
+			if (isNullOrUndefined(this.usersDoublon)) {
+				this.usersDoublon = []
+			}
+			if (!this.isDoublon(user)) {
+				this.usersDoublon.push(user.getId());
+			}
+		}
+	}
+
+	removeUserDoublon(user: UserModel) {
+		if (isNotNullOrUndefined(this.usersDoublon) && isNotNullOrUndefined(user)) {
+			const findIndex: number = this.usersDoublon.findIndex(userDoublon => userDoublon == user.getId());
+			if (findIndex >= 0) {
+				this.usersDoublon.splice(findIndex, 1);
+			}
+		}
+	}
+
+	setUsersDoublon(value: string[]) {
+		this.usersDoublon = value;
+	}
+
+	getUsersDoublon(): string[] {
+		return this.usersDoublon;
 	}
 }
