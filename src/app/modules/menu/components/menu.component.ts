@@ -81,11 +81,9 @@ export class MenuComponent {
 	}
 
 	verifRoute() {
+		//this.timbreService.modifAll();
 
-
-		this.timbreService.modifAll();
-
-		/*if (window.location.href.indexOf("bloc") > 0) {
+		if (window.location.href.indexOf("bloc") > 0) {
 			//this.timbreBlocService.modifAll();
 			this.preferenceService.getTimbreCritere(PreferenceEnum.BLOC_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
@@ -118,7 +116,7 @@ export class MenuComponent {
 					});
 				}
 			});
-		}*/
+		}
 	}
 
 	setUser(userModel: UserModel) {
