@@ -10,7 +10,7 @@
 			<!-- Année -->
 			<ng-container matColumnDef="annee" sticky>
 				<th mat-header-cell *matHeaderCellDef mat-sort-header>Année</th>
-				<td mat-cell *matCellDef="let row" class="primary100">
+				<td mat-cell *matCellDef="let row" class="primary100 click" (click)="filtreParAnnee(row)">
 					{{ row.getAnnee() }}
 				</td>
 				<td mat-footer-cell *matFooterCellDef><strong>Total</strong></td>
@@ -19,7 +19,9 @@
 			<!-- Total -->
 			<ng-container matColumnDef="total" sticky>
 				<th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
-				<td mat-cell *matCellDef="let row" class="primary50">{{ row.getTotal() }}</td>
+				<td mat-cell *matCellDef="let row" class="primary50 click" (click)="filtreParAnnee(row)">
+					{{ row.getTotal() }}
+				</td>
 				<td mat-footer-cell *matFooterCellDef><strong>{{ getTotalFooter('total') }}</strong></td>
 			</ng-container>
 
@@ -254,8 +256,35 @@
 					<strong>{{ getTotalFooterByType(TypeTimbreEnum.COLLECTOR, 'nbAcquis') }}</strong></td>
 			</ng-container>
 
+			<ng-container matColumnDef="refresh">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.ROTATE"
+						[info]="'Rafraichir'"
+						(click)="refresh()"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell
+				    *matCellDef="let row" class="primary50">
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_SOLID"
+						[icone]="FontAwesomeEnum.ROTATE"
+						[info]="'Rafraichir'"
+						(click)="refresh(row)"
+					>
+					</lib-icon>
+				</td>
+				<td mat-footer-cell *matFooterCellDef></td>
+			</ng-container>
+
 			<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="primary100"></tr>
-			<tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="filtreParAnnee(row)" class="click"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 			<tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true" class="primary100"></tr>
 
 			<tr class="mat-row" *matNoDataRow>

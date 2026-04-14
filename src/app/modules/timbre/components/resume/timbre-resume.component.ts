@@ -58,20 +58,6 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		//this.refresh();
 	}
 
-	refresh() {
-		this.timbreResumeService.refreshResume();
-		this.timbreResumeService.loadGeneration$.pipe(first(load => load === true)).subscribe(() => {
-			this.initData();
-		});
-	}
-
-	getResumeByUser() {
-		this.timbreResumeService.getResumeByUser(false);
-		this.timbreResumeService.load$.pipe(first(load => load === true)).subscribe(() => {
-			this.initData();
-		});
-	}
-
 	initColumns() {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			const displayedColumns: string[] = ['annee', 'total'];
@@ -102,6 +88,7 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 			if (user?.getDroit() == DroitEnum.CONSULT_TOTAL || user?.getDroit() == DroitEnum.TOTAL) {
 				displayedColumns.push('nombreCollector', 'acquisCollector');
 			}
+			displayedColumns.push('refresh');
 
 			this.displayedColumns = displayedColumns;
 			this.footerColumns = displayedColumns;
@@ -120,6 +107,13 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		this.sortDefaut();
 	}
 
+	getResumeByUser() {
+		this.timbreResumeService.getResumeByUser(false);
+		this.timbreResumeService.load$.pipe(first(load => load === true)).subscribe(() => {
+			this.initData();
+		});
+	}
+
 	sortDefaut() {
 		this.dataSource.sort = this.sort;
 		this.sort.active = 'annee';
@@ -131,6 +125,17 @@ export class TimbreResumeComponent implements OnInit, AfterViewInit {
 		if (isNotNullOrUndefined(sort)) {
 			this.dataSource.sort = this.sort;
 		}
+	}
+
+	refresh(timbreResumeModel?: TimbreResumeModel) {
+		if (isNotNullOrUndefined(timbreResumeModel)) {
+			this.timbreResumeService.refreshResume(timbreResumeModel.getAnnee());
+		} else {
+			this.timbreResumeService.refreshResume();
+		}
+		this.timbreResumeService.loadGeneration$.pipe(first(load => load === true)).subscribe(() => {
+			this.initData();
+		});
 	}
 
 	filtreParAnnee(timbreResumeModel: TimbreResumeModel) {
