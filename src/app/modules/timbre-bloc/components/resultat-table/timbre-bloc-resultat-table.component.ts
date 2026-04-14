@@ -9,14 +9,14 @@ import {first, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
-import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
-import {TimbreBlocService} from "../../../../shared/services/timbre/timbre-bloc.service";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 import {DroitEnum} from "../../../../shared/enum/droit.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
+import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
+import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
 
 @Component({
 	selector: "app-timbre-bloc-resultat-table",
@@ -37,15 +37,14 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly TypeTimbreEnum = TypeTimbreEnum;
 
-	constructor(private authService: AuthService, public timbreBlocService: TimbreBlocService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(public authService: AuthService, public timbreActionsService: TimbreActionsService, public timbreVarService: TimbreVarService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
 	ngOnInit(): void {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
-		this.timbreBlocModel.setTimbreBlocAcquisModel(new TimbreBlocAcquisModel());
 
-		this.displayedColumns = ["image", "id", "annee", "type", "monnaie", "yt", "nbTimbres" ,"acquis"];
+		this.displayedColumns = ["image", "id", "annee", "type", "monnaie", "yt", "nbTimbres", "nbTimbresAcquis" ,"acquis"];
 		if (this.modif) {
 			this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 				if (user?.getDroit() >= DroitEnum.PARTIEL) {
@@ -57,7 +56,7 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 			});
 		}
 
-		this.timbreBlocService.timbresBlocModel$.subscribe(timbres => {
+		this.timbreVarService.timbresBlocModel$.subscribe(timbres => {
 			this.dataSource.data = timbres;
 		});
 	}

@@ -8,11 +8,11 @@ import {HttpResponseHandlerService} from "../../shared/services/httpResponseHand
 		SimpleNotificationComponent
     ],
 	imports: [
-		SimpleNotificationsModule.forRoot(),
+		SimpleNotificationsModule
 	],
 	exports: [
 		SimpleNotificationComponent
 	],
-    providers: [NotificationsService, HttpResponseHandlerService],
+    providers: [ HttpResponseHandlerService],
 })
 export class SimpleNotificationModule {}

@@ -1,34 +1,49 @@
-import {Label} from "./utils/utils-model";
-import {ProprieteModel} from "./utils/propriete-model";
-import {TimbreBlocModel} from './timbre-bloc.model';
-import {MonnaieEnum} from "../shared/enum/monnaie.enum";
-import {UserModel} from "./user.model";
-import {isNotNullOrUndefined, isNullOrUndefined} from "../shared/utils/utils";
+import { Label } from '../utils/utils-model';
+import { ProprieteModel } from '../utils/propriete-model';
+import {TypeTimbreEnum} from "../../shared/enum/type-timbre.enum";
+import {MonnaieEnum} from "../../shared/enum/monnaie.enum";
+import {TimbreModel} from "../timbre.model";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../../shared/utils/utils";
+import {UserModel} from "../user.model";
 
-export class TimbreModel extends ProprieteModel {
-	@Label("Identifiant")
+export class TimbreBlocOldModel extends ProprieteModel {
+	@Label('Identifiant')
 	id: number;
 
-	@Label("Identifiant bloc")
-	idBloc: number;
-
-	@Label("Année")
+	@Label('Année')
 	annee: number;
 
-	@Label("Monnaie")
+	@Label("Type")
+	type: TypeTimbreEnum;
+
+	@Label('Monnaie')
 	monnaie: MonnaieEnum;
+
+	@Label('Image')
+	image: string | File;
+
+	@Label('Image tableau')
+	imageTable: string;
+
+	@Label('Image zoom')
+	imageZoom: string;
 
 	@Label("Réference")
 	yt: string;
 
-	@Label("Image")
-	image: string | File;
+	@Label("vérif")
+	timbreBlocAcquisModel: any;
 
-	@Label("Image zoom")
-	imageZoom: string;
+	@Label("Nombre de timbres")
+	nbTimbres: number;
 
-	@Label("Bloc")
-	timbreBlocModel: TimbreBlocModel;
+	@Label("Nombre de timbres acquis")
+	nbTimbresAcquis: number;
+
+	idOrigine: number;
+
+	@Label("Timbres")
+	timbres: TimbreModel[];
 
 	@Label("Utilisateurs acquis")
 	usersAcquis: string[] = [];
@@ -36,16 +51,19 @@ export class TimbreModel extends ProprieteModel {
 	@Label("Utilisateurs doublon")
 	usersDoublon: string[] = [];
 
-	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, yt?: string, image?: string | File, imageZoom?: string, timbreBlocModel?: TimbreBlocModel, usersAcquis?: [], usersDoublon?: []) {
+	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageTable?: string, imageZoom?: string, yt?: string, timbreBlocAcquisModel?: any, nbTimbres?: number, nbTimbresAcquis?: number, usersAcquis?: [], usersDoublon?: []) {
 		super();
 		this.id = id ? id : null;
-		this.idBloc = idBloc ? idBloc : null;
 		this.annee = annee ? annee : null;
+		this.type = type ? type : null;
 		this.monnaie = monnaie ? monnaie : null;
-		this.yt = yt ? yt : null;
 		this.image = image ? image : null;
+		this.imageTable = imageTable ? imageTable : null;
 		this.imageZoom = imageZoom ? imageZoom : null;
-		this.timbreBlocModel = timbreBlocModel ? timbreBlocModel : null;
+		this.yt = yt ? yt : null;
+		this.timbreBlocAcquisModel = timbreBlocAcquisModel ? timbreBlocAcquisModel : null;
+		this.nbTimbres = nbTimbres ? nbTimbres : null;
+		this.nbTimbresAcquis = nbTimbresAcquis ? nbTimbresAcquis : null;
 		this.usersAcquis = usersAcquis ? usersAcquis : null;
 		this.usersDoublon = usersDoublon ? usersDoublon : null;
 	}
@@ -58,12 +76,12 @@ export class TimbreModel extends ProprieteModel {
 		this.id = value;
 	}
 
-	getIdBloc(): number {
-		return this.idBloc;
+	getIdOrigine(): number {
+		return this.idOrigine;
 	}
 
-	setIdBloc(value: number) {
-		this.idBloc = value;
+	setIdOrigine(value: number) {
+		this.idOrigine = value;
 	}
 
 	getAnnee(): number {
@@ -74,20 +92,20 @@ export class TimbreModel extends ProprieteModel {
 		this.annee = value;
 	}
 
+	getType(): TypeTimbreEnum {
+		return this.type;
+	}
+
+	setType(value: TypeTimbreEnum) {
+		this.type = value;
+	}
+
 	getMonnaie(): MonnaieEnum {
 		return this.monnaie;
 	}
 
 	setMonnaie(value: MonnaieEnum) {
 		this.monnaie = value;
-	}
-
-	getYt(): string {
-		return this.yt;
-	}
-
-	setYt(value: string) {
-		this.yt = value;
 	}
 
 	getImage(): string | File {
@@ -98,6 +116,14 @@ export class TimbreModel extends ProprieteModel {
 		this.image = value;
 	}
 
+	getImageTable(): string {
+		return this.imageTable;
+	}
+
+	setImageTable(value: string) {
+		this.imageTable = value;
+	}
+
 	getImageZoom(): string {
 		return this.imageZoom;
 	}
@@ -106,16 +132,45 @@ export class TimbreModel extends ProprieteModel {
 		this.imageZoom = value;
 	}
 
-	getTimbreBlocModel(): TimbreBlocModel {
-		return this.timbreBlocModel;
+	getYt(): string {
+		return this.yt;
 	}
 
-	setTimbreBlocModel(value: TimbreBlocModel) {
-		this.timbreBlocModel = value;
+	setYt(value: string) {
+		this.yt = value;
 	}
 
-	getImageBloc() {
-		return "<img src='" + this.timbreBlocModel?.getImage() + "'/>";
+	getNbTimbres(): number {
+		return this.nbTimbres;
+	}
+
+	setNbTimbres(value: number) {
+		this.nbTimbres = value;
+	}
+
+	getNbTimbresAcquis(): number {
+		return this.nbTimbresAcquis;
+	}
+
+	setNbTimbresAcquis(value: number) {
+		this.nbTimbresAcquis = value;
+	}
+
+	getTimbres(): TimbreModel[] {
+		return this.timbres;
+	}
+
+	setTimbres(value: TimbreModel[]) {
+		this.timbres = value;
+	}
+
+	addTimbre(value: TimbreModel) {
+		let timbres = this.getTimbres();
+		if (isNullOrUndefined(timbres)) {
+			timbres = [];
+		}
+		timbres.push(value);
+		this.setTimbres(timbres);
 	}
 
 	isAcquis(user: UserModel): boolean {

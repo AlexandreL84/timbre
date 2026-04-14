@@ -19,37 +19,37 @@ export class TimbrePaysService {
 	heightMap: number = 220;
 	total$: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-	constructor(private firestore: AngularFirestore, private uploadService: UploadService) {
+	constructor(private angularFirestore: AngularFirestore, private uploadService: UploadService) {
 	}
 
 	upload(timbrePaysModel: TimbrePaysModel, dossier: DossierEnum, zoom: boolean): Observable<string> {
-		let witdth: number;
+		let width: number;
 		let height: number;
 		let image: File | string;
 
 		switch (dossier) {
 			case DossierEnum.DRAPEAU :
-				witdth = this.widthDrapeau;
+				width = this.widthDrapeau;
 				height = this.heightDrapeau;
 				image = timbrePaysModel.getDrapeau();
 				break;
 			case DossierEnum.LANGUE :
-				witdth = this.widthLangue;
+				width = this.widthLangue;
 				height = this.heightLangue;
 				image = timbrePaysModel.getImageLangue();
 				break;
 			case DossierEnum.MAP :
-				witdth = this.widthMap;
+				width = this.widthMap;
 				height = this.heightMap;
 				image = timbrePaysModel.getMap();
 				break;
 		}
 		if (dossier == DossierEnum.ZOOM) {
-			witdth = witdth * (height/ height);
+			width = width * (height/ height);
 		}
 
 		if (isNotNullOrUndefined(image)) {
-			return this.uploadService.processAndUploadImage(image, witdth, height, timbrePaysModel?.getId(), this.getDossier(dossier, zoom));
+			return this.uploadService.processAndUploadImage(image, width, height, timbrePaysModel?.getId(), this.getDossier(dossier, zoom));
 		} else {
 			return of("nok");
 		}
@@ -67,7 +67,7 @@ export class TimbrePaysService {
 	}
 
 	getTimbreByIdAsync(id: number): Observable<TimbrePaysModel> {
-		return this.firestore.collection(BaseEnum.PAYS, ref => ref.where('id', '==', id))
+		return this.angularFirestore.collection(BaseEnum.PAYS, ref => ref.where('id', '==', id))
 			.valueChanges().pipe(
 				map((data: any) => {
 					return plainToInstance(TimbrePaysModel, data[0]);
@@ -75,7 +75,7 @@ export class TimbrePaysService {
 	}
 
 	getByCodeAsync(code: string): Observable<TimbrePaysModel> {
-		return this.firestore.collection(BaseEnum.PAYS, ref => ref.where('code', '==', code))
+		return this.angularFirestore.collection(BaseEnum.PAYS, ref => ref.where('code', '==', code))
 			.valueChanges().pipe(
 				map((data: any) => {
 					return plainToInstance(TimbrePaysModel, data[0]);
@@ -83,7 +83,7 @@ export class TimbrePaysService {
 	}
 
 	getTimbres(): Observable<TimbrePaysModel[]> {
-		return this.firestore.collection(BaseEnum.PAYS).valueChanges().pipe(
+		return this.angularFirestore.collection(BaseEnum.PAYS).valueChanges().pipe(
 			map((timbres: any) => {
 				let total: number = 0;
 				let timbresPaysModel: TimbrePaysModel[] = [];
@@ -100,13 +100,13 @@ export class TimbrePaysService {
 	}
 
 	ajouter(timbrePaysModel: TimbrePaysModel) {
-		return this.firestore.collection(BaseEnum.PAYS).add(
+		return this.angularFirestore.collection(BaseEnum.PAYS).add(
 			Object.assign(new Object(), timbrePaysModel)
 		)
 	}
 
 	modifier(timbrePaysModel: TimbrePaysModel) {
-		this.firestore.collection(BaseEnum.PAYS)
+		this.angularFirestore.collection(BaseEnum.PAYS)
 			.ref.where('id', '==', timbrePaysModel.getId())
 			.get()
 			.then(snapshot => {
@@ -121,7 +121,7 @@ export class TimbrePaysService {
 	}
 
 	supprimer(timbrePaysModel: TimbrePaysModel) {
-		this.firestore.collection(BaseEnum.PAYS)
+		this.angularFirestore.collection(BaseEnum.PAYS)
 			.ref.where('id', '==', timbrePaysModel.getId())
 			.get()
 			.then(snapshot => {
@@ -137,7 +137,7 @@ export class TimbrePaysService {
 
 	getBouchon(): TimbrePaysModel {
 		let timbre: TimbrePaysModel = new TimbrePaysModel();
-		let id: number = Utils.getRandom(10000)
+		let id: number = Utils.getRandom(10000);
 		//timbre.setId(id);
 		timbre.setCode("FR");
 		timbre.setLibelle("France " + id);

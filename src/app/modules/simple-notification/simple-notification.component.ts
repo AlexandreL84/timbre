@@ -1,5 +1,6 @@
 import {Component,} from "@angular/core";
 import {Options} from "angular2-notifications";
+
 @Component({
 	selector: "app-simple-notification",
 	templateUrl: "./simple-notification.component.html",
@@ -8,8 +9,11 @@ import {Options} from "angular2-notifications";
 export class SimpleNotificationComponent {
 	public notificationOptions: Options = {
 		position: ['top', 'right'],
-		timeOut: 5000,
+		timeOut: 2000,
 		maxStack: 5,
-		lastOnBottom: true
+		lastOnBottom: true,
+		showProgressBar: false,
+		pauseOnHover: true,
+		theClass: "sy-notification"
 	};
 }

@@ -1,25 +1,12 @@
-import {Label} from "./utils/utils-model";
-import {ProprieteModel} from "./utils/propriete-model";
-
-export class TimbreBlocAcquisModel extends ProprieteModel {
-	@Label("Identifiant Utilisateur")
+export class TimbreBlocAcquisModel {
 	idUser: string;
+	nbAcquis: number;
+	nbDoublon: number;
 
-	@Label("Identifiant bloc")
-	idBloc: number;
-
-	@Label("Acquis")
-	acquis: boolean;
-
-	@Label("Doublon")
-	doublon: boolean;
-
-	constructor(idUser?: string, idBloc?: number, acquis?: boolean, doublon?: boolean) {
-		super();
+	constructor(idUser?: string, nbAcquis?: number, nbDoublon?: number) {
 		this.idUser = idUser ? idUser : null;
-		this.idBloc = idBloc ? idBloc : null;
-		this.acquis = acquis ? acquis : false;
-		this.doublon = doublon ? doublon : false;
+		this.nbAcquis = nbAcquis ? nbAcquis : 0;
+		this.nbDoublon = nbDoublon ? nbDoublon : 0;
 	}
 
 	getIdUser(): string {
@@ -30,27 +17,19 @@ export class TimbreBlocAcquisModel extends ProprieteModel {
 		this.idUser = value;
 	}
 
-	getIdBloc(): number {
-		return this.idBloc;
+	getNbAcquis(): number {
+		return this.nbAcquis;
 	}
 
-	setIdBloc(value: number) {
-		this.idBloc = value;
+	setNbAcquis(value: number) {
+		this.nbAcquis = value;
 	}
 
-	isAcquis(): boolean {
-		return this.acquis;
+	getNbDoublon(): number {
+		return this.nbDoublon;
 	}
 
-	setAcquis(value: boolean) {
-		this.acquis = value;
-	}
-
-	isDoublon(): boolean {
-		return this.doublon;
-	}
-
-	setDoublon(value: boolean) {
-		this.doublon = value;
+	setNbDoublon(value: number) {
+		this.nbDoublon = value;
 	}
 }

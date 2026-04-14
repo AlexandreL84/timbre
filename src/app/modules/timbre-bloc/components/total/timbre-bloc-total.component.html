@@ -1,5 +1,5 @@
 <div class="timbreTotal">
-	<ng-container *ngFor="let total of (timbreBlocService.total$ | async); let isFirst = first; let isOdd = odd">
+	<ng-container *ngFor="let total of (timbreVarService.totalBloc$ | async); let isFirst = first; let isOdd = odd">
 		<div class="nbTimbre">
 			<span>{{isFirst? 'Nombre de ': ' / '}}{{ total?.getType() | capitalize }} : </span>
 			<span class="bold">{{ total?.getTotal() ? total?.getTotal() : 0 }}</span>

@@ -1,4 +1,4 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
 import {provideRouter} from '@angular/router';
 import {   getFirestore, provideFirestore } from '@angular/fire/firestore';
 import {routes} from './app.routes';
@@ -11,11 +11,12 @@ import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 import {MatPaginatorIntl} from "@angular/material/paginator";
 import {PaginatorIntlService} from "./shared/services/paginator-intl.service";
 import {HeaderService} from "./shared/services/header.service";
-import {SimpleNotificationModule} from "./modules/simple-notification/simple-notification.module";
 import {provideServiceWorker} from "@angular/service-worker";
 import {provideHttpClient} from "@angular/common/http";
 import {PreferenceService} from "./shared/services/preference.service";
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {SimpleNotificationsModule} from "angular2-notifications";
+import {TimbreVarService} from "./shared/services/timbre/timbre-var.service";
 
 
 export const appConfig: ApplicationConfig = {
@@ -31,13 +32,16 @@ export const appConfig: ApplicationConfig = {
 		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
 		HeaderService,
 		PreferenceService,
-		SimpleNotificationModule,
 		provideHttpClient(),
 		provideFirebaseApp(() => initializeApp(environment.firebase)),
 		provideFirestore(() => getFirestore()),
 		provideServiceWorker('ngsw-worker.js', {
 			enabled: environment.production,
 			registrationStrategy: 'registerWhenStable:30000'
-		})
+		}),
+		importProvidersFrom(
+			SimpleNotificationsModule.forRoot()
+		),
+		TimbreVarService
 	]
 };

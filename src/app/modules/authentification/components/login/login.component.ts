@@ -38,7 +38,7 @@ export class LoginComponent {
 					this.redirection$.next(true);
 				})
 				.catch((error) => {
-					console.error(error);
+					//console.error(error);
 					this.messageError$.next("Email ou mot de passe incorrect");
 				});
 		}

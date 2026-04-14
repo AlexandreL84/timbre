@@ -3,6 +3,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {TimbreLayoutComponent} from "./layout/timbre-layout.component";
 import {TimbreImporterComponent} from "./components/importer/timbre-importer.component";
 import {TimbreResumeComponent} from "./components/resume/timbre-resume.component";
+import {TimbreModifAllComponent} from "./components/modif--all/timbre-modif--all.component";
 
 const routes: Routes = [
 	{
@@ -16,6 +17,10 @@ const routes: Routes = [
 	{
 		path: "resume",
 		component: TimbreResumeComponent,
+	},
+	{
+		path: "modifAll",
+		component: TimbreModifAllComponent,
 	},
 	/*{
 		path: "bloc",

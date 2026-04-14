@@ -1,7 +1,7 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {TimbreModel} from '../../../../model/timbre.model';
 import {TimbreService} from '../../../../shared/services/timbre/timbre.service';
-import {BehaviorSubject, catchError, combineLatest, EMPTY, filter, first} from 'rxjs';
+import {BehaviorSubject, catchError, combineLatest, EMPTY, filter, first, of, switchMap, throwError} from 'rxjs';
 import {isNotNullOrUndefined} from '../../../../shared/utils/utils';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
@@ -19,7 +19,10 @@ import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-util
 import {DimensionImageEnum} from "../../../../shared/enum/dimension-image.enum";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 import {MonnaieEnum} from "../../../../shared/enum/monnaie.enum";
-import {take} from "rxjs/operators";
+import {take, tap} from "rxjs/operators";
+import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
+import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
+import {TimbreUploadService} from "../../../../shared/services/timbre/timbre-upload.service";
 
 @Component({
 	selector: 'app-timbre-modifier',
@@ -29,11 +32,11 @@ export class TimbreModifierComponent implements OnInit {
 	@ViewChild('canvas', {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
 
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 	id: number;
 	maxAnnee: number = new Date().getFullYear() + 1;
 	timbreModel: TimbreModel = new TimbreModel();
 	fileUploadModel: FileUploadModel = new FileUploadModel();
+	retryCount: number = 0
 
 	readonly TypeTimbreEnum = TypeTimbreEnum;
 	readonly DimensionImageEnum = DimensionImageEnum;
@@ -41,7 +44,10 @@ export class TimbreModifierComponent implements OnInit {
 	constructor(
 		private httpResponseHandlerService: HttpResponseHandlerService,
 		public dialogRef: MatDialogRef<TimbreModifierComponent>,
-		public timbreService: TimbreService,
+		private timbreActionsService: TimbreActionsService,
+		private timbreService: TimbreService,
+		private timbreUploadService: TimbreUploadService,
+		public timbreVarService: TimbreVarService,
 		public timbreBlocService: TimbreBlocService,
 		public timbreUtilsService: TimbreUtilsService,
 		public utilsService: UtilsService
@@ -49,9 +55,8 @@ export class TimbreModifierComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		//this.timbreBlocService.getBlocs();
-		this.fileUploadModel = this.timbreUtilsService.initUpload();
-		this.load$.next(false);
+		this.fileUploadModel = this.timbreUploadService.initUpload();
+		this.timbreVarService.loadModifTimbre$.next(false);
 		if (isNotNullOrUndefined(this.id)) {
 			this.timbreService.getTimbreByIdAsync(this.id).subscribe(timbreModel => {
 				this.timbreModel = timbreModel;
@@ -59,14 +64,20 @@ export class TimbreModifierComponent implements OnInit {
 					this.timbreModel.setAnnee(timbreModel.getTimbreBlocModel().getAnnee());
 					this.timbreModel.setMonnaie(timbreModel.getTimbreBlocModel().getMonnaie());
 				}
-				this.load$.next(true);
+				this.timbreVarService.loadModifTimbre$.next(true);
 			});
 		} else {
 			this.timbreModel.setAnnee(new Date().getFullYear());
 			this.timbreModel.setMonnaie(MonnaieEnum.EURO);
-			this.load$.next(true);
+			this.timbreVarService.loadModifTimbre$.next(true);
 		}
 		this.changeAnnee(this.timbreModel.getAnnee());
+	}
+
+	getBlocsByAnnee(annee: number) {
+		const timbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.setAnnees([annee]);
+		this.timbreBlocService.getBlocs(timbreCritereModel, false, false);
 	}
 
 	valider(formModif: NgForm) {
@@ -82,9 +93,9 @@ export class TimbreModifierComponent implements OnInit {
 	}
 
 	saveData() {
-		this.load$.next(false);
+		this.timbreVarService.loadModifTimbre$.next(false);
 		if (isNotNullOrUndefined(this.timbreModel.getId())) {
-			this.save();
+			this.timbreActionsService.save(this.timbreModel, this.dialogRef, false, true);
 		} else {
 			this.ajouter();
 		}
@@ -93,52 +104,7 @@ export class TimbreModifierComponent implements OnInit {
 	ajouter() {
 		this.utilsService.getMaxIdentAsync(BaseEnum.TIMBRE).pipe(first()).subscribe(id => {
 			this.timbreModel.setId(id);
-			this.save(true);
-		});
-	}
-
-	save(ajout?: boolean) {
-		if (this.timbreModel.getAnnee() >= 2002) {
-			this.timbreModel.setMonnaie(MonnaieEnum.EURO);
-		} else if (this.timbreModel.getAnnee() >= 1999) {
-			this.timbreModel.setMonnaie(MonnaieEnum.FRANC_EURO);
-		} else {
-			this.timbreModel.setMonnaie(MonnaieEnum.FRANC);
-		}
-
-		combineLatest([
-			this.timbreService.upload(this.timbreModel, DossierEnum.AUTRE),
-			this.timbreService.upload(this.timbreModel, DossierEnum.TABLE),
-			this.timbreService.upload(this.timbreModel, DossierEnum.ZOOM),
-		]).pipe(
-			filter(([image, imageTable, imageZoom]) =>
-				isNotNullOrUndefined(image) &&
-				isNotNullOrUndefined(imageTable) &&
-				isNotNullOrUndefined(imageZoom)
-			),
-			take(1),
-			catchError(error => {
-				this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, ajout? NotificationMessageEnum.TIMBRE_AJOUT_NOK: NotificationMessageEnum.TIMBRE_MODIF_NOK);
-				this.load$.next(true);
-				return EMPTY; // stop the stream
-			})).subscribe(([image, imageTable, imageZoom]) => {
-				if (this.timbreUtilsService.isValidImage(image)) {
-					this.timbreModel.setImage(image);
-				}
-				if (this.timbreUtilsService.isValidImage(imageTable)) {
-					this.timbreModel.setImageTable(imageTable);
-				}
-				if (this.timbreUtilsService.isValidImage(imageZoom)) {
-					this.timbreModel.setImageZoom(imageZoom);
-				}
-				if (!ajout) {
-					this.timbreService.modifier(this.timbreModel);
-				} else {
-					this.timbreService.ajouter(this.timbreModel, true);
-				}
-				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, ajout? NotificationMessageEnum.TIMBRE_AJOUT: NotificationMessageEnum.TIMBRE_MODIF);
-				this.load$.next(true);
-				this.dialogRef.close();
+			this.timbreActionsService.save(this.timbreModel, this.dialogRef, true, true);
 		});
 	}
 
@@ -153,7 +119,7 @@ export class TimbreModifierComponent implements OnInit {
 			timbreCritereModel.initCritereBloc();
 			timbreCritereModel.setAnnees([annee]);
 			timbreCritereModel.setSort("desc");
-			this.timbreBlocService.getBlocs(timbreCritereModel, false);
+			this.getBlocsByAnnee(annee)
 		}
 	}
 

@@ -29,36 +29,43 @@ import {TimbreRechercheComponent} from "./components/recherche/timbre-recherche.
 import {TimbreResultatTableComponent} from "./components/resultat-table/timbre-resultat-table.component";
 import {TimbreTotalComponent} from "./components/total/timbre-total.component";
 import {TimbreService} from "../../shared/services/timbre/timbre.service";
+import {TimbreActionsService} from "../../shared/services/timbre/timbre-actions.service";
+import {TimbreVarService} from "../../shared/services/timbre/timbre-var.service";
+import {TimbreUploadService} from "../../shared/services/timbre/timbre-upload.service";
+import {LetDirective} from "@ngrx/component";
+import {TimbreTotalService} from "../../shared/services/timbre/timbre-total.service";
+import {TimbreModifAllComponent} from "./components/modif--all/timbre-modif--all.component";
 
 @NgModule({
 	declarations: [
-		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent
+		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent, TimbreModifAllComponent
 	],
-    imports: [
-        MaterialModule,
-        TimbreRoutingModule,
-        CommonModule,
-        FlexModule,
-        FlexLayoutModule,
-        FormsModule,
-        AsyncPipe,
-        LibSpinnerModule,
-        LibIconModule,
-        LibDialogImageModule,
-        LibLibelleModelModule,
-        DirectiveModule,
-        ErrorModule,
-        PipeModule,
-        LibModalModule,
-        LibUploadModule,
-        SimpleNotificationModule,
-        MenuModule,
-        ReactiveFormsModule
-    ],
+	imports: [
+		MaterialModule,
+		TimbreRoutingModule,
+		CommonModule,
+		FlexModule,
+		FlexLayoutModule,
+		FormsModule,
+		AsyncPipe,
+		LibSpinnerModule,
+		LibIconModule,
+		LibDialogImageModule,
+		LibLibelleModelModule,
+		DirectiveModule,
+		ErrorModule,
+		PipeModule,
+		LibModalModule,
+		LibUploadModule,
+		SimpleNotificationModule,
+		MenuModule,
+		ReactiveFormsModule,
+		LetDirective
+	],
     exports: [
         TimbreTotalComponent
     ],
-	providers: [TimbreService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService]
+	providers: [TimbreService, TimbreActionsService, TimbreVarService, TimbreTotalService, TimbreUploadService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService]
 })
 export class TimbreModule {
 }

@@ -4,87 +4,96 @@
 	<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
 </div>
 
-<lib-spinner [fxHide]="(timbreBlocService.load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
+<lib-spinner [fxHide]="(timbreVarService.loadBloc$ | async) == true" class="spinner"
+			 [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
-<section [fxHide]="(timbreBlocService.load$ | async) == false">
-	<div class="listeTimbre primary">
-		<div *ngFor="let timbreBloc of timbreBlocService.timbresBlocModel$ | async" class="detailTimbre"
-			 [ngClass]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'border-accent900 bg-accentA400' : timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'border-accent bg-accentA200' : 'border-primary'">
-			<div class="headerTimbre">
-				<div class="actionTimbre">
-					<lib-icon
-						*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
-						class="click"
-						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'accent' : 'primary'"
-						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-						[icone]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ?FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
-						[info]="timbreBloc?.getTimbreBlocAcquisModel()?.isAcquis() ? 'pas acquis' : 'acquis'"
-						(click)="timbreBlocService.acquisDoublon(timbreBloc, false)"
-					>
-					</lib-icon>
-					<lib-icon
-						*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
-						class="click"
-						[classIcone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'accent900' : 'primary'"
-						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-						[icone]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon()? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
-						[info]="timbreBloc?.getTimbreBlocAcquisModel()?.isDoublon() ? 'pas en double' : 'en double'"
-						(click)="timbreBlocService.acquisDoublon(timbreBloc, true)"
-					>
-					</lib-icon>
+<section [fxHide]="(timbreVarService.loadBloc$ | async) == false">
+	<section *ngIf="authService.userSelect$ | async as userSelect">
+		<div class="listeTimbre primary">
+			<div *ngFor="let timbreBloc of timbreVarService.timbresBlocModel$ | async" class="detailTimbre"
+				 [ngClass]="timbreBloc.isDoublon(userSelect) ? 'border-accent900 bg-accentA400' : timbreBloc.isAcquis(userSelect) ? 'border-accent bg-accentA200' : 'border-primary'">
+				<div class="headerTimbre">
+					<div class="actionTimbre">
+						<ng-container *ngIf="{ value: timbreBloc.isAcquis(userSelect) } as isAcquis">
+							<lib-icon
+								*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
+								class="click"
+								[classIcone]="isAcquis.value ? 'accent' : 'primary'"
+								[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+								[icone]="isAcquis.value  ? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+								[info]="isAcquis.value   ? 'pas acquis' : 'acquis'"
+								(click)="timbreActionsService.acquisBloc(timbreBloc, !timbreBloc.isAcquis(userSelect))"
+							>
+							</lib-icon>
+						</ng-container>
+
+						<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
+							<ng-container *ngIf="{ value: timbreBloc.isDoublon(userSelect) } as isDoublon">
+								<lib-icon
+									class="click"
+									[classIcone]="isDoublon.value ? 'accent900' : 'primary'"
+									[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+									[icone]="isDoublon.value? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+									[info]="isDoublon.value ? 'pas en double' : 'en double'"
+									(click)="timbreActionsService.doublonBloc(timbreBloc, !timbreBloc.isDoublon(userSelect))"
+								>
+								</lib-icon>
+							</ng-container>
+						</ng-container>
+					</div>
+
+					<div class="actionTimbre2">
+						<lib-icon
+							class="primary click"
+							[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
+							[info]="'Modifier'"
+							(click)="timbreActionsService.modifierBlocDialog(timbreBloc)"
+						>
+						</lib-icon>
+						<lib-icon
+							class="primary click"
+							[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.TRASH"
+							[info]="'Supprimer'"
+							(click)="timbreActionsService.supprimerBlocDialog(timbreBloc)"
+						></lib-icon>
+					</div>
 				</div>
 
-				<div class="actionTimbre2">
-					<lib-icon
-						class="primary click"
-						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.PENCIL"
-						[info]="'Modifier'"
-						(click)="timbreBlocService.modifierDialog(timbreBloc)"
-					>
-					</lib-icon>
-					<lib-icon
-						class="primary click"
-						[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.TRASH"
-						[info]="'Supprimer'"
-						(click)="timbreBlocService.supprimerDialog(timbreBloc)"
-					></lib-icon>
+				<div class="imgTimbre">
+					<img *ngIf="timbreBloc.getImage()"
+						 [src]="timbreBloc.getImage()"
+						 class="image zoomIn"
+						 (click)="utilsService.zoom(timbreBloc.getImageZoom())"/>
 				</div>
-			</div>
 
-			<div class="imgTimbre">
-				<img *ngIf="timbreBloc?.getImage()"
-					 [src]="timbreBloc?.getImage()"
-					 class="image zoomIn"
-					 (click)="utilsService.zoom(timbreBloc?.getImageZoom())"/>
-			</div>
+				<div class="footerTimbre">
+					{{ timbreBloc.getAnnee() }}
 
-			<div class="footerTimbre">
-				{{ timbreBloc?.getAnnee() }}
+					<div class="infoTimbre">
+						<ng-container *ngIf="timbreBloc.getType() != TypeTimbreEnum.COLLECTOR">
+							{{ timbreBloc.getNbTimbresAcquisByUser(userSelect) }}/{{ timbreBloc.getNbTimbres() }}
+						</ng-container>
 
-				<div class="infoTimbre">
-					<ng-container *ngIf="timbreBloc?.getType() != TypeTimbreEnum.COLLECTOR">
-						{{ timbreBloc?.getNbTimbresAcquis() }}/{{ timbreBloc?.getNbTimbres() }}
-					</ng-container>
+						<lib-icon
+							class="click"
+							[classIcone]="timbreBloc.getType() == TypeTimbreEnum.CARNET ? 'accent' : timbreBloc.getType() == TypeTimbreEnum.COLLECTOR ? 'accent900' : 'primary'"
+							[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+							[icone]="timbreBloc.getType() == TypeTimbreEnum.BLOC? FontAwesomeEnum.CIRCLE_B: FontAwesomeEnum.CIRCLE_C"
+							(click)="timbreActionsService.isCarnet(timbreBloc)"
+						></lib-icon>
 
-					<lib-icon
-						class="click"
-						[classIcone]="timbreBloc?.getType() == TypeTimbreEnum.CARNET ? 'accent' : timbreBloc?.getType() == TypeTimbreEnum.COLLECTOR ? 'accent900' : 'primary'"
-						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-						[icone]="timbreBloc?.getType() == TypeTimbreEnum.BLOC? FontAwesomeEnum.CIRCLE_B: FontAwesomeEnum.CIRCLE_C"
-						(click)="timbreBlocService.isCarnet(timbreBloc)"
-					></lib-icon>
-
-					<lib-icon
-						*ngIf="timbreBloc?.getYt()"
-						class="click"
-						[classIcone]="'primary'"
-						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-						[icone]="FontAwesomeEnum.CIRCLE_INFO"
-						[info]="timbreBloc?.getYt()"
-					></lib-icon>
+						<lib-icon
+							*ngIf="timbreBloc.getYt()"
+							class="click"
+							[classIcone]="'primary'"
+							[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+							[icone]="FontAwesomeEnum.CIRCLE_INFO"
+							[info]="timbreBloc.getYt()"
+						></lib-icon>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 </section>
 

@@ -4,6 +4,7 @@ import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {BehaviorSubject,  Observable} from "rxjs";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreResumeComponent} from "../resume/timbre-resume.component";
+import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
 
 @Component({
 	selector: "app-timbre-total",
@@ -16,7 +17,7 @@ export class TimbreTotalComponent {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(private dialog: MatDialog) {
+	constructor(private dialog: MatDialog, public timbreVarService: TimbreVarService) {
 	}
 
 	resume() {

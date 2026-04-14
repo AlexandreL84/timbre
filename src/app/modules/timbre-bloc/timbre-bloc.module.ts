@@ -24,6 +24,10 @@ import {TimbreService} from "../../shared/services/timbre/timbre.service";
 import {TimbreResumeService} from "../../shared/services/timbre/timbre-resume.service";
 import {PipeModule} from "../../shared/pipes/pipe.module";
 import {LibUploadMultipleModule} from "../../shared/components/lib-upload-multiple/lib-upload-multiple.module";
+import {TimbreVarService} from "../../shared/services/timbre/timbre-var.service";
+import {TimbreTotalService} from "../../shared/services/timbre/timbre-total.service";
+import {TimbreActionsService} from "../../shared/services/timbre/timbre-actions.service";
+import {TimbreUploadService} from "../../shared/services/timbre/timbre-upload.service";
 
 @NgModule({
 	declarations: [
@@ -34,25 +38,25 @@ import {LibUploadMultipleModule} from "../../shared/components/lib-upload-multip
 		TimbreBlocTotalComponent,
 		TimbreModifierBlocComponent
 	],
-    imports: [
-        TimbreBlocRoutingModule,
-        MaterialModule,
-        CommonModule,
-        FlexModule,
-        FlexLayoutModule,
-        FormsModule,
-        LibIconModule,
-        LibLibelleModelModule,
-        LibSpinnerModule,
-        DirectiveModule,
-        LibUploadModule,
-        SimpleNotificationModule,
-        MenuModule,
-        PipeModule,
-        LibUploadMultipleModule,
-    ],
+	imports: [
+		TimbreBlocRoutingModule,
+		MaterialModule,
+		CommonModule,
+		FlexModule,
+		FlexLayoutModule,
+		FormsModule,
+		LibIconModule,
+		LibLibelleModelModule,
+		LibSpinnerModule,
+		DirectiveModule,
+		LibUploadModule,
+		SimpleNotificationModule,
+		MenuModule,
+		PipeModule,
+		LibUploadMultipleModule,
+	],
 	exports: [],
-	providers: [TimbreService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService]
+	providers: [TimbreService, TimbreActionsService, TimbreUploadService, TimbreVarService, TimbreTotalService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService]
 })
 export class TimbreBlocModule {
 }

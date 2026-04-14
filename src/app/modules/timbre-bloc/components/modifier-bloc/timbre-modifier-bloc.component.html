@@ -4,7 +4,7 @@
 		<span>{{ timbreBlocModel?.getId() }}</span>
 	</div>
 
-	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
+	<ng-template [ngIf]="(timbreVarService.loadModifBloc$ | async) == false" [ngIfElse]="load">
 		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 	</ng-template>
 	<ng-template #load>
@@ -150,6 +150,7 @@
 				</lib-upload>
 
 				<lib-upload-multiple
+					*ngIf="!timbreBlocModel?.getId()"
 					[label]="'Timbres'"
 					[maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
 					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"

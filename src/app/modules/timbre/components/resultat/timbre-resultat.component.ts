@@ -1,15 +1,15 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
-import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {BehaviorSubject, Observable} from "rxjs";
 import {UtilsService} from "../../../../shared/services/utils.service";
-import {TimbreAcquisModel} from "../../../../model/timbre-acquis.model";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {DroitEnum} from "../../../../shared/enum/droit.enum";
+import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
+import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -19,7 +19,6 @@ import {DroitEnum} from "../../../../shared/enum/droit.enum";
 export class TimbreResultatComponent implements OnInit {
 	@Input() timbres$: BehaviorSubject<TimbreModel[]> | Observable<TimbreModel[]>;
 	@Input() load$: BehaviorSubject<boolean> | Observable<boolean>;
-	@Input() total$: BehaviorSubject<number> | Observable<number>;
 	@Input() modif: boolean = true;
 
 	public timbre: TimbreModel = new TimbreModel();
@@ -29,12 +28,11 @@ export class TimbreResultatComponent implements OnInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public authService: AuthService, public timbreService: TimbreService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(public authService: AuthService, public timbreService: TimbreService, public timbreActionsService: TimbreActionsService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
 	}
 
 	ngOnInit(): void {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
-		this.timbre.setTimbreAcquisModel(new TimbreAcquisModel());
 	}
 
 }

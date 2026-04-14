@@ -1,11 +1,12 @@
-import { Label } from './utils/utils-model';
-import { ProprieteModel } from './utils/propriete-model';
-import {TimbreBlocAcquisModel} from "./timbre-bloc-acquis.model";
+import {Label} from './utils/utils-model';
+import {Type} from 'class-transformer';
+import {ProprieteModel} from './utils/propriete-model';
 import {TypeTimbreEnum} from "../shared/enum/type-timbre.enum";
 import {MonnaieEnum} from "../shared/enum/monnaie.enum";
 import {TimbreModel} from "./timbre.model";
 import {isNotNullOrUndefined, isNullOrUndefined} from "../shared/utils/utils";
 import {UserModel} from "./user.model";
+import {TimbreBlocAcquisModel} from "./timbre-bloc-acquis.model";
 
 export class TimbreBlocModel extends ProprieteModel {
 	@Label('Identifiant')
@@ -23,52 +24,45 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label('Image')
 	image: string | File;
 
-	@Label('Image tableau')
-	imageTable: string;
-
 	@Label('Image zoom')
 	imageZoom: string;
 
 	@Label("Réference")
 	yt: string;
 
-	@Label("vérif")
-	timbreBlocAcquisModel: TimbreBlocAcquisModel;
-
 	@Label("Nombre de timbres")
 	nbTimbres: number;
-
-	@Label("Nombre de timbres acquis")
-	nbTimbresAcquis: number;
 
 	idOrigine: number;
 
 	@Label("Timbres")
 	timbres: TimbreModel[];
 
-	@Label("Utilisateurs acquis")
+	@Label("Acquis")
 	usersAcquis: string[] = [];
 
-	@Label("Utilisateurs doublon")
+	@Label("Doublon")
 	usersDoublon: string[] = [];
 
-	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageTable?: string, imageZoom?: string, yt?: string, timbreBlocAcquisModel?: TimbreBlocAcquisModel, nbTimbres?: number, nbTimbresAcquis?: number, usersAcquis?: [], usersDoublon?: []) {
+	@Label("Nombre de timbres")
+	@Type(() => TimbreBlocAcquisModel)
+	nbTimbresAcquisByUser: TimbreBlocAcquisModel[];
+
+	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageZoom?: string, yt?: string, nbTimbres?: number, usersAcquis?: [], usersDoublon?: [], nbTimbresAcquisByUser?: TimbreBlocAcquisModel[]) {
 		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
 		this.type = type ? type : null;
 		this.monnaie = monnaie ? monnaie : null;
 		this.image = image ? image : null;
-		this.imageTable = imageTable ? imageTable : null;
 		this.imageZoom = imageZoom ? imageZoom : null;
 		this.yt = yt ? yt : null;
-		this.timbreBlocAcquisModel = timbreBlocAcquisModel ? timbreBlocAcquisModel : null;
 		this.nbTimbres = nbTimbres ? nbTimbres : null;
-		this.nbTimbresAcquis = nbTimbresAcquis ? nbTimbresAcquis : null;
 		this.usersAcquis = usersAcquis ? usersAcquis : null;
 		this.usersDoublon = usersDoublon ? usersDoublon : null;
+		this.nbTimbresAcquisByUser = nbTimbresAcquisByUser ? nbTimbresAcquisByUser : null;
 	}
-	
+
 	getId(): number {
 		return this.id;
 	}
@@ -117,14 +111,6 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.image = value;
 	}
 
-	getImageTable(): string {
-		return this.imageTable;
-	}
-
-	setImageTable(value: string) {
-		this.imageTable = value;
-	}
-
 	getImageZoom(): string {
 		return this.imageZoom;
 	}
@@ -141,28 +127,12 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.yt = value;
 	}
 
-	getTimbreBlocAcquisModel(): TimbreBlocAcquisModel {
-		return this.timbreBlocAcquisModel;
-	}
-
-	setTimbreBlocAcquisModel(value: TimbreBlocAcquisModel) {
-		this.timbreBlocAcquisModel = value;
-	}
-
 	getNbTimbres(): number {
 		return this.nbTimbres;
 	}
 
 	setNbTimbres(value: number) {
 		this.nbTimbres = value;
-	}
-
-	getNbTimbresAcquis(): number {
-		return this.nbTimbresAcquis;
-	}
-
-	setNbTimbresAcquis(value: number) {
-		this.nbTimbresAcquis = value;
 	}
 
 	getTimbres(): TimbreModel[] {
@@ -183,7 +153,7 @@ export class TimbreBlocModel extends ProprieteModel {
 	}
 
 	isAcquis(user: UserModel): boolean {
-		return isNotNullOrUndefined(this.getUsersAcquis()?.find(userAcquis => userAcquis == user?.getId()));
+		return isNotNullOrUndefined(this.getUsersAcquis()?.find(u => u == user?.getId()));
 	}
 
 	addUserAcquis(user: UserModel) {
@@ -216,7 +186,7 @@ export class TimbreBlocModel extends ProprieteModel {
 	}
 
 	isDoublon(user: UserModel): boolean {
-		return isNotNullOrUndefined(this.getUsersDoublon()?.find(userAcquis => userAcquis == user.getId()));
+		return isNotNullOrUndefined(this.getUsersDoublon()?.find(u => u == user?.getId()));
 	}
 
 	addUserDoublon(user: UserModel) {
@@ -245,5 +215,77 @@ export class TimbreBlocModel extends ProprieteModel {
 
 	getUsersDoublon(): string[] {
 		return this.usersDoublon;
+	}
+
+	getNbTimbresAcquisByUser(user: UserModel): number {
+		return isNotNullOrUndefined(user) && isNotNullOrUndefined(this.nbTimbresAcquisByUser) && this.nbTimbresAcquisByUser?.length > 0
+			? this.nbTimbresAcquisByUser?.find(t => t.getIdUser() == user?.getId())?.getNbAcquis() ?? 0
+			: 0;
+	}
+
+	addTimbresAcquisByUser(user: UserModel, nb?: number) {
+		if (isNotNullOrUndefined(user)) {
+			if (isNullOrUndefined(this.nbTimbresAcquisByUser)) {
+				this.nbTimbresAcquisByUser = []
+			}
+
+			const find = this.nbTimbresAcquisByUser.find(timbreBlocAcquis => timbreBlocAcquis.getIdUser() == user?.getId());
+			if (isNotNullOrUndefined(find)) {
+				find.setNbAcquis(this.getNb(find.getNbAcquis(), nb));
+			} else {
+				this.nbTimbresAcquisByUser.push(new TimbreBlocAcquisModel(user?.getId(), this.getNb(0, nb), null));
+			}
+		}
+	}
+
+	removeTimbresAcquisByUser(user: UserModel) {
+		if (isNotNullOrUndefined(user) && isNotNullOrUndefined(this.nbTimbresAcquisByUser)) {
+			const find = this.nbTimbresAcquisByUser.find(timbreBlocAcquis => timbreBlocAcquis.getIdUser() == user?.getId());
+			if (isNotNullOrUndefined(find) && find.getNbAcquis() > 0) {
+				find.setNbAcquis(find.getNbAcquis() - 1)
+			}
+		}
+	}
+
+	getNbTimbresDoublonByUser(user: UserModel): number {
+		return isNotNullOrUndefined(user) && isNotNullOrUndefined(this.nbTimbresAcquisByUser) && this.nbTimbresAcquisByUser?.length > 0
+			? this.nbTimbresAcquisByUser?.find(t => t.getIdUser() == user?.getId())?.getNbDoublon() ?? 0
+			: 0;
+	}
+
+	addTimbresDoublonByUser(user: UserModel, nb?: number) {
+		if (isNotNullOrUndefined(user)) {
+			if (isNullOrUndefined(this.nbTimbresAcquisByUser)) {
+				this.nbTimbresAcquisByUser = []
+			}
+
+			const find = this.nbTimbresAcquisByUser.find(timbreBlocAcquis => timbreBlocAcquis.getIdUser() == user?.getId());
+			if (isNotNullOrUndefined(find)) {
+				find.setNbDoublon(this.getNb(find.getNbDoublon(), nb));
+			} else {
+				this.nbTimbresAcquisByUser.push(new TimbreBlocAcquisModel(user?.getId(), null, this.getNb(0, nb)));
+			}
+		}
+	}
+
+	removeTimbresDoublonByUser(user: UserModel) {
+		if (isNotNullOrUndefined(user) && isNotNullOrUndefined(this.nbTimbresAcquisByUser)) {
+			const find = this.nbTimbresAcquisByUser.find(timbreBlocAcquis => timbreBlocAcquis.getIdUser() == user?.getId());
+			if (isNotNullOrUndefined(find) && find.getNbDoublon() > 0) {
+				find.setNbDoublon(find.getNbDoublon() - 1)
+			}
+		}
+	}
+
+	getNb(nb: number, nbSupp: number): number {
+		if (isNullOrUndefined(nbSupp)) {
+			nbSupp = 1
+		}
+		nb = nb + nbSupp;
+
+		if (nb > this.getNbTimbres()) {
+			nb = this.getNbTimbres();
+		}
+		return nb;
 	}
 }

@@ -2,15 +2,17 @@ import {Injectable} from '@angular/core';
 import {LibDialogImageComponent} from "../components/lib-dialog-image/lib-dialog-image.component";
 import {MatDialog} from "@angular/material/dialog";
 import {BaseEnum} from "../enum/base.enum";
-import {map, Observable} from "rxjs";
+import {BehaviorSubject, catchError, first, map, Observable, of, switchMap} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
-import {isNotNullOrUndefined} from "../utils/utils";
+import {isNotNullOrUndefined, isNullOrUndefined} from "../utils/utils";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {DimensionImageEnum} from "../enum/dimension-image.enum";
+import {TimbreVarService} from "./timbre/timbre-var.service";
+import {tap} from "rxjs/operators";
 
 @Injectable()
 export class UtilsService {
-	constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private firestore: AngularFirestore) {
+	constructor(private snackBar: MatSnackBar, private dialog: MatDialog, private angularFirestore: AngularFirestore, private timbreVarService: TimbreVarService) {
 	}
 
 	zoom(url: string) {
@@ -36,18 +38,54 @@ export class UtilsService {
 		});
 	}
 
-	getMaxIdentAsync(baseEmun: BaseEnum, annee?: number): Observable<number> {
-		return this.firestore.collection(baseEmun, ref => {
-			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
+	getMaxIdentAsync(baseEnum: BaseEnum): Observable<number> {
+		const subjectMap: Partial<Record<BaseEnum, BehaviorSubject<number | null>>> = {
+			[BaseEnum.TIMBRE]: this.timbreVarService.maxIdentTimbre$,
+			[BaseEnum.PAYS]:   this.timbreVarService.maxIdentPays$,
+			[BaseEnum.TIMBRE_BLOC]:   this.timbreVarService.maxIdentBloc$,
+		};
+
+		const subject = subjectMap[baseEnum];
+
+		if (isNullOrUndefined(subject)) {
+			return this.getMaxIdentByBaseAsync(baseEnum).pipe(first());
+		}
+
+		return subject.pipe(
+			first(),
+			switchMap(maxIdent => {
+				if (isNullOrUndefined(maxIdent)) {
+					return this.getMaxIdentByBaseAsync(baseEnum).pipe(
+						first(),
+						tap(newMaxIdent => subject.next(newMaxIdent))
+					);
+				} else {
+					return of(maxIdent);
+				}
+			})
+		);
+	}
+
+	getMaxIdentByBaseAsync(baseEnum: BaseEnum, annee?: number): Observable<number> {
+		return this.angularFirestore.collection(baseEnum, ref => {
+			let query: firebase.default.firestore.CollectionReference
+				| firebase.default.firestore.Query = ref;
+
 			/*if (isNotNullOrUndefined(annee)) {
-				filteredQuery = filteredQuery.where("annee", "==", annee);
+				query = query.where("annee", "==", annee);
 			}*/
-			filteredQuery = filteredQuery.orderBy("id", "desc");
-			filteredQuery = filteredQuery.limit(1);
-			return filteredQuery;
+
+			return query.orderBy("id", "desc").limit(1);
 		}).valueChanges().pipe(
 			map(docs => {
-				return isNotNullOrUndefined(docs[0]) ? docs[0]["id"] + 1 : 1
+				if (!docs.length || !isNotNullOrUndefined(docs[0])) return 1;
+
+				const topDoc = docs[0] as { id?: number };
+				return typeof topDoc.id === "number" ? topDoc.id + 1 : 1;
+			}),
+			catchError(err => {
+				console.error("getMaxIdentAsync a échoué :", err);
+				return of(1); // valeur par defaut
 			})
 		);
 	}

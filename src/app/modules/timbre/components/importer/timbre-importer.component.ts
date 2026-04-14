@@ -1,24 +1,19 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, combineLatest, filter, first} from 'rxjs';
+import {BehaviorSubject, combineLatest, first} from 'rxjs';
 import {NgForm} from '@angular/forms';
 import {MatDialogRef} from '@angular/material/dialog';
 import * as Papa from 'papaparse';
 import {TimbreModel} from '../../../../model/timbre.model';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../shared/utils/utils';
-import {TimbreService} from '../../../../shared/services/timbre/timbre.service';
 import {UploadService} from '../../../../shared/services/upload.service';
-import {DossierEnum} from '../../../../shared/enum/dossier.enum';
 import {TimbreBlocModel} from '../../../../model/timbre-bloc.model';
-import {TimbreAcquisModel} from '../../../../model/timbre-acquis.model';
 import {AuthService} from '../../../../shared/services/auth.service';
 import {UserModel} from '../../../../model/user.model';
 import {BaseEnum} from '../../../../shared/enum/base.enum';
 import {UtilsService} from '../../../../shared/services/utils.service';
-import {TimbreBlocService} from '../../../../shared/services/timbre/timbre-bloc.service';
-import {TimbreBlocAcquisModel} from "../../../../model/timbre-bloc-acquis.model";
-import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
-import {take} from "rxjs/operators";
+import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
+import {DossierEnum} from "../../../../shared/enum/dossier.enum";
 
 @Component({
 	selector: 'app-timbre-importer',
@@ -27,7 +22,7 @@ import {take} from "rxjs/operators";
 })
 export class TimbreImporterComponent implements OnInit {
 	//dossier = "http://www.consdjeunes.123.fr/timbres//images/timbres/zoom/"
-	dossier = '/assets/images/timbres/';
+	dossier = '/assets/images/' + DossierEnum.TIMBRE;
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
 	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 	messageLoad$: BehaviorSubject<string> = new BehaviorSubject<string>('Chargement en cours ...');
@@ -43,9 +38,7 @@ export class TimbreImporterComponent implements OnInit {
 
 	constructor(
 		private authService: AuthService,
-		private timbreService: TimbreService,
-		private timbreBlocService: TimbreBlocService,
-		private timbreUtilsService: TimbreUtilsService,
+		private timbreActionsService: TimbreActionsService,
 		private uploadService: UploadService,
 		private utilsService: UtilsService,
 		public dialogRef: MatDialogRef<TimbreImporterComponent>) {
@@ -141,16 +134,15 @@ export class TimbreImporterComponent implements OnInit {
 			//timbreModel.setId(item["ID"] != "NULL" ? item["ID"] : "");
 			//timbreModel.setId(item["CODE"] != "NULL" && item["CODE"] != "" ? Number(item["CODE"]) : null);
 			//timbreModel.setIdBloc(item["IDENT_BLOC"] != "NULL" && item["IDENT_BLOC"] != "" ? Number(item["IDENT_BLOC"]) : null);
-			timbreModel.setType(item["TYPE"] != 'NULL' && item["TYPE"] != '' ? item["TYPE"] : null);
+			//timbreModel.setType(item["TYPE"] != 'NULL' && item["TYPE"] != '' ? item["TYPE"] : null);
 			timbreModel.setYt(item["YT"] != 'NULL' && item["YT"] != '' ? item["YT"] : null);
 			timbreModel.setAnnee(annee);
-
-			const timbreAcquisModel: TimbreAcquisModel = new TimbreAcquisModel();
-			timbreAcquisModel.setIdTimbre(timbreModel.getId());
-			timbreAcquisModel.setIdUser(user.getId());
-			timbreAcquisModel.setAcquis(item["ACQUIS"] == "1");
-			timbreAcquisModel.setDoublon(item["DOUBLON"] == "1");
-			timbreModel.setTimbreAcquisModel(timbreAcquisModel);
+			if (item["ACQUIS"] == "1") {
+				timbreModel.addUserAcquis(user);
+			}
+			if (item["DOUBLON"] == "1") {
+				timbreModel.addUserDoublon(user);
+			}
 
 			let image: string = this.dossier + annee + '/';
 			let imageBloc: string = '';
@@ -169,19 +161,17 @@ export class TimbreImporterComponent implements OnInit {
 					timbreBlocModel.setMonnaie(monnaie);
 					timbreBlocModel.setType(item["CARNET"] == "1"? TypeTimbreEnum.CARNET: TypeTimbreEnum.BLOC);
 					timbreBlocModel.idOrigine = idBloc;
-
-					const timbreBlocAcquisModel: TimbreBlocAcquisModel = new TimbreBlocAcquisModel();
-					timbreBlocAcquisModel.setIdBloc(this.identBloc);
-					timbreBlocAcquisModel.setIdUser(user.getId());
-					timbreBlocAcquisModel.setAcquis(item["ACQUIS_BLOC"] == "1");
-					timbreBlocAcquisModel.setDoublon(item["DOUBLON_BLOC"] == "1");
-					timbreBlocModel.setTimbreBlocAcquisModel(timbreBlocAcquisModel);
+					if (item["ACQUIS_BLOC"] == "1") {
+						timbreBlocModel.addUserAcquis(user);
+					}
+					if (item["DOUBLON_BLOC"] == "1") {
+						timbreBlocModel.addUserDoublon(user);
+					}
 
 					this.uploadService.checkIfImageExists(imageBloc).pipe(first()).subscribe(
 						exists => {
 							if (exists) {
 								timbreBlocModel.setImage(imageBloc);
-								timbreBlocModel.setImageTable(imageBloc);
 								timbreBlocModel.setImageZoom(imageBloc);
 							}
 						}
@@ -203,7 +193,6 @@ export class TimbreImporterComponent implements OnInit {
 				exists => {
 					if (exists) {
 						timbreModel.setImage(image);
-						timbreModel.setImageTable(image);
 						timbreModel.setImageZoom(image);
 					}
 				}
@@ -223,14 +212,14 @@ export class TimbreImporterComponent implements OnInit {
 
 			if (isNotNullOrUndefined(this.timbresBlocsModel) && this.timbresBlocsModel?.length > 0) {
 				this.timbresBlocsModel.forEach((timbreBlocModel, index) => {
-					this.saveBloc(timbreBlocModel);
+					this.timbreActionsService.saveBloc(timbreBlocModel, this.dialogRef, true);
 				});
 			}
 
 			this.timbres$.pipe(first()).subscribe(timbresModel => {
 				if (isNotNullOrUndefined(timbresModel) && timbresModel?.length > 0) {
 					timbresModel.forEach((timbreModel, index) => {
-						this.saveTimbre(timbreModel, index == timbresModel.length - 1);
+						this.timbreActionsService.save(timbreModel, this.dialogRef, true, true);
 					});
 				} else {
 					this.messageError$.next('Données incorrectes');
@@ -238,71 +227,6 @@ export class TimbreImporterComponent implements OnInit {
 				}
 			});
 		}
-	}
-
-	saveBloc(timbreBlocModel: TimbreBlocModel) {
-		combineLatest([
-			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.AUTRE),
-			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.TABLE),
-			this.timbreBlocService.upload(timbreBlocModel, DossierEnum.ZOOM)
-		]).pipe(
-			filter(([image, imageTable, imageZoom]) =>
-				isNotNullOrUndefined(image) &&
-				isNotNullOrUndefined(imageTable) &&
-				isNotNullOrUndefined(imageZoom)
-			),
-			take(1)
-		).subscribe(([image, imageTable, imageZoom]) => {
-			if (this.timbreUtilsService.isValidImage(image)) {
-				timbreBlocModel.setImage(image);
-			}
-			if (this.timbreUtilsService.isValidImage(imageTable)) {
-				timbreBlocModel.setImageTable(imageTable);
-			}
-			if (this.timbreUtilsService.isValidImage(imageZoom)) {
-				timbreBlocModel.setImageZoom(imageZoom);
-			}
-			if (timbreBlocModel?.getTimbreBlocAcquisModel()?.isAcquis()) {
-				this.timbreUtilsService.addAcquisBloc(timbreBlocModel?.getTimbreBlocAcquisModel()?.getIdUser(), timbreBlocModel, timbreBlocModel?.getTimbreBlocAcquisModel()?.isDoublon());
-			}
-			this.timbreBlocService.ajouter(timbreBlocModel, false);
-		});
-	}
-
-	saveTimbre(timbreModel: TimbreModel, last: boolean) {
-		combineLatest([
-			this.timbreService.upload(timbreModel, DossierEnum.AUTRE),
-			this.timbreService.upload(timbreModel, DossierEnum.TABLE),
-			this.timbreService.upload(timbreModel, DossierEnum.ZOOM)
-		]).pipe(
-			filter(([image, imageTable, imageZoom]) =>
-				isNotNullOrUndefined(image) &&
-				isNotNullOrUndefined(imageTable) &&
-				isNotNullOrUndefined(imageZoom)
-			),
-			take(1)
-		).subscribe(([image, imageTable, imageZoom]) => {
-			if (this.timbreUtilsService.isValidImage(image)) {
-				timbreModel.setImage(image);
-			}
-			if (this.timbreUtilsService.isValidImage(imageTable)) {
-				timbreModel.setImageTable(imageTable);
-			}
-			if (this.timbreUtilsService.isValidImage(imageZoom)) {
-				timbreModel.setImageZoom(imageZoom);
-			}
-			if (timbreModel?.getTimbreAcquisModel()?.isAcquis()) {
-				this.timbreUtilsService.addAcquis(timbreModel?.getTimbreAcquisModel()?.getIdUser(), timbreModel, timbreModel?.getTimbreAcquisModel()?.isDoublon());
-			}
-			/*if (isNotNullOrUndefined(timbreModel?.getTimbreBlocModel()?.getId())) {
-				this.timbreBlocService.ajouter(timbreModel?.getTimbreBlocModel(), false);
-			}*/
-			this.timbreService.ajouter(timbreModel, last);
-			if (last) {
-				this.load$.next(true);
-				this.close();
-			}
-		});
 	}
 
 	close() {

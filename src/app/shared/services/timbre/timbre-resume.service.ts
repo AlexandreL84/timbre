@@ -1,176 +1,271 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, combineLatest, first} from 'rxjs';
+import {BehaviorSubject, combineLatest, first, forkJoin, map, Observable, switchMap} from 'rxjs';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
 import {TimbreCritereModel} from '../../../model/timbre-critere.model';
-import {TimbreBlocService} from './timbre-bloc.service';
-import {TimbreUtilsService} from './timbre-utils.service';
-import {TimbreService} from "./timbre.service";
 import {TimbreResumeModel} from "../../../model/timbre-resume.model";
 import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
+import {BaseEnum} from "../../enum/base.enum";
+import {TimbreVarService} from "./timbre-var.service";
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import {TimbreBlocModel} from "../../../model/timbre-bloc.model";
+import {plainToInstance} from 'class-transformer';
+import {TimbreResumeTypeModel} from "../../../model/timbre-resume-type.model";
+import {TimbreResumeAcquisModel} from "../../../model/timbre-resume-acquis.model";
+import {TimbreModel} from "../../../model/timbre.model";
+import {AuthService} from "../auth.service";
 
 @Injectable()
 export class TimbreResumeService {
+	loadGeneration$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-	timbresResume$: BehaviorSubject<TimbreResumeModel[]> = new BehaviorSubject<TimbreResumeModel[]>(null);
-	totalTimbreResume$: BehaviorSubject<TimbreResumeModel> = new BehaviorSubject<TimbreResumeModel>(null);
+	timbresResume$: BehaviorSubject<TimbreResumeModel[]> = new BehaviorSubject<TimbreResumeModel[]>([]);
 
 	constructor(
-		private timbreService: TimbreService,
-		private timbreBlocService: TimbreBlocService,
-		private timbreUtilsService: TimbreUtilsService) {
+		private angularFirestore: AngularFirestore,
+		private timbreVarService: TimbreVarService,
+		private authService: AuthService
+	) {
 	}
 
-	getResume(timbreCritereModel?: TimbreCritereModel) {
-		console.log("getResume")
-		/*this.load$.next(false);
-		this.timbresResume$.next(null);
-		this.totalTimbreResume$.next(null);
+	getResumeByUser(refresh: boolean) {
+		if (!refresh) {
+			this.loadGeneration$.next(true);
+		}
+		this.load$.next(false);
 		combineLatest([
-			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
-			this.timbreUtilsService.getTimbreAcquis(),
-			this.timbreBlocService.getAllBlocs(timbreCritereModel),
-			this.timbreBlocService.getTimbreBlocAcquis()
-		]).pipe(first()).subscribe(([timbres, timbresAcquis, timbresBloc, timbresBlocAcquis]) => {
-			this.timbresResume$.next(this.construct(timbres, timbresAcquis, timbresBloc, timbresBlocAcquis));
-			this.timbreUtilsService.reinitResume$.next(false);
-		});*/
+			this.authService.userSelect$,
+			this.getAllWithIds(),
+		]).pipe(first()).subscribe(([user, timbresWithIds]) => {
+			let timbresRetour = [];
+			if (isNotNullOrUndefined(timbresWithIds) && timbresWithIds.length > 0) {
+				timbresWithIds.forEach(({id, data}) => {
+					let timbreRetour: TimbreResumeModel = plainToInstance(TimbreResumeModel, data);
+					timbreRetour.setId(id); // ← on stocke l'id Firestore dans le model
+					timbresRetour.push(timbreRetour);
+				});
+				this.timbresResume$.next(timbresRetour);
+			}
+			this.load$.next(true);
+		});
 	}
 
-	construct(timbres, timbresAcquis, timbresBloc, timbresBlocAcquis) {
-		let timbreResumeModels: TimbreResumeModel[] = [];
-		if (timbres?.length > 0) {
-			timbres.forEach((timbre: any) => {
-				let annee: number = timbre["annee"];
+	getAllWithIds() {
+		return this.angularFirestore.collection(BaseEnum.TIMBRE_RESUME)
+			.snapshotChanges()
+			.pipe(
+				map(actions => actions.map(a => ({
+					id: a.payload.doc.id,
+					data: a.payload.doc.data()
+				})))
+			);
+	}
 
-				if (isNotNullOrUndefined(timbresBloc) && isNullOrUndefined(timbre["annee"]) && isNotNullOrUndefined(timbre["idBloc"])) {
-					const findTimbreBloc = timbresBloc.find(timbreBloc => timbreBloc["id"] == timbre["idBloc"]);
-					if (isNotNullOrUndefined(findTimbreBloc)) {
-						annee = findTimbreBloc["annee"];
-					}
-				}
+	refreshResume(choixAnnee?: number) {
+		this.load$.next(false);
+		this.loadGeneration$.next(false);
 
-				let timbreResumeModel: TimbreResumeModel = timbreResumeModels.find(timbreResumeModel => timbreResumeModel.getAnnee() == annee);
-				if (isNullOrUndefined(timbreResumeModel)) {
-					timbreResumeModel = new TimbreResumeModel();
-					timbreResumeModel.setAnnee(annee);
-					timbreResumeModels.push(timbreResumeModel);
-				}
-				timbreResumeModel.setTotal(timbreResumeModel.getTotal() + 1);
+		this.getResumeByUser(true);
 
-				const findBloc = isNotNullOrUndefined(timbre["idBloc"])? timbresBloc.find(timbreBloc => timbreBloc["id"] == timbre["idBloc"]): null;
-				if (isNotNullOrUndefined(timbre["idBloc"])) {
-					if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.CARNET) {
-						timbreResumeModel.setNombreTimbresCarnet(timbreResumeModel.getNombreTimbresCarnet() + 1);
-					} else if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.COLLECTOR) {
-						timbreResumeModel.setNombreTimbresCollector(timbreResumeModel.getNombreTimbresCollector() + 1);
-					} else {
-						timbreResumeModel.setNombreTimbresBloc(timbreResumeModel.getNombreTimbresBloc() + 1);
-					}
-				} else {
-					timbreResumeModel.setNombre(timbreResumeModel.getNombre() + 1);
-				}
-
-				if (isNotNullOrUndefined(timbresAcquis)) {
-					const findTimbreAcquis = timbresAcquis.find(timbreAcquis => timbreAcquis['idTimbre'] == timbre["id"]);
-					if (isNotNullOrUndefined(findTimbreAcquis)) {
-						if (findTimbreAcquis["acquis"] == true) {
-							if (isNotNullOrUndefined(timbre["idBloc"])) {
-								if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.CARNET) {
-									timbreResumeModel.setAcquisTimbresCarnet(timbreResumeModel.getAcquisTimbresCarnet() + 1);
-								} else if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.COLLECTOR) {
-									timbreResumeModel.setAcquisTimbresCollector(timbreResumeModel.getAcquisTimbresCollector() + 1);
-								} else {
-									timbreResumeModel.setAcquisTimbresBloc(timbreResumeModel.getAcquisTimbresBloc() + 1);
-								}
-							} else {
-								timbreResumeModel.setAcquis(timbreResumeModel.getAcquis() + 1);
-							}
-						}
-						if (findTimbreAcquis["doublon"] == true) {
-							if (isNotNullOrUndefined(timbre["idBloc"])) {
-								if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.CARNET) {
-									timbreResumeModel.setDoublonTimbresCarnet(timbreResumeModel.getDoublonTimbresCarnet() + 1);
-								} else if (isNotNullOrUndefined(findBloc) && findBloc["type"] == TypeTimbreEnum.COLLECTOR) {
-									timbreResumeModel.setDoublonTimbresCollector(timbreResumeModel.getDoublonTimbresCollector() + 1);
-								} else {
-									timbreResumeModel.setDoublonTimbresBloc(timbreResumeModel.getDoublonTimbresBloc() + 1);
-								}
-							} else {
-								timbreResumeModel.setDoublon(timbreResumeModel.getDoublon() + 1);
-							}
-						}
-					}
-				}
-			});
-
-			timbresBloc.forEach(bloc => {
-				let timbreResumeModel: TimbreResumeModel = timbreResumeModels.find(timbreResumeModel => timbreResumeModel.getAnnee() == bloc["annee"])
-				if (isNullOrUndefined(timbreResumeModel)) {
-					timbreResumeModel = new TimbreResumeModel();
-					timbreResumeModel.setAnnee(bloc["annee"]);
-					timbreResumeModels.push(timbreResumeModel);
-				}
-
-				if (bloc["type"] == TypeTimbreEnum.CARNET) {
-					timbreResumeModel.setNombreCarnet(timbreResumeModel.getNombreCarnet() + 1);
-				} else if (bloc["type"] == TypeTimbreEnum.COLLECTOR) {
-					timbreResumeModel.setNombreCollector(timbreResumeModel.getNombreCollector() + 1);
-				} else {
-					timbreResumeModel.setNombreBloc(timbreResumeModel.getNombreBloc() + 1);
-				}
-
-				if (isNotNullOrUndefined(timbresBlocAcquis)) {
-					const findTimbreBlocAcquis = timbresBlocAcquis.find(timbreBlocAcquis => timbreBlocAcquis['idBloc'] == bloc["id"]);
-					if (isNotNullOrUndefined(findTimbreBlocAcquis)) {
-						if (findTimbreBlocAcquis["acquis"] == true) {
-							if (isNullOrUndefined(bloc["type"]) || bloc["type"] == TypeTimbreEnum.BLOC) {
-								timbreResumeModel.setAcquisBloc(timbreResumeModel.getAcquisBloc() + 1);
-							} else if (bloc["type"] == TypeTimbreEnum.COLLECTOR) {
-								timbreResumeModel.setAcquisCollector(timbreResumeModel.getAcquisCollector() + 1);
-							}
-						}
-						if (findTimbreBlocAcquis["doublon"] == true) {
-							if (isNullOrUndefined(bloc["type"]) || bloc["type"] == TypeTimbreEnum.BLOC) {
-								timbreResumeModel.setDoublonBloc(timbreResumeModel.getDoublonBloc() + 1);
-							} else if (bloc["type"] == TypeTimbreEnum.COLLECTOR) {
-								timbreResumeModel.setDoublonCollector(timbreResumeModel.getDoublonCollector() + 1);
-							}
-						}
-					}
-				}
-			});
+		let anneeDebut: number;
+		let anneeFin: number;
+		if (isNotNullOrUndefined(choixAnnee)) {
+			anneeDebut = choixAnnee;
+			anneeFin = choixAnnee;
+		} else {
+			anneeDebut = 1849;
+			anneeFin = 2026;
 		}
 
-		if (isNotNullOrUndefined(timbreResumeModels) && timbreResumeModels?.length > 0) {
-			const totalTimbreResume = new TimbreResumeModel();
-			timbreResumeModels.forEach(timbreResumeModel => {
-				totalTimbreResume.setTotal(totalTimbreResume.getTotal() + timbreResumeModel.getTotal());
-				totalTimbreResume.setNombre(totalTimbreResume.getNombre() + timbreResumeModel.getNombre());
-				totalTimbreResume.setAcquis(totalTimbreResume.getAcquis() + timbreResumeModel.getAcquis());
-				totalTimbreResume.setDoublon(totalTimbreResume.getDoublon() + timbreResumeModel.getDoublon());
+		this.load$.pipe(
+			first(isLoaded => isLoaded === true),
+			switchMap(() => this.timbresResume$.pipe(first())),
+		).subscribe(timbresResume => {
 
-				totalTimbreResume.setNombreCarnet(totalTimbreResume.getNombreCarnet() + timbreResumeModel.getNombreCarnet());
-				totalTimbreResume.setNombreTimbresCarnet(totalTimbreResume.getNombreTimbresCarnet() + timbreResumeModel.getNombreTimbresCarnet());
-				totalTimbreResume.setAcquisTimbresCarnet(totalTimbreResume.getAcquisTimbresCarnet() + timbreResumeModel.getAcquisTimbresCarnet());
-				totalTimbreResume.setDoublonTimbresCarnet(totalTimbreResume.getDoublonTimbresCarnet() + timbreResumeModel.getDoublonTimbresCarnet());
+			const timbresReset = timbresResume.map(t => {
+				if (t.getAnnee() >= anneeDebut && t.getAnnee() <= anneeFin) {
+					console.log('reset annee', t.getAnnee());
+					t.setTotal(0);
+					t.setTimbresResumeTypeModel(null);
+				}
+				return t;
+			});
+			this.timbresResume$.next(timbresReset); // ← force la mise à jour
 
-				totalTimbreResume.setNombreBloc(totalTimbreResume.getNombreBloc() + timbreResumeModel.getNombreBloc());
-				totalTimbreResume.setAcquisBloc(totalTimbreResume.getAcquisBloc() + timbreResumeModel.getAcquisBloc());
-				totalTimbreResume.setDoublonBloc(totalTimbreResume.getDoublonBloc() + timbreResumeModel.getDoublonBloc());
-				totalTimbreResume.setNombreTimbresBloc(totalTimbreResume.getNombreTimbresBloc() + timbreResumeModel.getNombreTimbresBloc());
-				totalTimbreResume.setAcquisTimbresBloc(totalTimbreResume.getAcquisTimbresBloc() + timbreResumeModel.getAcquisTimbresBloc());
-				totalTimbreResume.setDoublonTimbresBloc(totalTimbreResume.getDoublonTimbresBloc() + timbreResumeModel.getDoublonTimbresBloc());
+			const appels = [];
+			for (let annee = anneeDebut; annee <= anneeFin; annee++) {
+				appels.push(
+					forkJoin([
+						this.getTotalTimbreObs(annee),
+						this.getTotalBlocObs(annee)
+					])
+				);
+			}
 
-				totalTimbreResume.setNombreCollector(totalTimbreResume.getNombreCollector() + timbreResumeModel.getNombreCollector());
-				totalTimbreResume.setAcquisCollector(totalTimbreResume.getAcquisCollector() + timbreResumeModel.getAcquisCollector());
-				totalTimbreResume.setDoublonCollector(totalTimbreResume.getDoublonCollector() + timbreResumeModel.getDoublonCollector());
-				totalTimbreResume.setNombreTimbresCollector(totalTimbreResume.getNombreTimbresCollector() + timbreResumeModel.getNombreTimbresCollector());
-				totalTimbreResume.setAcquisTimbresCollector(totalTimbreResume.getAcquisTimbresCollector() + timbreResumeModel.getAcquisTimbresCollector());
-				totalTimbreResume.setDoublonTimbresCollector(totalTimbreResume.getDoublonTimbresCollector() + timbreResumeModel.getDoublonTimbresCollector());
+			forkJoin(appels).subscribe(() => {
+				this.timbresResume$.pipe(first()).subscribe(timbresResume => {
+					timbresResume
+						?.filter(t => t.getAnnee() >= anneeDebut && t.getAnnee() <= anneeFin)
+						?.forEach(timbreResume => {
+							console.log(timbreResume)
+							const plainData = JSON.parse(JSON.stringify(timbreResume));
+
+							if (isNotNullOrUndefined(timbreResume.getId())) {
+								this.angularFirestore.collection(BaseEnum.TIMBRE_RESUME)
+									.doc(String(timbreResume.getId()))
+									.set(plainData)
+									.then(() => console.log('Modifié annee ' + timbreResume.getAnnee() + " - " + timbreResume.getTotal()))
+									.catch(err => console.error('Erreur modification annee ' + timbreResume.getAnnee(), err));
+							} else {
+								this.angularFirestore.collection(BaseEnum.TIMBRE_RESUME)
+									.add(plainData)
+									.then(docRef => {
+										timbreResume.setId(docRef.id as any);
+										console.log('Ajouté annee ' + timbreResume.getAnnee());
+									})
+									.catch(err => console.error('Erreur ajout annee ' + timbreResume.getAnnee(), err));
+							}
+						});
+				});
+
+				this.timbreVarService.reinitResume$.next(false);
+				this.loadGeneration$.next(true);
+			});
+		});
+	}
+
+	getTotalBlocObs(annee: number): Observable<any> {
+		const timbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.setAnnees([annee]);
+
+		return this.getAllTimbres(timbreCritereModel).pipe(
+			first(),
+			map(timbres => {
+				this.timbresResume$.pipe(first()).subscribe(timbresResume => {
+					let timbreResumeModel: TimbreResumeModel = timbresResume?.find(timbreResumeModel => timbreResumeModel.getAnnee() == annee);
+					if (isNullOrUndefined(timbreResumeModel)) {
+						timbreResumeModel = new TimbreResumeModel();
+						timbreResumeModel.setAnnee(annee);
+						timbresResume.push(timbreResumeModel);
+					}
+					const timbreResumeTypeModel = new TimbreResumeTypeModel();
+					timbreResumeTypeModel.setType(TypeTimbreEnum.TIMBRE);
+
+					if (timbres?.length > 0) {
+						timbres.forEach(timbre => {
+							const timbreModel: TimbreModel = plainToInstance(TimbreModel, timbre);
+							timbreResumeTypeModel.setNombreTimbre(timbreResumeTypeModel.getNombreTimbre() + 1);
+
+							let timbresResumeAcquisModel: TimbreResumeAcquisModel[] = [];
+							if (isNotNullOrUndefined(timbreModel.getUsersAcquis()) && timbreModel.getUsersAcquis().length > 0) {
+								timbreModel.getUsersAcquis().forEach(userAcquis => {
+									const timbreResumeAcquisModel = new TimbreResumeAcquisModel();
+									timbreResumeAcquisModel.setIdUser(userAcquis);
+									timbreResumeAcquisModel.setNbTimbresAcquis(1);
+									timbresResumeAcquisModel.push(timbreResumeAcquisModel);
+								});
+							}
+							if (isNotNullOrUndefined(timbreModel.getUsersDoublon()) && timbreModel.getUsersDoublon().length > 0) {
+								timbreModel.getUsersDoublon().forEach(userAcquis => {
+									const timbreResumeAcquisModel = new TimbreResumeAcquisModel();
+									timbreResumeAcquisModel.setIdUser(userAcquis);
+									timbreResumeAcquisModel.setNbTimbresDoublon(1);
+									timbresResumeAcquisModel.push(timbreResumeAcquisModel);
+								});
+							}
+
+							timbreResumeModel.setTotal(timbreResumeModel.getTotal() + 1);
+							timbreResumeModel.addTimbresResumeTypeModel(timbreResumeTypeModel, timbresResumeAcquisModel);
+						});
+					}
+				});
 			})
-			this.totalTimbreResume$.next(totalTimbreResume);
+		);
+	}
+
+
+	getTotalTimbreObs(annee: number): Observable<any> {
+		const timbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.setAnnees([annee]);
+
+		const timbreResumeTypeModel = new TimbreResumeTypeModel();
+		timbreResumeTypeModel.setType(TypeTimbreEnum.TIMBRE);
+
+
+		return this.getAllBlocs(timbreCritereModel).pipe(
+			first(),
+			map(blocs => {
+				if (blocs?.length > 0) {
+					blocs.forEach(bloc => {
+						const timbreBlocModel: TimbreBlocModel = plainToInstance(TimbreBlocModel, bloc);
+
+						this.timbresResume$.pipe(first()).subscribe(timbresResume => {
+							let timbreResumeModel: TimbreResumeModel = timbresResume?.find(timbreResumeModel => timbreResumeModel.getAnnee() == annee);
+							if (isNullOrUndefined(timbreResumeModel)) {
+								timbreResumeModel = new TimbreResumeModel();
+								timbreResumeModel.setAnnee(annee);
+								timbresResume.push(timbreResumeModel);
+							}
+							const timbreResumeTypeModel = new TimbreResumeTypeModel();
+							timbreResumeTypeModel.setType(timbreBlocModel.getType());
+							timbreResumeTypeModel.setNombreTimbre(timbreBlocModel.getNbTimbres());
+
+							let timbresResumeAcquisModel: TimbreResumeAcquisModel[] = [];
+							if (isNotNullOrUndefined(timbreBlocModel.nbTimbresAcquisByUser) && timbreBlocModel.nbTimbresAcquisByUser.length > 0) {
+								timbreBlocModel.nbTimbresAcquisByUser.forEach(timbreBlocAcquis => {
+									const timbreResumeAcquisModel = new TimbreResumeAcquisModel();
+									timbreResumeAcquisModel.setIdUser(timbreBlocAcquis.getIdUser());
+									timbreResumeAcquisModel.setNbTimbresAcquis(timbreBlocAcquis.getNbAcquis());
+									timbreResumeAcquisModel.setNbTimbresDoublon(timbreBlocAcquis.getNbDoublon());
+									if (isNotNullOrUndefined(timbreBlocModel?.getUsersAcquis()?.find(idUser => idUser == timbreBlocAcquis.getIdUser()))) {
+										timbreResumeAcquisModel.setNbAcquis(1);
+									}
+									if (isNotNullOrUndefined(timbreBlocModel?.getUsersDoublon()?.find(idUser => idUser == timbreBlocAcquis.getIdUser()))) {
+										timbreResumeAcquisModel.setNbDoublon(1);
+									}
+									timbresResumeAcquisModel.push(timbreResumeAcquisModel);
+								});
+							}
+
+							timbreResumeModel.addTimbresResumeTypeModel(timbreResumeTypeModel, timbresResumeAcquisModel);
+
+							timbreResumeModel.setTotal(timbreResumeModel.getTotal() + timbreBlocModel.getNbTimbres());
+							this.timbresResume$.next(timbresResume);
+						});
+					});
+				}
+			})
+		);
+	}
+
+	getAllTimbres(timbreCritereModel: TimbreCritereModel) {
+		return this.angularFirestore.collection(BaseEnum.TIMBRE, ref => {
+			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
+			if (isNotNullOrUndefined(timbreCritereModel)) {
+				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
+					filteredQuery = filteredQuery.where('annee', '==', timbreCritereModel.getAnnees()[0]);
+				}
+				filteredQuery = filteredQuery.where('idBloc', '==', null);
+			}
+			return filteredQuery;
+		}).valueChanges();
+	}
+
+	getAllBlocs(timbreCritereModel: TimbreCritereModel): Observable<any> {
+		return this.angularFirestore.collection(BaseEnum.TIMBRE_BLOC, ref => {
+			return this.getRefBloc(ref, timbreCritereModel);
+		}).valueChanges();
+	}
+
+	getRefBloc(ref, timbreCritereModel: TimbreCritereModel) {
+		let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
+		if (isNotNullOrUndefined(timbreCritereModel)) {
+			if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees()?.length > 0) {
+				filteredQuery = filteredQuery.where("annee", "in", timbreCritereModel.getAnnees());
+			}
+			if (isNotNullOrUndefined(timbreCritereModel.getType()) && timbreCritereModel.getType()?.length > 0) {
+				filteredQuery = filteredQuery.where("type", "in", timbreCritereModel.getType());
+			}
 		}
-		this.load$.next(true);
-		return timbreResumeModels;
+		return filteredQuery;
 	}
 }

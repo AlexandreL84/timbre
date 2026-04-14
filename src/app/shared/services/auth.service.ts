@@ -16,7 +16,7 @@ export class AuthService {
 	userSelect$: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(null);
 	users$: BehaviorSubject<UserModel[]> = new BehaviorSubject<UserModel[]>(null);
 
-	constructor(private afAuth: AngularFireAuth, private firestore: AngularFirestore) {
+	constructor(private afAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
 	}
 
 	// Méthode de connexion avec email et mot de passe
@@ -43,7 +43,7 @@ export class AuthService {
 
 	// Méthode pour obtenir l'utilisateur actuellement connecté
 	getUser(): Observable<UserModel> {
-		const collectionUser = this.firestore.collection(BaseEnum.USER).valueChanges();
+		const collectionUser = this.angularFirestore.collection(BaseEnum.USER).valueChanges();
 		return combineLatest([this.afAuth.authState, collectionUser, this.user$]).pipe(map(([user, users, userConnect]) => {
 				if (isNotNullOrUndefined(userConnect)) {
 					return userConnect;
@@ -78,7 +78,7 @@ export class AuthService {
 			droit = DroitEnum.CONSULT;
 		}
 
-		return this.firestore.collection(BaseEnum.USER, ref => {
+		return this.angularFirestore.collection(BaseEnum.USER, ref => {
 			let filteredQuery: firebase.default.firestore.CollectionReference | firebase.default.firestore.Query = ref;
 			filteredQuery = filteredQuery.where("droit", ">=", droit);
 			return filteredQuery;

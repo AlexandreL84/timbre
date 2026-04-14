@@ -4,7 +4,7 @@
 		<span *ngIf="timbreModel?.getId()" class="accent"><b>N°{{ timbreModel?.getId() }}</b></span>
 	</div>
 
-	<ng-template [ngIf]="(load$ | async) == false" [ngIfElse]="load">
+	<ng-template [ngIf]="(timbreVarService.loadModifTimbre$ | async) == false" [ngIfElse]="load">
 		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 	</ng-template>
 	<ng-template #load>
@@ -74,12 +74,12 @@
 										style="width: 180px !important;"
 										[ngModel]="timbreModel.getTimbreBlocModel()"
 										[placeholder]="'Choix bloc'"
-										[disabled]="!!timbreModel?.getId() || (timbreBlocService.timbresBlocModel$ | async)?.length <= 0"
+										[disabled]="!!timbreModel?.getId() || (timbreVarService.timbresBlocModel$ | async)?.length <= 0"
 										(ngModelChange)="changeBloc($event)">
 								<mat-option class="selectMin" [value]="null"></mat-option>
 
 								<mat-option class="selectMin"
-											*ngFor="let bloc of timbreBlocService.timbresBlocModel$ | async"
+											*ngFor="let bloc of timbreVarService.timbresBlocModel$ | async"
 											[value]="bloc">
 									{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc?.getType() == TypeTimbreEnum.CARNET ? " (carnet)" : "" }}
 								</mat-option>
@@ -103,19 +103,6 @@
 						<input
 							name="yt"
 							[(ngModel)]="timbreModel.yt"
-							type="text"
-							trim
-							zControl
-						/>
-					</div>
-
-					<div fxLayout="column" class="form-input">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'type'"></lib-libelle-model>
-						</label>
-						<input
-							name="type"
-							[(ngModel)]="timbreModel.type"
 							type="text"
 							trim
 							zControl

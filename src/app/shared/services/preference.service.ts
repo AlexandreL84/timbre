@@ -15,7 +15,7 @@ export class PreferenceService {
 	public timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
 
 	constructor(
-		private firestore: AngularFirestore,
+		private angularFirestore: AngularFirestore,
 		private authService: AuthService,
 	) {
 	}
@@ -46,7 +46,7 @@ export class PreferenceService {
 				if (isNotNullOrUndefined(userSelect)) {
 					preferenceModel.setIdUser(userSelect.getId());
 
-					return this.firestore.collection(BaseEnum.PREFERENCE, ref => {
+					return this.angularFirestore.collection(BaseEnum.PREFERENCE, ref => {
 						return this.getRef(ref, preferenceModel);
 					}).valueChanges()
 						.pipe(first(), map(preferences => {
@@ -78,7 +78,7 @@ export class PreferenceService {
 	}
 
 	getPreference(preferenceModel: PreferenceModel): Observable<any> {
-		return this.firestore.collection(BaseEnum.PREFERENCE, ref => {
+		return this.angularFirestore.collection(BaseEnum.PREFERENCE, ref => {
 			return this.getRef(ref, preferenceModel);
 		}).valueChanges();
 	}
@@ -98,7 +98,7 @@ export class PreferenceService {
 				if (isNotNullOrUndefined(preferenceModelTrouve) && preferenceModelTrouve?.length > 0) {
 					console.error("préférence déjà existante");
 				} else {
-					this.firestore.collection(BaseEnum.PREFERENCE).add(
+					this.angularFirestore.collection(BaseEnum.PREFERENCE).add(
 						Object.assign(new Object(), preferenceModel)
 					)
 						.then((result) => {
@@ -118,7 +118,7 @@ export class PreferenceService {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			preferenceModel.setIdUser(user.getId());
 
-			this.firestore.collection(BaseEnum.PREFERENCE, ref => {
+			this.angularFirestore.collection(BaseEnum.PREFERENCE, ref => {
 				return this.getRef(ref, preferenceModel);
 			})
 				.get()
@@ -144,7 +144,7 @@ export class PreferenceService {
 		const preferenceModel = new PreferenceModel(key);
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			preferenceModel.setIdUser(user.getId());
-			this.firestore.collection(BaseEnum.PREFERENCE, ref => {
+			this.angularFirestore.collection(BaseEnum.PREFERENCE, ref => {
 				return this.getRef(ref, preferenceModel);
 			})
 				.get()
@@ -167,7 +167,7 @@ export class PreferenceService {
 		const preferenceModel = new PreferenceModel();
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			preferenceModel.setIdUser(user.getId());
-			this.firestore.collection(BaseEnum.PREFERENCE, ref => {
+			this.angularFirestore.collection(BaseEnum.PREFERENCE, ref => {
 				return this.getRef(ref, preferenceModel);
 			})
 				.get()
@@ -208,6 +208,6 @@ export class PreferenceService {
 	}
 
 	getAllPreferences(): Observable<any> {
-		return this.firestore.collection(BaseEnum.PREFERENCE, null).valueChanges();
+		return this.angularFirestore.collection(BaseEnum.PREFERENCE, null).valueChanges();
 	}
 }

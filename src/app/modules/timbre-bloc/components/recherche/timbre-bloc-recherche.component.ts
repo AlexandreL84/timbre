@@ -38,7 +38,7 @@ export class TimbreBlocRechercheComponent implements OnInit {
 
 	recherche(){
 		if (isNotNullOrUndefined(this.preferenceService.timbreCritereBlocModel.getAnnees()) && this.preferenceService.timbreCritereBlocModel.getAnnees().length > 0) {
-			this.timbreBlocService.getBlocs(this.preferenceService.timbreCritereBlocModel, false);
+			this.timbreBlocService.getBlocs(this.preferenceService.timbreCritereBlocModel, true, false);
 		}
 	}
 }

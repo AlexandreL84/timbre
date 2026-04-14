@@ -7,11 +7,10 @@ import {HeaderModule} from "./modules/header/header.module";
 @Component({
 	selector: 'app-root',
 	standalone: true,
-    imports: [RouterOutlet, FlexModule, HeaderModule, SimpleNotificationModule],
+	imports: [RouterOutlet, FlexModule, HeaderModule, SimpleNotificationModule],
 	templateUrl: './app.component.html',
 	styleUrl: './app.component.css'
 })
 export class AppComponent {
-
 }
 

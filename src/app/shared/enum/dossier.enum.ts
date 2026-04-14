@@ -7,4 +7,5 @@ export enum DossierEnum {
 	DRAPEAU = "drapeau",
 	LANGUE = "langue",
 	MAP = "map",
+	BLOC = "bloc",
 }

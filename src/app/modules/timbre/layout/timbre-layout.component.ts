@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
-import {TimbreService} from "../../../shared/services/timbre/timbre.service";
 import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {HeaderService} from "../../../shared/services/header.service";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
+import {TimbreVarService} from "../../../shared/services/timbre/timbre-var.service";
 
 @Component({
 	selector: "app-timbre-layout",
@@ -15,7 +15,8 @@ export class TimbreLayoutComponent implements OnInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly ModeEnum = ModeEnum;
 
-	constructor(public headerService: HeaderService, public timbreService: TimbreService) {
+	constructor(
+		public headerService: HeaderService, public timbreVarService: TimbreVarService) {
 	}
 
 	ngOnInit(): void {

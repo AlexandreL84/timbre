@@ -1,356 +1,270 @@
-<ng-template [ngIf]="(timbreResumeService.load$ | async) == false" [ngIfElse]="load">
-	<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
-</ng-template>
-<ng-template #load>
-	<table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
-		<ng-container matColumnDef="annee" sticky>
-			<th mat-header-cell mat-sort-header *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'annee'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="primary50">
-				{{ element?.getAnnee() }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef></td>
-		</ng-container>
-		<ng-container matColumnDef="total" sticky>
-			<th mat-header-cell mat-sort-header *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'total'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index" class="primary50">
-				{{ element?.getTotal() }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getTotal() }} </b></td>
-		</ng-container>
+<div class="table-container mat-elevation-z2">
+	<ng-template
+		[ngIf]="(timbreResumeService.load$ | async) == false || (timbreResumeService.loadGeneration$ | async) == false">
+		<lib-spinner class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
+	</ng-template>
 
-		<ng-container matColumnDef="nombre">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombre'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index">
-				{{ element?.getNombre() }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombre() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="acquis">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK"
-					[info]="timbreResumeModel.getPropertyLibelle('acquis')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="{'accent50': element?.getNombre() == element?.getAcquis()}"
-				[matTooltip]="element?.getAcquis() > 0? ((element?.getAcquis() / element?.getNombre()) | percent) : ''">
-				<ng-container *ngIf="element?.getAcquis() > 0">
-					{{ element?.getAcquis() }}
-				</ng-container>
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<ng-container *ngIf="(timbreResumeService.totalTimbreResume$ | async)?.getAcquis() > 0">
-					<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquis() }} ({{ ((timbreResumeService.totalTimbreResume$ | async)?.getAcquis() / (timbreResumeService.totalTimbreResume$ | async)?.getNombre()) | percent  }})</b>
-				</ng-container>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="doublon">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
-					[info]="timbreResumeModel.getPropertyLibelle('doublon')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="{'accent50': element?.getNombre() == element?.getDoublon()}">
-				{{ element?.getDoublon() }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublon() }} </b>
-			</td>
-		</ng-container>
+	<section
+		[fxHide]="(timbreResumeService.load$ | async) == false || (timbreResumeService.loadGeneration$ | async) == false">
+		<table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+			<!-- Année -->
+			<ng-container matColumnDef="annee" sticky>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header>Année</th>
+				<td mat-cell *matCellDef="let row" class="primary100">
+					{{ row.getAnnee() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef><strong>Total</strong></td>
+			</ng-container>
 
-		<ng-container matColumnDef="nombreCarnet">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreCarnet'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreCarnet() == 0? 'gray25': 'primary25'">
-				{{ element?.getNombreCarnet() > 0 ? element?.getNombreCarnet() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreCarnet() }} </b>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="nombreTimbresCarnet">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreTimbresCarnet'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreCarnet() == 0? 'gray25': 'primary25'">
-				{{ element?.getNombreCarnet() > 0 ? element?.getNombreTimbresCarnet() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreTimbresCarnet() }} </b>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="acquisTimbresCarnet">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK"
-					[info]="timbreResumeModel.getPropertyLibelle('acquisTimbresCarnet')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresCarnet() == 0? 'gray25': element?.getNombreTimbresCarnet() == element?.getAcquisTimbresCarnet()? 'accent50': 'primary25'"
-			>
-				{{ element?.getNombreCarnet() > 0 ? element?.getAcquisTimbresCarnet() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisTimbresCarnet() }} </b>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="doublonTimbresCarnet">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
-					[info]="timbreResumeModel.getPropertyLibelle('doublonTimbresCarnet')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresCarnet() == 0? 'gray25': element?.getNombreTimbresCarnet() == element?.getDoublonTimbresCarnet()? 'accent50': 'primary25'"
-			>
-				{{ element?.getNombreCarnet() > 0 ? element?.getDoublonTimbresCarnet() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonTimbresCarnet() }} </b></td>
-		</ng-container>
+			<!-- Total -->
+			<ng-container matColumnDef="total" sticky>
+				<th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+				<td mat-cell *matCellDef="let row" class="primary50">{{ row.getTotal() }}</td>
+				<td mat-footer-cell *matFooterCellDef><strong>{{ getTotalFooter('total') }}</strong></td>
+			</ng-container>
 
-		<ng-container matColumnDef="nombreBloc">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreBloc'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreBloc() == 0? 'gray25': ''">
-				{{ element?.getNombreBloc() > 0 ? element?.getNombreBloc() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreBloc() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="acquisBloc">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK"
-					[info]="timbreResumeModel.getPropertyLibelle('acquisBloc')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreBloc() == 0? 'gray25': element.getNombreBloc() == element?.getAcquisBloc()? 'accent50': ''"
-			>
-				{{ element?.getNombreBloc() > 0 ? element?.getAcquisBloc() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisBloc() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="doublonBloc">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
-					[info]="timbreResumeModel.getPropertyLibelle('doublonBloc')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreBloc() == 0? 'gray25': element.getNombreBloc() == element?.getDoublonBloc()? 'accent50': ''"
-			>
-				{{ element?.getNombreBloc() > 0 ? element?.getDoublonBloc() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonBloc() }} </b></td>
-		</ng-container>
+			<!-- ===== TIMBRE SIMPLE ===== -->
+			<ng-container matColumnDef="nombre">
+				<th mat-header-cell *matHeaderCellDef>Nb Timbres</th>
+				<td mat-cell *matCellDef="let row">{{ getNombreByType(row, TypeTimbreEnum.TIMBRE) }}</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.TIMBRE, 'nombre') }}</strong></td>
+			</ng-container>
 
-		<ng-container matColumnDef="nombreTimbresBloc">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreTimbresBloc'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresBloc() == 0? 'gray25': 'primary25'">
-				{{ element?.getNombreTimbresBloc() > 0 ? element?.getNombreTimbresBloc() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreTimbresBloc() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="acquisTimbresBloc">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK"
-					[info]="timbreResumeModel.getPropertyLibelle('acquisTimbresBloc')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresBloc() == 0? 'gray25': element?.getNombreTimbresBloc() == element?.getAcquisTimbresBloc()? 'accent50': 'primary25'"
-			>
-				{{ element?.getNombreTimbresBloc() > 0 ? element?.getAcquisTimbresBloc() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisTimbresBloc() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="doublonTimbresBloc">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
-					[info]="timbreResumeModel.getPropertyLibelle('doublonTimbresBloc')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresBloc() == 0? 'gray25': element?.getNombreTimbresBloc() == element?.getDoublonTimbresBloc()? 'accent50': 'primary25'"
-			>
-				{{ element?.getNombreTimbresBloc() > 0 ? element?.getDoublonTimbresBloc() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonTimbresBloc() }} </b></td>
-		</ng-container>
+			<ng-container matColumnDef="acquis">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK"
+						[info]="'Acquis'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="{'accent50': getNombreByType(row, TypeTimbreEnum.TIMBRE) == getAcquisByType(row, TypeTimbreEnum.TIMBRE)?.getNbTimbresAcquis()}">{{ getAcquisByType(row, TypeTimbreEnum.TIMBRE)?.getNbTimbresAcquis() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.TIMBRE, 'nbTimbresAcquis') }}</strong></td>
+			</ng-container>
 
+			<ng-container matColumnDef="doublon">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK_DOUBLE"
+						[info]="'Doublon'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell
+				    *matCellDef="let row"
+					[ngClass]="{'accent50': getNombreByType(row, TypeTimbreEnum.TIMBRE) == getAcquisByType(row, TypeTimbreEnum.TIMBRE)?.getNbTimbresDoublon()}">{{ getAcquisByType(row, TypeTimbreEnum.TIMBRE)?.getNbTimbresDoublon() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.TIMBRE, 'nbTimbresDoublon') }}</strong></td>
+			</ng-container>
 
+			<!-- ===== CARNET ===== -->
+			<ng-container matColumnDef="nombreCarnet">
+				<th mat-header-cell *matHeaderCellDef>Nb Carnets</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getNombreByType(row, TypeTimbreEnum.CARNET) == 0? 'gray25': 'primary25'">
+					{{ getNombreByType(row, TypeTimbreEnum.CARNET) }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.CARNET, 'nombre') }}</strong></td>
+			</ng-container>
 
-		<ng-container matColumnDef="nombreCollector">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreCollector'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreCollector() == 0? 'gray25': 'primary25'">
-				{{ element?.getNombreCollector() > 0 ? element?.getNombreCollector() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreCollector() }} </b>
-			</td>
-		</ng-container>>
-		<ng-container matColumnDef="acquisCollector">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK"
-					[info]="timbreResumeModel.getPropertyLibelle('acquisCollector')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreCollector() == 0? 'gray25': element.getNombreCollector() == element?.getAcquisCollector()? 'accent50': ''"
-			>
-				{{ element?.getNombreCollector() > 0 ? element?.getAcquisCollector() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisCollector() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="doublonCollector">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
-					[info]="timbreResumeModel.getPropertyLibelle('doublonCollector')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreCollector() == 0? 'gray25': element.getNombreCollector() == element?.getDoublonCollector()? 'accent50': ''"
-			>
-				{{ element?.getNombreCollector() > 0 ? element?.getDoublonCollector() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonCollector() }} </b></td>
-		</ng-container>
-		<ng-container matColumnDef="nombreTimbresCollector">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-libelle-model [object]="timbreResumeModel" [key]="'nombreTimbresCollector'"></lib-libelle-model>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreCollector() == 0? 'gray25': 'primary25'">
-				{{ element?.getNombreCollector() > 0 ? element?.getNombreTimbresCollector() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getNombreTimbresCollector() }} </b>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="acquisTimbresCollector">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK"
-					[info]="timbreResumeModel.getPropertyLibelle('acquisTimbresCollector')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresCollector() == 0? 'gray25': element?.getNombreTimbresCollector() == element?.getAcquisTimbresCollector()? 'accent50': 'primary25'"
-			>
-				{{ element?.getNombreCollector() > 0 ? element?.getAcquisTimbresCollector() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getAcquisTimbresCollector() }} </b>
-			</td>
-		</ng-container>
-		<ng-container matColumnDef="doublonTimbresCollector">
-			<th mat-header-cell *matHeaderCellDef>
-				<lib-icon
-					class="click"
-					style="font-size: 1.2em"
-					[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-					[icone]="FontAwesomeEnum.CHECK_DOUBLE"
-					[info]="timbreResumeModel.getPropertyLibelle('doublonTimbresCollector')"
-				>
-				</lib-icon>
-			</th>
-			<td mat-cell *matCellDef="let element; let i = index"
-				[ngClass]="element?.getNombreTimbresCollector() == 0? 'gray25': element?.getNombreTimbresCollector() == element?.getDoublonTimbresCollector()? 'accent50': 'primary25'"
-			>
-				{{ element?.getNombreCollector() > 0 ? element?.getDoublonTimbresCollector() : '' }}
-			</td>
-			<td mat-footer-cell *matFooterCellDef>
-				<b>{{ (timbreResumeService.totalTimbreResume$ | async)?.getDoublonTimbresCollector() }} </b></td>
-		</ng-container>
+			<ng-container matColumnDef="nombreTimbresCarnet">
+				<th mat-header-cell *matHeaderCellDef>Nb Timbres Carnet</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getNombreTimbreByType(row, TypeTimbreEnum.CARNET) == 0? 'gray25': 'primary25'">
+					{{ getNombreTimbreByType(row, TypeTimbreEnum.CARNET) }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.CARNET, 'nombreTimbre') }}</strong></td>
+			</ng-container>
 
-		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="bg-primary color-white"></tr>
-		<tr mat-row *matRowDef="let element; columns: displayedColumns" class="mat-row"
-			(click)="filtreParAnnee(element)"></tr>
-		<tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true" class="bg-primary color-white"></tr>
-	</table>
-	<!--
-	<mat-paginator [pageSize]="15" [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
-	-->
-</ng-template>
+			<ng-container matColumnDef="acquisTimbresCarnet">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK"
+						[info]="'Acquis Timbres Carnet'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell
+				    *matCellDef="let row"
+				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.CARNET)?.getNbTimbresAcquis()  == 0? 'gray25': getNombreTimbreByType(row, TypeTimbreEnum.CARNET) == getAcquisByType(row, TypeTimbreEnum.CARNET)?.getNbTimbresAcquis() ? 'accent50': 'primary25'">
+					{{ getAcquisByType(row, TypeTimbreEnum.CARNET)?.getNbTimbresAcquis() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.CARNET, 'nbTimbresAcquis') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="doublonTimbresCarnet">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK_DOUBLE"
+						[info]="'Doublon Timbres Carnet'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell
+				    *matCellDef="let row" 				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.CARNET)?.getNbTimbresDoublon() == 0? 'gray25': getNombreTimbreByType(row, TypeTimbreEnum.CARNET) == getAcquisByType(row, TypeTimbreEnum.CARNET)?.getNbTimbresDoublon() ? 'accent50': 'primary25'">
+					{{ getAcquisByType(row, TypeTimbreEnum.CARNET)?.getNbTimbresDoublon() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.CARNET, 'nbTimbresDoublon') }}</strong></td>
+			</ng-container>
+
+			<!-- ===== BLOC ===== -->
+			<ng-container matColumnDef="nombreBloc">
+				<th mat-header-cell *matHeaderCellDef>Nb Blocs</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getNombreByType(row, TypeTimbreEnum.BLOC) == 0? 'gray25': ''">
+					{{ getNombreByType(row, TypeTimbreEnum.BLOC) }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.BLOC, 'nombre') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="acquisBloc">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK"
+						[info]="'Acquis Blocs'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbAcquis() == 0? 'gray25': getNombreByType(row, TypeTimbreEnum.BLOC) == getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbAcquis() ? 'accent50': ''">
+					{{ getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbAcquis() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.BLOC, 'nbAcquis') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="doublonBloc">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK_DOUBLE"
+						[info]="'Doublon Blocs'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbDoublon() == 0? 'gray25': getNombreByType(row, TypeTimbreEnum.BLOC) == getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbDoublon() ? 'accent50': ''">
+					{{ getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbDoublon() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.BLOC, 'nbDoublon') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="nombreTimbresBloc">
+				<th mat-header-cell *matHeaderCellDef>Nb Timbres Bloc</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getNombreTimbreByType(row, TypeTimbreEnum.BLOC) == 0? 'gray25': ''">
+					{{ getNombreTimbreByType(row, TypeTimbreEnum.BLOC) }}</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.BLOC, 'nombreTimbre') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="acquisTimbresBloc">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK"
+						[info]="'Acquis Timbres Blocs'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbTimbresAcquis() == 0? 'gray25': getNombreTimbreByType(row, TypeTimbreEnum.BLOC) == getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbTimbresAcquis() ? 'accent50': ''">
+					{{ getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbTimbresAcquis() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.BLOC, 'nbTimbresAcquis') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="doublonTimbresBloc">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK_DOUBLE"
+						[info]="'Doublon Timbres Blocs'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbTimbresDoublon() == 0? 'gray25': getNombreTimbreByType(row, TypeTimbreEnum.BLOC) == getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbTimbresDoublon() ? 'accent50': ''">
+					{{ getAcquisByType(row, TypeTimbreEnum.BLOC)?.getNbTimbresDoublon() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.BLOC, 'nbTimbresDoublon') }}</strong></td>
+			</ng-container>
+
+			<!-- ===== COLLECTOR ===== -->
+			<ng-container matColumnDef="nombreCollector">
+				<th mat-header-cell *matHeaderCellDef>Nb Collector</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getNombreByType(row, TypeTimbreEnum.COLLECTOR) == 0? 'gray25': 'primary25'">
+					{{ getNombreByType(row, TypeTimbreEnum.COLLECTOR) }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.COLLECTOR, 'nombre') }}</strong></td>
+			</ng-container>
+
+			<ng-container matColumnDef="acquisCollector">
+				<th mat-header-cell *matHeaderCellDef>
+					<lib-icon
+						class="click"
+						style="font-size: 1.2em"
+						[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+						[icone]="FontAwesomeEnum.CHECK"
+						[info]="'Acquis Collector'"
+					>
+					</lib-icon>
+				</th>
+				<td mat-cell *matCellDef="let row"
+				    [ngClass]="getAcquisByType(row, TypeTimbreEnum.COLLECTOR)?.getNbAcquis() == 0? 'gray25': getNombreByType(row, TypeTimbreEnum.COLLECTOR) == getAcquisByType(row, TypeTimbreEnum.COLLECTOR)?.getNbAcquis() ? 'accent50': ''">
+					{{ getAcquisByType(row, TypeTimbreEnum.COLLECTOR)?.getNbAcquis() }}
+				</td>
+				<td mat-footer-cell *matFooterCellDef>
+					<strong>{{ getTotalFooterByType(TypeTimbreEnum.COLLECTOR, 'nbAcquis') }}</strong></td>
+			</ng-container>
+
+			<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" class="primary100"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="filtreParAnnee(row)" class="click"></tr>
+			<tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true" class="primary100"></tr>
+
+			<tr class="mat-row" *matNoDataRow>
+				<td class="mat-cell" [attr.colspan]="displayedColumns.length">Aucune donnée disponible</td>
+			</tr>
+		</table>
+
+		<!--
+		<mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+		-->
+	</section>
+</div>

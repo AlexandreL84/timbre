@@ -21,6 +21,9 @@ import {PreferenceService} from "../../../shared/services/preference.service";
 import {PreferenceEnum} from "../../../shared/enum/preference.enum";
 import {plainToInstance} from "class-transformer";
 import {TimbreCritereModel} from "../../../model/timbre-critere.model";
+import {TimbreVarService} from "../../../shared/services/timbre/timbre-var.service";
+import {TimbreActionsService} from "../../../shared/services/timbre/timbre-actions.service";
+import {TimbreTotalService} from "../../../shared/services/timbre/timbre-total.service";
 
 @Component({
 	selector: 'app-menu',
@@ -34,8 +37,20 @@ export class MenuComponent {
 	readonly DroitEnum = DroitEnum;
 	readonly ModeEnum = ModeEnum;
 
-	constructor(private preferenceService: PreferenceService, public authService: AuthService, public headerService: HeaderService, private timbreService: TimbreService, private timbreBlocService: TimbreBlocService, private timbreUtilsService: TimbreUtilsService, private dialog: MatDialog) {
+	constructor(private preferenceService: PreferenceService,
+				public authService: AuthService,
+				public headerService: HeaderService,
+				private timbreService: TimbreService,
+				private timbreActionsService: TimbreActionsService,
+				private timbreBlocService: TimbreBlocService,
+				private timbreUtilsService: TimbreUtilsService,
+				private dialog: MatDialog,
+				private timbreVarService: TimbreVarService,
+				private timbreTotalService: TimbreTotalService
+	) {
 		this.verifRoute();
+		this.timbreTotalService.getTotal();
+		this.timbreTotalService.getTotalBloc();
 	}
 
 	ajouter() {
@@ -63,7 +78,7 @@ export class MenuComponent {
 	}
 
 	ajouterBouchon() {
-		this.timbreService.ajouterSansId(this.timbreService.getBouchon());
+		this.timbreActionsService.ajouterSansId(this.timbreService.getBouchon());
 	}
 
 	importer() {
@@ -81,13 +96,10 @@ export class MenuComponent {
 	}
 
 	verifRoute() {
-		//this.timbreService.modifAll();
-
 		if (window.location.href.indexOf("bloc") > 0) {
-			//this.timbreBlocService.modifAll();
 			this.preferenceService.getTimbreCritere(PreferenceEnum.BLOC_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
-					this.timbreBlocService.getBlocs(timbreCritereModel, true);
+					this.timbreBlocService.getBlocs(timbreCritereModel, true, true);
 				} else {
 					this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 						timbreCritereModel.initCritere();
@@ -95,12 +107,11 @@ export class MenuComponent {
 						timbreCritereModel.setAnnees([annees[0]]);
 						this.preferenceService.timbreCritereBlocModel = timbreCritereModel;
 						this.preferenceService.modifier(PreferenceEnum.BLOC_CRITERE, timbreCritereModel);
-						this.timbreBlocService.getBlocs(timbreCritereModel, true);
+						this.timbreBlocService.getBlocs(timbreCritereModel, true, true);
 					});
 				}
 			});
 		} else {
-			//this.timbreService.modifAll();
 			//this.preferenceService.supprimer("timbreCritereModel2");
 			this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
 				if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
@@ -122,6 +133,6 @@ export class MenuComponent {
 	setUser(userModel: UserModel) {
 		this.authService.userSelect$.next(userModel);
 		this.verifRoute();
-		this.timbreUtilsService.reinitResume$.next(true);
+		this.timbreVarService.reinitResume$.next(true);
 	}
 }
