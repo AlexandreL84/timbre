@@ -11,7 +11,6 @@ import {DirectiveModule} from '../../shared/directives/directive.module';
 import {ErrorModule} from '../error';
 import {PipeModule} from '../../shared/pipes/pipe.module';
 import {SimpleNotificationModule} from '../simple-notification/simple-notification.module';
-import {TimbreImporterComponent} from './components/importer/timbre-importer.component';
 import {TimbreResultatComponent} from './components/resultat/timbre-resultat.component';
 import {UploadService} from '../../shared/services/upload.service';
 import {LibDialogImageModule} from '../../shared/components/lib-dialog-image/lib-dialog-image.module';
@@ -34,11 +33,10 @@ import {TimbreVarService} from "../../shared/services/timbre/timbre-var.service"
 import {TimbreUploadService} from "../../shared/services/timbre/timbre-upload.service";
 import {LetDirective} from "@ngrx/component";
 import {TimbreTotalService} from "../../shared/services/timbre/timbre-total.service";
-import {TimbreModifAllComponent} from "./components/modif--all/timbre-modif--all.component";
 
 @NgModule({
 	declarations: [
-		TimbreLayoutComponent, TimbreModifierComponent, TimbreImporterComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent, TimbreModifAllComponent
+		TimbreLayoutComponent, TimbreModifierComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent
 	],
 	imports: [
 		MaterialModule,

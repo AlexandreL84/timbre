@@ -4,12 +4,12 @@
 	<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
 </div>
 
-<lib-spinner [fxHide]="(load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
+<lib-spinner [fxHide]="(timbreVarService.load$ | async) == true" class="spinner" [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section *ngIf="authService.userSelect$ | async as userSelect">
-	<section [fxHide]="(load$ | async) == false">
+	<section [fxHide]="(timbreVarService.load$ | async) == false">
 		<div class="listeTimbre primary">
-			<div *ngFor="let timbre of timbres$ | async"
+			<div *ngFor="let timbre of timbreVarService.timbres$ | async"
 				 class="detailTimbre"
 				 [ngClass]="timbre.isDoublon(userSelect) ? 'border-accent900 bg-accentA400' : timbre.isAcquis(userSelect) ? 'border-accent bg-accentA200' : 'border-primary'"
 			>

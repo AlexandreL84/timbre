@@ -4,14 +4,10 @@
 
 		<app-timbre-resultat
 			*ngIf="headerService.mode == ModeEnum.GRAPH"
-			[load$]="timbreVarService.load$"
-			[timbres$]="timbreVarService.timbres$"
 		></app-timbre-resultat>
 
 		<app-timbre-resultat-table
 			*ngIf="headerService.mode == ModeEnum.TABLE"
-			[load$]="timbreVarService.load$"
-			[timbres$]="timbreVarService.timbres$"
 		></app-timbre-resultat-table>
 	</div>
 </div>

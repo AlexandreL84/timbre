@@ -5,7 +5,7 @@ import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
 import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {BehaviorSubject, first, Observable} from "rxjs";
+import {first, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import {saveAs} from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
@@ -15,6 +15,7 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {DroitEnum} from "../../../../shared/enum/droit.enum";
 import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
+import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
 
 @Component({
 	selector: "app-timbre-resultat-table",
@@ -25,8 +26,6 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 
-	@Input() timbres$: BehaviorSubject<TimbreModel[]> | Observable<TimbreModel[]>;
-	@Input() load$: BehaviorSubject<boolean> | Observable<boolean>;
 	@Input() modif: boolean = true;
 
 	dataSource: MatTableDataSource<TimbreModel> = new MatTableDataSource<TimbreModel>();
@@ -37,7 +36,7 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public authService: AuthService, public timbreActionsService: TimbreActionsService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(public authService: AuthService, public timbreActionsService: TimbreActionsService, public timbreVarService: TimbreVarService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
 		this.dataSource = new MatTableDataSource([]);
 	}
 
@@ -56,7 +55,7 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 			});
 		}
 
-		this.timbres$.subscribe(timbres => {
+		this.timbreVarService.timbres$.subscribe(timbres => {
 			this.dataSource.data = timbres;
 		});
 	}

@@ -32,9 +32,9 @@
 	</div>
 </div>
 
-<lib-spinner [fxHide]="(load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+<lib-spinner [fxHide]="(timbreVarService.load$ | async) == true" fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
-<section [fxHide]="(load$ | async) == false">
+<section [fxHide]="(timbreVarService.load$ | async) == false">
 	<section *ngIf="authService.userSelect$ | async as userSelect">
 		<table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
 			<ng-container matColumnDef="image">

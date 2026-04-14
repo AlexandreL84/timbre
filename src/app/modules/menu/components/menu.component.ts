@@ -3,7 +3,6 @@ import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {HeaderService} from "../../../shared/services/header.service";
 import {TimbreModifierComponent} from "../../timbre/components/modifier/timbre-modifier.component";
 import {TimbreModifierBlocComponent} from "../../timbre-bloc/components/modifier-bloc/timbre-modifier-bloc.component";
-import {TimbreImporterComponent} from "../../timbre/components/importer/timbre-importer.component";
 import {TimbreService} from "../../../shared/services/timbre/timbre.service";
 import {MatDialog} from "@angular/material/dialog";
 import {RouteEnum} from "../../../shared/enum/route.enum";
@@ -19,8 +18,6 @@ import {first} from "rxjs";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
 import {PreferenceService} from "../../../shared/services/preference.service";
 import {PreferenceEnum} from "../../../shared/enum/preference.enum";
-import {plainToInstance} from "class-transformer";
-import {TimbreCritereModel} from "../../../model/timbre-critere.model";
 import {TimbreVarService} from "../../../shared/services/timbre/timbre-var.service";
 import {TimbreActionsService} from "../../../shared/services/timbre/timbre-actions.service";
 import {TimbreTotalService} from "../../../shared/services/timbre/timbre-total.service";
@@ -79,20 +76,6 @@ export class MenuComponent {
 
 	ajouterBouchon() {
 		this.timbreActionsService.ajouterSansId(this.timbreService.getBouchon());
-	}
-
-	importer() {
-		const refDialog = this.dialog.open(TimbreImporterComponent, {
-			//height: "25vh",
-			//width: "20%",
-			height: "90vh",
-			width: "70%",
-			minWidth: "300px"
-		});
-
-		refDialog.afterClosed().subscribe(() => {
-			refDialog.close();
-		});
 	}
 
 	verifRoute() {

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
-import {BehaviorSubject, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
@@ -9,7 +9,7 @@ import {BaseEnum} from "../../../../shared/enum/base.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {DroitEnum} from "../../../../shared/enum/droit.enum";
 import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
-import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
+import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
 
 @Component({
 	selector: "app-timbre-resultat",
@@ -17,8 +17,6 @@ import {TimbreService} from "../../../../shared/services/timbre/timbre.service";
 	styleUrls: ["./../../../styles/timbre-resultat.scss"],
 })
 export class TimbreResultatComponent implements OnInit {
-	@Input() timbres$: BehaviorSubject<TimbreModel[]> | Observable<TimbreModel[]>;
-	@Input() load$: BehaviorSubject<boolean> | Observable<boolean>;
 	@Input() modif: boolean = true;
 
 	public timbre: TimbreModel = new TimbreModel();
@@ -28,7 +26,7 @@ export class TimbreResultatComponent implements OnInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public authService: AuthService, public timbreService: TimbreService, public timbreActionsService: TimbreActionsService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(public authService: AuthService, public timbreVarService: TimbreVarService, public timbreActionsService: TimbreActionsService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
 	}
 
 	ngOnInit(): void {
