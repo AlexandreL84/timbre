@@ -29,6 +29,8 @@ import {
 import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 import {TimbreBlocService} from "./timbre-bloc.service";
 import {UserModel} from "../../../model/user.model";
+import {TimbreCritereModel} from "../../../model/timbre-critere.model";
+import {plainToInstance} from "class-transformer";
 
 @Injectable()
 export class TimbreActionsService {
@@ -145,8 +147,17 @@ export class TimbreActionsService {
 								if (isNullOrUndefined(timbres)) {
 									timbres = [];
 								}
-								timbres.push(timbreModel);
-								this.timbreVarService.timbres$.next(timbres);
+								if (isNotNullOrUndefined(timbreModel.getIdBloc())) {
+									this.timbreBlocService.getBlocByIdAsync(timbreModel.getIdBloc()).pipe(first(bloc => isNotNullOrUndefined(bloc))).subscribe(bloc => {
+										timbreModel.setTimbreBlocModel(bloc);
+										this.modifierBlocAvecVerifNbTimbres(bloc, false);
+										timbres.push(timbreModel);
+										this.timbreVarService.timbres$.next(timbres);
+									});
+								} else {
+									timbres.push(timbreModel);
+									this.timbreVarService.timbres$.next(timbres);
+								}
 								this.timbreTotalService.setTotal(1);
 							});
 						}
@@ -154,6 +165,7 @@ export class TimbreActionsService {
 
 					this.timbreVarService.reinitResume$.next(true);
 					this.timbreVarService.addMaxIdentTimbre();
+
 
 					if (message) {
 						this.httpResponseHandlerService.showNotificationSuccess(
@@ -231,6 +243,12 @@ export class TimbreActionsService {
 									timbresModel.splice(findIndex, 1);
 									this.timbreTotalService.setTotal(-1);
 									this.timbreVarService.timbres$.next(timbresModel);
+									if (isNotNullOrUndefined(timbreModel.getIdBloc())) {
+										this.timbreBlocService.getBlocByIdAsync(timbreModel.getIdBloc()).pipe(first(bloc => isNotNullOrUndefined(bloc))).subscribe(bloc => {
+											timbreModel.setTimbreBlocModel(bloc);
+											this.modifierBlocAvecVerifNbTimbres(bloc, false);
+										});
+									}
 								}
 
 								if (message) {
@@ -260,7 +278,7 @@ export class TimbreActionsService {
 	}
 
 	acquis(timbreModel: TimbreModel, acquis: boolean) {
-		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
 				if (acquis) {
 					if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
@@ -289,7 +307,7 @@ export class TimbreActionsService {
 	}
 
 	doublon(timbreModel: TimbreModel, doublon: boolean) {
-		this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
 				if (doublon) {
 					if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
@@ -361,9 +379,7 @@ export class TimbreActionsService {
 	}
 
 
-
 	/* PARTIE BLOC */
-
 
 	saveBloc(timbreBlocModel: TimbreBlocModel, dialogRef: MatDialogRef<any>, ajout?: boolean) {
 		timbreBlocModel.setMonnaie(this.timbreUtilsService.resolveMonnaie(timbreBlocModel.getAnnee()));
@@ -419,8 +435,10 @@ export class TimbreActionsService {
 
 	validAjoutBloc(timbreBlocModel: TimbreBlocModel, dialogRef: MatDialogRef<any>, ajout: boolean) {
 		if (!ajout) {
-			this.ajouterBloc(timbreBlocModel);
+			this.modifierBloc(timbreBlocModel, true);
+			//this.verifNbTimbres(timbreBlocModel, false);
 		} else {
+			timbreBlocModel.setNbTimbres(timbreBlocModel?.getTimbres()?.length);
 			this.ajouterBloc(timbreBlocModel).pipe(first()).subscribe(verifAjout => {
 				if (verifAjout && timbreBlocModel?.getTimbres()?.length > 0) {
 					this.saveTimbres(timbreBlocModel, ajout);
@@ -463,15 +481,17 @@ export class TimbreActionsService {
 		return (({
 					 timbres,
 					 idOrigine,
-					 nbTimbres,
 					 ...rest
 				 }) => rest)(Object.assign({}, timbreBlocModel));
 	}
 
 	ajouterBloc(timbreBlocModel: TimbreBlocModel): Observable<boolean> {
+		console.log("ajouterBloc")
 		return this.timbreBlocService.getBloc(timbreBlocModel.getId()).pipe(
 			first(),
 			switchMap(data => {
+				console.log("ici", data)
+
 				if (isNullOrUndefined(data) || isNullOrUndefined(data[0]) || (isNotNullOrUndefined(data[0]) && data[0]?.length == 0)) {
 					const plainData = JSON.parse(JSON.stringify(this.getBlocEnvoi(timbreBlocModel)));
 					return from(
@@ -523,6 +543,20 @@ export class TimbreActionsService {
 				}
 			})
 		);
+	}
+
+	modifierBlocAvecVerifNbTimbres(timbreBlocModel: TimbreBlocModel, message: boolean) {
+		const timbreCritereModel: TimbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.setIdBloc(timbreBlocModel.getId());
+		console.log("modifierBloc");
+
+		this.timbreTotalService.getCountTimbres(timbreCritereModel).pipe(first()).subscribe(nbTimbres => {
+			console.log(nbTimbres);
+			if (isNotNullOrUndefined(nbTimbres)) {
+				timbreBlocModel.setNbTimbres(nbTimbres);
+			}
+			this.modifierBloc(timbreBlocModel, message);
+		});
 	}
 
 	modifierBloc(timbreBlocModel: TimbreBlocModel, message: boolean) {
@@ -804,5 +838,71 @@ export class TimbreActionsService {
 				this.utilsService.droitInsuffisant();
 			}
 		});
+	}
+
+	verifInfoBloc(annee: number) {
+		const timbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.initCritere();
+		timbreCritereModel.setType([TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
+		timbreCritereModel.setAnnees([annee]);
+		//timbreCritereModel.setAnnees(isNotNullOrUndefined(annee)? [annee] : this.getAnnees());
+
+		combineLatest([
+			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
+			this.timbreBlocService.getBlocsAsync(timbreCritereModel)
+		]).pipe(first(([timbres, blocs]) => isNotNullOrUndefined(timbres) && timbres?.length > 0 && isNotNullOrUndefined(blocs) && blocs?.length > 0)).subscribe(([timbres, blocs]) => {
+			let timbresModel: TimbreModel[] = [];
+			let blocsModel: TimbreBlocModel[] = [];
+
+			blocs.forEach(bloc => {
+				blocsModel.push(plainToInstance(TimbreBlocModel, bloc));
+			});
+
+			timbres.forEach(timbre => {
+				const newTimbre: TimbreModel = plainToInstance(TimbreModel, timbre)
+				if (isNotNullOrUndefined(newTimbre.getIdBloc())) {
+					timbresModel.push(newTimbre);
+				}
+			});
+
+			if (timbresModel?.length > 0) {
+				let blocsModelModif: TimbreBlocModel[] = [];
+				blocsModel.forEach(bloc => {
+					bloc.setNbTimbres(timbresModel.filter(timbre => timbre?.getIdBloc() == bloc.getId())?.length);
+
+					const listeUserAcquis = timbresModel.filter(timbre => timbre?.getIdBloc() == bloc.getId() && timbre.getUsersAcquis()?.length > 0);
+					if (listeUserAcquis?.length > 0) {
+						listeUserAcquis.forEach(timbreModel => {
+							timbreModel.getUsersAcquis().forEach(user => {
+								const userModel = new UserModel();
+								userModel.setId(user);
+								bloc.addTimbresAcquisByUser(userModel);
+							});
+						});
+					}
+
+					const listeUserDoublon = timbresModel.filter(timbre => timbre?.getIdBloc() == bloc.getId() && timbre.getUsersDoublon()?.length > 0);
+					if (listeUserDoublon?.length > 0) {
+						listeUserDoublon.forEach(timbreModel => {
+							timbreModel.getUsersDoublon().forEach(user => {
+								const userModel = new UserModel();
+								userModel.setId(user);
+								bloc.addTimbresDoublonByUser(userModel);
+							});
+						});
+					}
+					blocsModelModif.push(bloc);
+				});
+
+				if (blocsModelModif?.length > 0) {
+					blocsModelModif.forEach(bloc => {
+						//console.log(bloc);
+						this.modifierBloc(bloc, false);
+					})
+				}
+			}
+
+			//console.log(blocsModelModif);
+		})
 	}
 }
