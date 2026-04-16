@@ -311,7 +311,7 @@ export class TimbreActionsService {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
 				if (doublon) {
 					if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
-						timbreModel.getTimbreBlocModel().addTimbresDoublonByUser(user);
+						timbreModel.getTimbreBlocModel().addTimbresAcquisByUser(user);
 						timbreModel.getTimbreBlocModel().addTimbresDoublonByUser(user);
 						this.verifAcquisDoublonBloc(timbreModel.getTimbreBlocModel(), user);
 					}
@@ -334,17 +334,19 @@ export class TimbreActionsService {
 	}
 
 	verifAcquisDoublonBloc(timbreBlocModel: TimbreBlocModel, user: UserModel) {
-		if (timbreBlocModel?.getNbTimbresAcquisByUser(user) == 0 && timbreBlocModel.isAcquis(user)) {
-			timbreBlocModel.removeUserAcquis(user);
-		} else if (timbreBlocModel?.getNbTimbres() == timbreBlocModel?.getNbTimbresAcquisByUser(user)) {
-			timbreBlocModel.addUserAcquis(user);
+		if (timbreBlocModel.getType() == TypeTimbreEnum.CARNET) {
+			if (timbreBlocModel?.getNbTimbresAcquisByUser(user) == 0 && timbreBlocModel.isAcquis(user)) {
+				timbreBlocModel.removeUserAcquis(user);
+			} else if (timbreBlocModel?.getNbTimbres() == timbreBlocModel?.getNbTimbresAcquisByUser(user)) {
+				timbreBlocModel.addUserAcquis(user);
+			}
+			if (timbreBlocModel?.getNbTimbresDoublonByUser(user) == 0 && timbreBlocModel.isDoublon(user)) {
+				timbreBlocModel.removeUserDoublon(user);
+			} else if (timbreBlocModel?.getNbTimbres() == timbreBlocModel?.getNbTimbresDoublonByUser(user)) {
+				timbreBlocModel.addUserDoublon(user);
+			}
+			this.modifierBloc(timbreBlocModel, false);
 		}
-		if (timbreBlocModel?.getNbTimbresDoublonByUser(user) == 0 && timbreBlocModel.isDoublon(user)) {
-			timbreBlocModel.removeUserDoublon(user);
-		} else if (timbreBlocModel?.getNbTimbres() == timbreBlocModel?.getNbTimbresDoublonByUser(user)) {
-			timbreBlocModel.addUserDoublon(user);
-		}
-		this.modifierBloc(timbreBlocModel, false);
 	}
 
 	modifierDialog(timbreModel: TimbreModel) {
