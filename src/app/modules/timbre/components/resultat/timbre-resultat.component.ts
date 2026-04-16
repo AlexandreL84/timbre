@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
-import {Observable} from "rxjs";
+import {first, Observable} from "rxjs";
 import {UtilsService} from "../../../../shared/services/utils.service";
 import {FontAwesomeTypeEnum} from "../../../../shared/enum/font-awesome/font-awesome-type.enum";
 import {TimbreUtilsService} from "../../../../shared/services/timbre/timbre-utils.service";
@@ -26,11 +26,16 @@ export class TimbreResultatComponent implements OnInit {
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(public authService: AuthService, public timbreVarService: TimbreVarService, public timbreActionsService: TimbreActionsService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(
+		public authService: AuthService,
+		public timbreVarService: TimbreVarService,
+		public timbreActionsService: TimbreActionsService,
+		public timbreUtilsService: TimbreUtilsService,
+		public utilsService: UtilsService
+	) {
 	}
 
 	ngOnInit(): void {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
 	}
-
 }

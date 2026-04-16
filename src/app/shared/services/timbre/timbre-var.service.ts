@@ -10,10 +10,12 @@ import {isNotNullOrUndefined} from "../../utils/utils";
 @Injectable()
 export class TimbreVarService {
 	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	loadPdf$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 	loadModifTimbre$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 	totalTimbres$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 	totalTimbresByCritere$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 	timbres$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
+	timbresPdf$: BehaviorSubject<TimbreModel[]> = new BehaviorSubject<TimbreModel[]>(null);
 	maxIdentTimbre$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
 
 

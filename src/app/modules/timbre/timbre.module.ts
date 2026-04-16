@@ -33,6 +33,7 @@ import {TimbreVarService} from "../../shared/services/timbre/timbre-var.service"
 import {TimbreUploadService} from "../../shared/services/timbre/timbre-upload.service";
 import {LetDirective} from "@ngrx/component";
 import {TimbreTotalService} from "../../shared/services/timbre/timbre-total.service";
+import {TimbrePdfService} from "../../shared/services/timbre/timbre-pdf.service";
 
 @NgModule({
 	declarations: [
@@ -60,10 +61,10 @@ import {TimbreTotalService} from "../../shared/services/timbre/timbre-total.serv
 		ReactiveFormsModule,
 		LetDirective
 	],
-    exports: [
-        TimbreTotalComponent
-    ],
-	providers: [TimbreService, TimbreActionsService, TimbreVarService, TimbreTotalService, TimbreUploadService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, UploadService]
+	exports: [
+		TimbreTotalComponent
+	],
+	providers: [TimbreService, TimbreActionsService, TimbreVarService, TimbreTotalService, TimbreUploadService, UtilsService, TimbreUtilsService, TimbreBlocService, TimbreResumeService, TimbrePdfService, UploadService]
 })
 export class TimbreModule {
 }

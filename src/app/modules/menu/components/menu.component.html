@@ -49,6 +49,27 @@
 			</ng-template>
 		</ng-container>
 
+		<ng-template [ngIf]="(timbreVarService.loadPdf$ |async) == false" [ngIfElse]="noLoadPdf">
+			<lib-icon
+				[icone]="FontAwesomeEnum.CIRCLE_NOTCH"
+				[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+				[attribs]="[FontAwesomeAttributEnum.SPIN]"
+				class="primary click hide-on-mobile"
+				style="font-size: 2em"
+				[info]="'Génération du pdf en cours'">
+			</lib-icon>
+		</ng-template>
+		<ng-template #noLoadPdf>
+			<lib-icon
+				[icone]="FontAwesomeEnum.FILE_PDF"
+				[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+				class="primary click hide-on-mobile"
+				style="font-size: 2em"
+				[info]="'Exporter en PDF'"
+				(click)="exportPdf()">
+			</lib-icon>
+		</ng-template>
+
 		<!--
 		<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="accent"
 				(click)="ajouterBouchon()">

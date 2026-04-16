@@ -40,8 +40,29 @@ export class TimbreResumeService {
 			if (isNotNullOrUndefined(timbresWithIds) && timbresWithIds.length > 0) {
 				timbresWithIds.forEach(({id, data}) => {
 					let timbreRetour: TimbreResumeModel = plainToInstance(TimbreResumeModel, data);
-					timbreRetour.setId(id); // ← on stocke l'id Firestore dans le model
 					timbresRetour.push(timbreRetour);
+
+					/*if (isNullOrUndefined(timbreRetour.getTotal()) || timbreRetour.getTotal()  == 0) {
+						this.angularFirestore
+							.collection(BaseEnum.TIMBRE_RESUME)
+							.doc(timbreRetour.getId())  // ← accès direct par ID Firestore
+							.delete()
+							.then(() => console.log('Delete annee ' + timbreRetour.getAnnee()))
+							.catch(err => console.error('Erreur delete', err));
+
+					}
+
+					if (isNullOrUndefined(timbreRetour.getId()) ) {
+						timbreRetour.setId(id); // ← on stocke l'id Firestore dans le model
+						const plainData = JSON.parse(JSON.stringify(timbreRetour));
+
+						this.angularFirestore
+							.collection(BaseEnum.TIMBRE_RESUME)
+							.doc(timbreRetour.getId())  // ← accès direct par ID Firestore
+							.update(plainData)
+							.then(() => console.log('Modifié annee ' + timbreRetour.getAnnee()))
+							.catch(err => console.error('Erreur update', err));
+					}*/
 				});
 				this.timbresResume$.next(timbresRetour);
 			}
@@ -83,7 +104,6 @@ export class TimbreResumeService {
 
 			const timbresReset = timbresResume.map(t => {
 				if (t.getAnnee() >= anneeDebut && t.getAnnee() <= anneeFin) {
-					console.log('reset annee', t.getAnnee());
 					t.setTotal(0);
 					t.setTimbresResumeTypeModel(null);
 				}

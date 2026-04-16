@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
+import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {HeaderService} from "../../../shared/services/header.service";
 import {TimbreModifierComponent} from "../../timbre/components/modifier/timbre-modifier.component";
 import {TimbreModifierBlocComponent} from "../../timbre-bloc/components/modifier-bloc/timbre-modifier-bloc.component";
@@ -14,13 +14,14 @@ import {isNotNullOrUndefined} from "../../../shared/utils/utils";
 import {TimbreUtilsService} from "../../../shared/services/timbre/timbre-utils.service";
 import {TimbreBlocService} from "../../../shared/services/timbre/timbre-bloc.service";
 import {BaseEnum} from "../../../shared/enum/base.enum";
-import {first} from "rxjs";
+import {combineLatest, first} from "rxjs";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
 import {PreferenceService} from "../../../shared/services/preference.service";
 import {PreferenceEnum} from "../../../shared/enum/preference.enum";
 import {TimbreVarService} from "../../../shared/services/timbre/timbre-var.service";
 import {TimbreActionsService} from "../../../shared/services/timbre/timbre-actions.service";
 import {TimbreTotalService} from "../../../shared/services/timbre/timbre-total.service";
+import {TimbrePdfService} from "../../../shared/services/timbre/timbre-pdf.service";
 
 @Component({
 	selector: 'app-menu',
@@ -28,22 +29,26 @@ import {TimbreTotalService} from "../../../shared/services/timbre/timbre-total.s
 	styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent {
+
 	readonly FontAwesomeEnum = FontAwesomeEnum;
-	readonly RouteEnum = RouteEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+	readonly FontAwesomeAttributEnum = FontAwesomeAttributEnum;
+	readonly RouteEnum = RouteEnum;
 	readonly DroitEnum = DroitEnum;
 	readonly ModeEnum = ModeEnum;
 
-	constructor(private preferenceService: PreferenceService,
-				public authService: AuthService,
-				public headerService: HeaderService,
-				private timbreService: TimbreService,
-				private timbreActionsService: TimbreActionsService,
-				private timbreBlocService: TimbreBlocService,
-				private timbreUtilsService: TimbreUtilsService,
-				private dialog: MatDialog,
-				private timbreVarService: TimbreVarService,
-				private timbreTotalService: TimbreTotalService
+	constructor(
+		private preferenceService: PreferenceService,
+		public authService: AuthService,
+		public headerService: HeaderService,
+		private timbreService: TimbreService,
+		private timbreActionsService: TimbreActionsService,
+		private timbreBlocService: TimbreBlocService,
+		private timbreUtilsService: TimbreUtilsService,
+		private dialog: MatDialog,
+		public timbreVarService: TimbreVarService,
+		private timbreTotalService: TimbreTotalService,
+		public timbrePdfService: TimbrePdfService
 	) {
 		this.verifRoute();
 		this.timbreTotalService.getTotal();
@@ -117,5 +122,22 @@ export class MenuComponent {
 		this.authService.userSelect$.next(userModel);
 		this.verifRoute();
 		this.timbreVarService.reinitResume$.next(true);
+	}
+
+	exportPdf() {
+		this.preferenceService.getTimbreCritere(PreferenceEnum.TIMBRE_CRITERE).pipe(first()).subscribe(timbreCritereModel => {
+			if (isNotNullOrUndefined(timbreCritereModel.getAnnees()) && timbreCritereModel.getAnnees().length > 0) {
+				timbreCritereModel.setAcquis("NON");
+				timbreCritereModel.setDoublon("NON");
+
+				this.timbrePdfService.getTimbres(timbreCritereModel);
+				combineLatest([
+					this.timbreVarService.loadPdf$,
+					this.timbreVarService.timbresPdf$,
+				]).pipe(first(([loadPdf, timbres]) => loadPdf == false && isNotNullOrUndefined(timbres) && timbres?.length > 0)).subscribe(([loadPdf, timbres]) => {
+					this.timbrePdfService.generatePdf(timbres);
+				});
+			}
+		});
 	}
 }
