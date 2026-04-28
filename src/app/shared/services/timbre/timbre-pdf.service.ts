@@ -16,10 +16,10 @@ export class TimbrePdfService {
 	// Constantes de mise en page
 	private readonly PAGE_WIDTH = 210;   // A4 en mm
 	private readonly PAGE_HEIGHT = 297;
-	private readonly MARGIN = 12;
-	private readonly COLS = 4;
-	private readonly IMG_SIZE = 40;      // taille de chaque vignette timbre (carré)
-	private readonly CELL_PADDING = 4;
+	private readonly MARGIN = 6;
+	private readonly COLS = 8;
+	private readonly IMG_SIZE = 20;      // taille de chaque vignette timbre (carré)
+	private readonly CELL_PADDING = 2;
 	private readonly YEAR_HEADER_H = 10;
 	private readonly FOOTER_H = 6;
 
@@ -118,13 +118,13 @@ export class TimbrePdfService {
 				col++;
 				if (col >= this.COLS) {
 					col = 0;
-					y += cellHeight + 2;
+					y += cellHeight;
 				}
 			}
 
 			// Fin de la dernière ligne incomplète
 			if (col !== 0) {
-				y += cellHeight + 2;
+				y += cellHeight;
 			}
 
 			y += 4; // espace entre les sections d'années
@@ -187,43 +187,46 @@ export class TimbrePdfService {
 		cellWidth: number,
 		cellHeight: number,
 	): Promise<void> {
-		const imgX = x + (cellWidth - this.IMG_SIZE) / 2;
-		const imgY = y + this.CELL_PADDING;
-
-		// Cadre de fond de la cellule
-		doc.setFillColor(248, 248, 248);
-		doc.setDrawColor(210, 210, 210);
-		doc.roundedRect(x + 1, y, cellWidth - 2, cellHeight, 2, 2, "FD");
+		// Zone réservée au libellé en bas de cellule
+		const labelZoneH = this.FOOTER_H;
+		// Zone disponible pour l'image
+		const imgZoneW = cellWidth - this.CELL_PADDING * 2;
+		const imgZoneH = cellHeight - this.CELL_PADDING * 2 - labelZoneH;
 
 		// Image du timbre
 		const imageUrl = timbre.getImage();
+		let drawnW = imgZoneW;
+		let drawnH = imgZoneH;
+
 		if (isString(imageUrl)) {
 			try {
-				const {dataUrl, format} = await this.fetchImageAsDataUrl(imageUrl?.toString());
-				doc.addImage(dataUrl, format, imgX, imgY, this.IMG_SIZE, this.IMG_SIZE, undefined, "FAST");
+				const {dataUrl, format, naturalWidth, naturalHeight} = await this.fetchImageAsDataUrl(imageUrl.toString());
+
+				// Fit proportionnel dans imgZoneW × imgZoneH
+				if (naturalWidth > 0 && naturalHeight > 0) {
+					const scale = Math.min(imgZoneW / naturalWidth, imgZoneH / naturalHeight);
+					drawnW = naturalWidth  * scale;
+					drawnH = naturalHeight * scale;
+				}
+
+				// Centrage horizontal et vertical dans la zone image
+				const imgX = x + (cellWidth - drawnW) / 2;
+				const imgY = y + this.CELL_PADDING + (imgZoneH - drawnH) / 2;
+
+				doc.addImage(dataUrl, format, imgX, imgY, drawnW, drawnH, undefined, "FAST");
 			} catch {
-				// Image non chargeable : dessin d'un placeholder gris
-				doc.setFillColor(220, 220, 220);
-				doc.rect(imgX, imgY, this.IMG_SIZE, this.IMG_SIZE, "F");
-				doc.setFontSize(6);
-				doc.setTextColor(150, 150, 150);
-				doc.text("Image\nindisponible", imgX + this.IMG_SIZE / 2, imgY + this.IMG_SIZE / 2 - 2, {align: "center"});
+				// Image non chargeable : cellule laissée vide
 			}
-		} else {
-			// Pas d'image : placeholder
-			doc.setFillColor(230, 230, 230);
-			doc.rect(imgX, imgY, this.IMG_SIZE, this.IMG_SIZE, "F");
 		}
 
-		// Libellé sous l'image (nom ou id du timbre si disponible)
+		// Libellé ancré en bas de cellule
 		const label = this.getTimbreLabel(timbre);
 		if (label) {
 			doc.setFontSize(6);
 			doc.setTextColor(80, 80, 80);
 			doc.setFont("helvetica", "normal");
-			const textY = imgY + this.IMG_SIZE + 3;
-			const maxWidth = cellWidth - 2;
-			doc.text(label, x + cellWidth / 2, textY, {align: "center", maxWidth});
+			const textY = y + cellHeight - labelZoneH + 3;
+			doc.text(label, x + cellWidth / 2, textY, {align: "center", maxWidth: cellWidth - 2});
 		}
 	}
 
@@ -250,12 +253,19 @@ export class TimbrePdfService {
 
 	/**
 	 * Charge une image distante et la convertit en dataURL base64.
+	 * Retourne également les dimensions naturelles pour préserver le ratio.
 	 * Compatible navigateur (fetch) et SSR (à adapter si besoin).
 	 */
-	private fetchImageAsDataUrl(url: string): Promise<{ dataUrl: string; format: string }> {
+	private fetchImageAsDataUrl(url: string): Promise<{ dataUrl: string; format: string; naturalWidth: number; naturalHeight: number }> {
 		if (url.startsWith("data:")) {
 			const format = url.split(";")[0].split("/")[1].toUpperCase();
-			return Promise.resolve({dataUrl: url, format});
+			// Pour un data-URL on ne connaît pas les dimensions sans créer une Image
+			return new Promise((resolve, reject) => {
+				const img = new Image();
+				img.onload = () => resolve({dataUrl: url, format, naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight});
+				img.onerror = () => reject(new Error("Impossible de charger le data-URL"));
+				img.src = url;
+			});
 		}
 
 		return new Promise((resolve, reject) => {
@@ -268,22 +278,10 @@ export class TimbrePdfService {
 				const ctx = canvas.getContext("2d")!;
 				ctx.drawImage(img, 0, 0);
 				const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-				resolve({dataUrl, format: "JPEG"});
+				resolve({dataUrl, format: "JPEG", naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight});
 			};
 			img.onerror = () => reject(new Error("Impossible de charger l'image"));
 			img.src = url;
 		});
-	}
-
-	/** Convertit un MIME type en format jsPDF. */
-	private mimeToFormat(mime: string): string {
-		const map: Record<string, string> = {
-			"image/jpeg": "JPEG",
-			"image/jpg": "JPEG",
-			"image/png": "PNG",
-			"image/gif": "GIF",
-			"image/webp": "WEBP",
-		};
-		return map[mime] ?? "JPEG";
 	}
 }
