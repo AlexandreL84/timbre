@@ -28,6 +28,7 @@ import {TimbreVarService} from "../../shared/services/timbre/timbre-var.service"
 import {TimbreTotalService} from "../../shared/services/timbre/timbre-total.service";
 import {TimbreActionsService} from "../../shared/services/timbre/timbre-actions.service";
 import {TimbreUploadService} from "../../shared/services/timbre/timbre-upload.service";
+import {TimbrePdfService} from "../../shared/services/timbre/timbre-pdf.service";
 
 @NgModule({
 	declarations: [
@@ -56,7 +57,7 @@ import {TimbreUploadService} from "../../shared/services/timbre/timbre-upload.se
 		LibUploadMultipleModule,
 	],
 	exports: [],
-	providers: [TimbreService, TimbreActionsService, TimbreUploadService, TimbreVarService, TimbreTotalService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService]
+	providers: [TimbreService, TimbreActionsService, TimbreUploadService, TimbreVarService, TimbreTotalService, TimbreBlocService, TimbreUtilsService, TimbreResumeService, UploadService, TimbrePdfService]
 })
 export class TimbreBlocModule {
 }
