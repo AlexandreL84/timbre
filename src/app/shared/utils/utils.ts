@@ -1,5 +1,6 @@
 export const isNotNullOrUndefined = input => input !== null && input !== undefined && input != "undefined";
 export const isNullOrUndefined = input => input == null || input == undefined;
+export const isNullOrUndefinedOrEmpty = input => isNullOrUndefined(input) || input == "";
 export const isUndefined = input => input == undefined;
 export const isNumber = valeur => typeof valeur == "number";
 export const isString = valeur => typeof valeur == "string" || valeur instanceof String;

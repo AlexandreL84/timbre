@@ -7,6 +7,7 @@ import {combineLatest, first} from "rxjs";
 import {TimbreVarService} from "./timbre-var.service";
 import {AuthService} from "../auth.service";
 import {TimbreUtilsService} from "./timbre-utils.service";
+import {TimbreBlocService} from "./timbre-bloc.service";
 
 @Injectable({
 	providedIn: "root",
@@ -22,22 +23,56 @@ export class TimbrePdfService {
 	private readonly CELL_PADDING = 2;
 	private readonly YEAR_HEADER_H = 10;
 	private readonly FOOTER_H = 6;
+	private readonly NB_BLOC = 100000;
 
-	constructor(private timbreVarService: TimbreVarService, private authService: AuthService, private timbreUtilsService: TimbreUtilsService) {
+	constructor(private timbreVarService: TimbreVarService, private timbreBlocService: TimbreBlocService, private authService: AuthService, private timbreUtilsService: TimbreUtilsService) {
 	}
 
 
+	getAnnees(): number[] {
+		/*
+		let anneeDepart = 1926;
+		if (baseEmun == BaseEnum.TIMBRE) {
+			anneeDepart = 1849
+		}*/
+		//1920
+		const anneeDebut = 2020;
+		const anneeFin = 2026;
+		const annees: number[] = []
+		for (let i = anneeDebut; i <= anneeFin; i++) {
+			annees.push(i);
+		}
+		return annees;
+	}
+
 	getTimbres(timbreCritereModel: TimbreCritereModel) {
-		const timbreCritereBlocModel: TimbreCritereModel = new TimbreCritereModel();
-		timbreCritereBlocModel.setAnnees(timbreCritereModel.getAnnees())
+		timbreCritereModel = new TimbreCritereModel();
+		timbreCritereModel.initCritere();
+		timbreCritereModel.setAcquis("NON");
+		//timbreCritereModel.setType([TypeTimbreEnum.CARNET, TypeTimbreEnum.BLOC]);
+		//timbreCritereModel.setAnnees(this.getAnnees());
+
+
 		this.timbreVarService.timbresPdf$.next(null);
 		this.timbreVarService.loadPdf$.next(false);
 		combineLatest([
 			this.authService.userSelect$,
 			this.timbreUtilsService.getAllTimbres(timbreCritereModel),
-		]).pipe(first()).subscribe(([user, timbres]) => {
+			this.timbreBlocService.getAllBlocs(timbreCritereModel),
+		]).pipe(first()).subscribe(([user, timbres, blocs]) => {
 			if (isNotNullOrUndefined(timbres) && timbres.length > 0) {
+				console.log(blocs)
+				//let timbresBloc: TimbreBlocModel[] = this.timbreBlocService.constructBlocs(blocs, timbreCritereModel, false);
+				let timbresBloc: TimbreModel[] = this.timbreUtilsService.constructTimbres(user, blocs, null, timbreCritereModel);
+				if (isNotNullOrUndefined(timbresBloc) && timbresBloc.length > 0) {
+					timbresBloc.forEach(timbreBloc => {
+						timbreBloc.setId(this.NB_BLOC + timbreBloc.getId())
+						timbreBloc.setIdBloc(timbreBloc.getId())
+					})
+				}
 				let timbresRetour: TimbreModel[] = this.timbreUtilsService.constructTimbres(user, timbres, null, timbreCritereModel);
+				timbresRetour = [...timbresRetour, ...timbresBloc];
+
 				//console.log("verif constructTimbres timbresRetour", timbresRetour)
 				if (timbresRetour?.length > 0) {
 					timbresRetour = timbresRetour.sort((a, b) => {
@@ -46,6 +81,8 @@ export class TimbrePdfService {
 						return a?.getTimbreBlocModel()?.getNbTimbres() - b?.getTimbreBlocModel()?.getNbTimbres();
 					});
 				}
+				console.log(blocs);
+				console.log(timbresRetour);
 				this.timbreVarService.timbresPdf$.next(timbresRetour);
 			}
 		});
@@ -89,6 +126,9 @@ export class TimbrePdfService {
 
 			// En-tête d'année
 			if (!isFirstPage) {
+				/*doc.addPage();
+				y = this.MARGIN;*/
+
 				// Vérifier si on a la place pour au moins l'en-tête + une ligne de timbres
 				if (y + this.YEAR_HEADER_H + cellHeight > this.PAGE_HEIGHT - this.MARGIN) {
 					doc.addPage();
@@ -104,12 +144,24 @@ export class TimbrePdfService {
 
 			// ── 4. Grille de timbres ───────────────────────────────────────────
 			let col = 0;
+			let passedThreshold = false;
 
 			for (const timbre of timbresDeLAnnee) {
+				// Forcer un retour à la ligne pour le 1er timbre dont l'id > 1000
+				if (!passedThreshold && timbre.id > this.NB_BLOC) {
+					passedThreshold = true;
+					if (col !== 0) {
+						col = 0;
+						y += cellHeight;
+					}
+				}
+
 				// Nouvelle ligne : vérifier la place
 				if (col === 0 && y + cellHeight > this.PAGE_HEIGHT - this.MARGIN) {
 					doc.addPage();
 					y = this.MARGIN;
+					this.drawYearHeader(doc, annee, timbresDeLAnnee.length, y,true);
+					y += this.YEAR_HEADER_H + 3;
 				}
 
 				const x = this.MARGIN + col * cellWidth;
@@ -159,7 +211,7 @@ export class TimbrePdfService {
 	}
 
 	/** Dessine la bannière d'une année. */
-	private drawYearHeader(doc: jsPDF, annee: number, count: number, y: number): void {
+	private drawYearHeader(doc: jsPDF, annee: number, count: number, y: number, suite?: boolean): void {
 		const usableWidth = this.PAGE_WIDTH - 2 * this.MARGIN;
 
 		// Fond coloré
@@ -170,7 +222,11 @@ export class TimbrePdfService {
 		doc.setFont("helvetica", "bold");
 		doc.setFontSize(11);
 		doc.setTextColor(255, 255, 255);
-		doc.text(`${annee}`, this.MARGIN + 4, y + 6.8);
+		if (suite) {
+			doc.text(`${annee} (suite)`, this.MARGIN + 4, y + 6.8);
+		} else {
+			doc.text(`${annee}`, this.MARGIN + 4, y + 6.8);
+		}
 
 		doc.setFont("helvetica", "normal");
 		doc.setFontSize(8);
@@ -273,11 +329,23 @@ export class TimbrePdfService {
 			img.crossOrigin = "anonymous";  // nécessaire pour le canvas
 			img.onload = () => {
 				const canvas = document.createElement("canvas");
-				canvas.width = img.naturalWidth;
-				canvas.height = img.naturalHeight;
+
+				// Redimensionnement pour compression : on limite à 200px max
+				const MAX_DIM = 200;
+				const scale = Math.min(1, MAX_DIM / Math.max(img.naturalWidth, img.naturalHeight));
+				canvas.width  = Math.round(img.naturalWidth  * scale);
+				canvas.height = Math.round(img.naturalHeight * scale);
+
 				const ctx = canvas.getContext("2d")!;
-				ctx.drawImage(img, 0, 0);
-				const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
+
+				// Fond blanc pour éviter le fond noir sur les images transparentes (PNG, WebP…)
+				ctx.fillStyle = "#ffffff";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+				ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+				// JPEG avec qualité réduite pour alléger le PDF
+				const dataUrl = canvas.toDataURL("image/jpeg", 0.3);
 				resolve({dataUrl, format: "JPEG", naturalWidth: img.naturalWidth, naturalHeight: img.naturalHeight});
 			};
 			img.onerror = () => reject(new Error("Impossible de charger l'image"));
