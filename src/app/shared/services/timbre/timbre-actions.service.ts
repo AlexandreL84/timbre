@@ -306,6 +306,23 @@ export class TimbreActionsService {
 		});
 	}
 
+	enCoursAcquisition(timbreModel: TimbreModel, enCoursAcquisition: boolean) {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				if (enCoursAcquisition) {
+					timbreModel.addUserEnCoursAcquis(user);
+				} else {
+					timbreModel.removeUserEnCoursAcquis(user);
+				}
+				this.modifier(timbreModel, false);
+				//this.verifBloc(timbreModel.getTimbreBlocModel());
+				this.timbreVarService.reinitResume$.next(true);
+			} else {
+				this.utilsService.droitInsuffisant();
+			}
+		});
+	}
+
 	doublon(timbreModel: TimbreModel, doublon: boolean) {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {

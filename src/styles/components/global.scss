@@ -7,8 +7,10 @@
 	$accent: mat.m2-get-color-from-palette($accent-palette);
 	$accent700: mat.m2-get-color-from-palette($accent-palette, 700);
 	$accent900: mat.m2-get-color-from-palette($accent-palette, 900);
+	$accent950: mat.m2-get-color-from-palette($accent-palette, 950);
 	$accentA200: mat.m2-get-color-from-palette($accent-palette, A200);
 	$accentA400: mat.m2-get-color-from-palette($accent-palette, A400);
+	$accentA500: mat.m2-get-color-from-palette($accent-palette, A500);
 	$primary-palette: map.get($color-config, "primary");
 	$primary: mat.m2-get-color-from-palette($primary-palette);
 
@@ -34,6 +36,10 @@
 		border-color: $accent900 !important;
 	}
 
+	.border-accent950 {
+		border-color: $accent950 !important;
+	}
+
 	.border-primary {
 		border-color: $primary !important;
 	}
@@ -50,6 +56,10 @@
 		color: $accent900;
 	}
 
+	.accent950 {
+		color: $accent950;
+	}
+
 	.bg-accent {
 		background-color: $accent !important;
 	}
@@ -60,5 +70,9 @@
 
 	.bg-accentA400 {
 		background-color: $accentA400 !important;
+	}
+
+	.bg-accentA500 {
+		background-color: $accentA500 !important;
 	}
 }

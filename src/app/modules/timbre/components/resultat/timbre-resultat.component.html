@@ -11,7 +11,7 @@
 		<div class="listeTimbre primary">
 			<div *ngFor="let timbre of timbreVarService.timbres$ | async"
 				 class="detailTimbre"
-				 [ngClass]="timbre.isDoublon(userSelect) ? 'border-accent900 bg-accentA400' : timbre.isAcquis(userSelect) ? 'border-accent bg-accentA200' : 'border-primary'"
+				 [ngClass]="timbre.isEnCoursAcquis(userSelect) ? 'border-accent950 bg-accentA500' : timbre.isDoublon(userSelect) ? 'border-accent900 bg-accentA400' : timbre.isAcquis(userSelect) ? 'border-accent bg-accentA200' : 'border-primary'"
 			>
 				<div class="headerTimbre">
 					<div class="actionTimbre">
@@ -37,6 +37,19 @@
 									[icone]="isDoublon.value? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
 									[info]="isDoublon.value ? 'pas en double' : 'en double'"
 									(click)="timbreActionsService.doublon(timbre, !timbre.isDoublon(userSelect))"
+								>
+								</lib-icon>
+							</ng-container>
+
+							<ng-container *ngIf="{ value: timbre.isEnCoursAcquis(userSelect) } as isEnCoursAcquis">
+								<lib-icon
+									*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
+									class="click"
+									[classIcone]="isEnCoursAcquis.value ? 'accent950' : 'primary'"
+									[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+									[icone]="isEnCoursAcquis.value  ? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+									[info]="isEnCoursAcquis.value   ? 'pas en cours d\'acquisition' : 'en cours d\'acquisition'"
+									(click)="timbreActionsService.enCoursAcquisition(timbre, !timbre.isEnCoursAcquis(userSelect))"
 								>
 								</lib-icon>
 							</ng-container>

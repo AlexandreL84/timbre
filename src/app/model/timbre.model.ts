@@ -36,7 +36,10 @@ export class TimbreModel extends ProprieteModel {
 	@Label("Utilisateurs doublon")
 	usersDoublon: string[] = [];
 
-	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, yt?: string, image?: string | File, imageZoom?: string, timbreBlocModel?: TimbreBlocModel, usersAcquis?: [], usersDoublon?: []) {
+	@Label("Utilisateurs en cours acquisition")
+	usersEnCoursAcquis: string[] = [];
+
+	constructor(id?: number, idBloc?: number, annee?: number, monnaie?: MonnaieEnum, yt?: string, image?: string | File, imageZoom?: string, timbreBlocModel?: TimbreBlocModel, usersAcquis?: [], usersEnCoursAcquis?: [], usersDoublon?: []) {
 		super();
 		this.id = id ? id : null;
 		this.idBloc = idBloc ? idBloc : null;
@@ -48,6 +51,7 @@ export class TimbreModel extends ProprieteModel {
 		this.timbreBlocModel = timbreBlocModel ? timbreBlocModel : null;
 		this.usersAcquis = usersAcquis ? usersAcquis : null;
 		this.usersDoublon = usersDoublon ? usersDoublon : null;
+		this.usersEnCoursAcquis = usersEnCoursAcquis ? usersEnCoursAcquis : null;
 	}
 
 	getId(): number {
@@ -181,5 +185,38 @@ export class TimbreModel extends ProprieteModel {
 
 	getUsersDoublon(): string[] {
 		return this.usersDoublon;
+	}
+
+	isEnCoursAcquis(user: UserModel): boolean {
+		return isNotNullOrUndefined(this.getUsersEnCoursAcquis()?.find(userEnCoursAcquis => userEnCoursAcquis == user?.getId()));
+	}
+
+	addUserEnCoursAcquis(user: UserModel) {
+		if (isNotNullOrUndefined(user)) {
+			if (isNullOrUndefined(this.usersEnCoursAcquis)) {
+				this.usersEnCoursAcquis = []
+			}
+
+			if (!this.isEnCoursAcquis(user)) {
+				this.usersEnCoursAcquis.push(user?.getId());
+			}
+		}
+	}
+
+	removeUserEnCoursAcquis(user: UserModel) {
+		if (isNotNullOrUndefined(this.usersEnCoursAcquis) && isNotNullOrUndefined(user)) {
+			const findIndex: number = this.usersEnCoursAcquis.findIndex(userEnCoursAcquis => userEnCoursAcquis == user.getId());
+			if (findIndex >= 0) {
+				this.usersEnCoursAcquis.splice(findIndex, 1);
+			}
+		}
+	}
+
+	setUsersEnCoursAcquis(value: string[]) {
+		this.usersEnCoursAcquis = value;
+	}
+
+	getUsersEnCoursAcquis(): string[] {
+		return this.usersEnCoursAcquis;
 	}
 }
