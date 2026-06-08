@@ -76,7 +76,9 @@ export class TimbreUtilsService {
 					}
 
 					if (isNotNullOrUndefined(timbreModel.isAcquis(user))) {
-						if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreModel.isAcquis(user)) || (timbreCritereModel.getAcquis() == 'NON' && !timbreModel.isAcquis(user)))) {
+						if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && timbreCritereModel.getAcquis() == 'EN_COURS' && !timbreModel.isEnCoursAcquis(user)) {
+							ajout = false;
+						} else if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && timbreCritereModel.getAcquis() != 'EN_COURS' && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreModel.isAcquis(user)) || (timbreCritereModel.getAcquis() == 'NON' && !timbreModel.isAcquis(user)))) {
 							ajout = false;
 						}
 						if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreModel.isDoublon(user)) || (timbreCritereModel.getDoublon() == 'NON' && !timbreModel.isDoublon(user)))) {

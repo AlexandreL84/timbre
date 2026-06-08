@@ -5,13 +5,14 @@
 </div>
 
 <lib-spinner [fxHide]="(timbreVarService.loadBloc$ | async) == true" class="spinner"
-			 [textSpec]="'Chargement en cours ...'"></lib-spinner>
+             [textSpec]="'Chargement en cours ...'"></lib-spinner>
 
 <section [fxHide]="(timbreVarService.loadBloc$ | async) == false">
 	<section *ngIf="authService.userSelect$ | async as userSelect">
 		<div class="listeTimbre primary">
 			<div *ngFor="let timbreBloc of timbreVarService.timbresBlocModel$ | async" class="detailTimbre"
-				 [ngClass]="timbreBloc.isDoublon(userSelect) ? 'border-accent900 bg-accentA400' : timbreBloc.isAcquis(userSelect) ? 'border-accent bg-accentA200' : 'border-primary'">
+			     [ngClass]="timbreBloc.isEnCoursAcquis(userSelect) ? 'border-accent950 bg-accentA500' : timbreBloc.isDoublon(userSelect) ? 'border-accent900 bg-accentA400' : timbreBloc.isAcquis(userSelect) ? 'border-accent bg-accentA200' : 'border-primary'"
+			>
 				<div class="headerTimbre">
 					<div class="actionTimbre">
 						<ng-container *ngIf="{ value: timbreBloc.isAcquis(userSelect) } as isAcquis">
@@ -39,6 +40,18 @@
 								>
 								</lib-icon>
 							</ng-container>
+
+							<ng-container *ngIf="{ value: timbreBloc.isEnCoursAcquis(userSelect) } as isEnCoursAcquis">
+								<lib-icon
+									class="click"
+									[classIcone]="isEnCoursAcquis.value ? 'accent950' : 'primary'"
+									[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+									[icone]="isEnCoursAcquis.value  ? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+									[info]="isEnCoursAcquis.value   ? 'pas en cours d\'acquisition' : 'en cours d\'acquisition'"
+									(click)="timbreActionsService.enCoursAcquisitionBloc(timbreBloc, !timbreBloc.isEnCoursAcquis(userSelect))"
+								>
+								</lib-icon>
+							</ng-container>
 						</ng-container>
 					</div>
 
@@ -61,9 +74,9 @@
 
 				<div class="imgTimbre">
 					<img *ngIf="timbreBloc.getImage()"
-						 [src]="timbreBloc.getImage()"
-						 class="image zoomIn"
-						 (click)="utilsService.zoom(timbreBloc.getImageZoom())"/>
+					     [src]="timbreBloc.getImage()"
+					     class="image zoomIn"
+					     (click)="utilsService.zoom(timbreBloc.getImageZoom())"/>
 				</div>
 
 				<div class="footerTimbre">

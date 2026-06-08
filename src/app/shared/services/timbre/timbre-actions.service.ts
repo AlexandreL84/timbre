@@ -280,6 +280,7 @@ export class TimbreActionsService {
 	acquis(timbreModel: TimbreModel, acquis: boolean) {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				timbreModel.removeUserEnCoursAcquis(user);
 				if (acquis) {
 					if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
 						timbreModel.getTimbreBlocModel().addTimbresAcquisByUser(user);
@@ -306,26 +307,10 @@ export class TimbreActionsService {
 		});
 	}
 
-	enCoursAcquisition(timbreModel: TimbreModel, enCoursAcquisition: boolean) {
-		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
-			if (user?.getDroit() >= DroitEnum.PARTIEL) {
-				if (enCoursAcquisition) {
-					timbreModel.addUserEnCoursAcquis(user);
-				} else {
-					timbreModel.removeUserEnCoursAcquis(user);
-				}
-				this.modifier(timbreModel, false);
-				//this.verifBloc(timbreModel.getTimbreBlocModel());
-				this.timbreVarService.reinitResume$.next(true);
-			} else {
-				this.utilsService.droitInsuffisant();
-			}
-		});
-	}
-
 	doublon(timbreModel: TimbreModel, doublon: boolean) {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				timbreModel.removeUserEnCoursAcquis(user);
 				if (doublon) {
 					if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
 						timbreModel.getTimbreBlocModel().addTimbresAcquisByUser(user);
@@ -340,6 +325,23 @@ export class TimbreActionsService {
 						this.verifAcquisDoublonBloc(timbreModel.getTimbreBlocModel(), user);
 					}
 					timbreModel.removeUserDoublon(user);
+				}
+				this.modifier(timbreModel, false);
+				//this.verifBloc(timbreModel.getTimbreBlocModel());
+				this.timbreVarService.reinitResume$.next(true);
+			} else {
+				this.utilsService.droitInsuffisant();
+			}
+		});
+	}
+
+	enCoursAcquisition(timbreModel: TimbreModel, enCoursAcquisition: boolean) {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				if (enCoursAcquisition) {
+					timbreModel.addUserEnCoursAcquis(user);
+				} else {
+					timbreModel.removeUserEnCoursAcquis(user);
 				}
 				this.modifier(timbreModel, false);
 				//this.verifBloc(timbreModel.getTimbreBlocModel());
@@ -822,6 +824,7 @@ export class TimbreActionsService {
 	acquisBloc(timbreBlocModel: TimbreBlocModel, acquis: boolean) {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				timbreBlocModel.removeUserEnCoursAcquis(user);
 				if (acquis) {
 					timbreBlocModel.addUserAcquis(user);
 				} else {
@@ -842,6 +845,7 @@ export class TimbreActionsService {
 	doublonBloc(timbreBlocModel: TimbreBlocModel, doublon: boolean) {
 		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				timbreBlocModel.removeUserEnCoursAcquis(user);
 				if (doublon) {
 					timbreBlocModel.addUserAcquis(user);
 					timbreBlocModel.addUserDoublon(user);
@@ -852,6 +856,22 @@ export class TimbreActionsService {
 				if (timbreBlocModel?.getNbTimbres() > 0) {
 					this.acquisCarnetDialog(timbreBlocModel, true);
 				}
+				this.timbreVarService.reinitResume$.next(true);
+			} else {
+				this.utilsService.droitInsuffisant();
+			}
+		});
+	}
+
+	enCoursAcquisitionBloc(timbreBlocModel: TimbreBlocModel, acquis: boolean) {
+		this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
+			if (user?.getDroit() >= DroitEnum.PARTIEL) {
+				if (acquis) {
+					timbreBlocModel.addUserEnCoursAcquis(user);
+				} else {
+					timbreBlocModel.removeUserEnCoursAcquis(user);
+				}
+				this.modifierBloc(timbreBlocModel, true);
 				this.timbreVarService.reinitResume$.next(true);
 			} else {
 				this.utilsService.droitInsuffisant();

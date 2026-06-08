@@ -44,11 +44,14 @@ export class TimbreBlocModel extends ProprieteModel {
 	@Label("Doublon")
 	usersDoublon: string[] = [];
 
+	@Label("Utilisateurs en cours acquisition")
+	usersEnCoursAcquis: string[] = [];
+
 	@Label("Nombre de timbres")
 	@Type(() => TimbreBlocAcquisModel)
 	nbTimbresAcquisByUser: TimbreBlocAcquisModel[];
 
-	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageZoom?: string, yt?: string, nbTimbres?: number, usersAcquis?: [], usersDoublon?: [], nbTimbresAcquisByUser?: TimbreBlocAcquisModel[]) {
+	constructor(id?: number, annee?: number, type?: TypeTimbreEnum, monnaie?: MonnaieEnum, image?: string | File, imageZoom?: string, yt?: string, nbTimbres?: number, usersAcquis?: [], usersDoublon?: [], usersEnCoursAcquis?: [], nbTimbresAcquisByUser?: TimbreBlocAcquisModel[]) {
 		super();
 		this.id = id ? id : null;
 		this.annee = annee ? annee : null;
@@ -61,6 +64,7 @@ export class TimbreBlocModel extends ProprieteModel {
 		this.usersAcquis = usersAcquis ? usersAcquis : null;
 		this.usersDoublon = usersDoublon ? usersDoublon : null;
 		this.nbTimbresAcquisByUser = nbTimbresAcquisByUser ? nbTimbresAcquisByUser : null;
+		this.usersEnCoursAcquis = usersEnCoursAcquis ? usersEnCoursAcquis : null;
 	}
 
 	getId(): number {
@@ -275,6 +279,39 @@ export class TimbreBlocModel extends ProprieteModel {
 				find.setNbDoublon(find.getNbDoublon() - 1)
 			}
 		}
+	}
+
+	isEnCoursAcquis(user: UserModel): boolean {
+		return isNotNullOrUndefined(this.getUsersEnCoursAcquis()?.find(userEnCoursAcquis => userEnCoursAcquis == user?.getId()));
+	}
+
+	addUserEnCoursAcquis(user: UserModel) {
+		if (isNotNullOrUndefined(user)) {
+			if (isNullOrUndefined(this.usersEnCoursAcquis)) {
+				this.usersEnCoursAcquis = []
+			}
+
+			if (!this.isEnCoursAcquis(user)) {
+				this.usersEnCoursAcquis.push(user?.getId());
+			}
+		}
+	}
+
+	removeUserEnCoursAcquis(user: UserModel) {
+		if (isNotNullOrUndefined(this.usersEnCoursAcquis) && isNotNullOrUndefined(user)) {
+			const findIndex: number = this.usersEnCoursAcquis.findIndex(userEnCoursAcquis => userEnCoursAcquis == user.getId());
+			if (findIndex >= 0) {
+				this.usersEnCoursAcquis.splice(findIndex, 1);
+			}
+		}
+	}
+
+	setUsersEnCoursAcquis(value: string[]) {
+		this.usersEnCoursAcquis = value;
+	}
+
+	getUsersEnCoursAcquis(): string[] {
+		return this.usersEnCoursAcquis;
 	}
 
 	getNb(nb: number, nbSupp: number): number {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {first, map, Observable} from 'rxjs';
 import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {isNotNullOrUndefined} from '../../utils/utils';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/utils';
 import {TimbreCritereModel} from '../../../model/timbre-critere.model';
 import {plainToInstance} from 'class-transformer';
 import {TimbreBlocModel} from '../../../model/timbre-bloc.model';
@@ -12,6 +12,7 @@ import {MonnaieEnum} from "../../enum/monnaie.enum";
 import {TimbreModel} from "../../../model/timbre.model";
 import {TimbreVarService} from "./timbre-var.service";
 import {TimbreTotalService} from "./timbre-total.service";
+import {TypeTimbreEnum} from "../../enum/type-timbre.enum";
 
 @Injectable()
 export class TimbreBlocService {
@@ -111,7 +112,9 @@ export class TimbreBlocService {
 						}*/
 
 						if (isNotNullOrUndefined(timbreBlocModel.isAcquis(user))) {
-							if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.isAcquis(user)) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.isAcquis(user)))) {
+							if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && timbreCritereModel.getAcquis() == 'EN_COURS' && !timbreBlocModel.isEnCoursAcquis(user)) {
+								ajout = false;
+							} else if (isNotNullOrUndefined(timbreCritereModel.getAcquis()) && timbreCritereModel.getAcquis() != 'EN_COURS' && !(timbreCritereModel.getAcquis() == 'TOUS' || (timbreCritereModel.getAcquis() == 'OUI' && timbreBlocModel.isAcquis(user)) || (timbreCritereModel.getAcquis() == 'NON' && !timbreBlocModel.isAcquis(user)))) {
 								ajout = false;
 							}
 							if (isNotNullOrUndefined(timbreCritereModel.getDoublon()) && !(timbreCritereModel.getDoublon() == 'TOUS' || (timbreCritereModel.getDoublon() == 'OUI' && timbreBlocModel.isDoublon(user)) || (timbreCritereModel.getDoublon() == 'NON' && !timbreBlocModel.isDoublon(user)))) {

@@ -1,5 +1,6 @@
 <div *ngIf="modif" class="menuRecherche">
 	<div class="form-input select" style="width: 120px">
+		<label>Type</label>
 		<mat-select name="type"
 					class="scrollBarAccent"
 					[(ngModel)]="preferenceService.timbreCritereModel.type"
@@ -16,19 +17,21 @@
 		</mat-select>
 	</div>
 
-
 	<div class="form-input select" style="width: 100px">
+		<label>Acquis</label>
 		<mat-select name="acquis"
-					[(ngModel)]="preferenceService.timbreCritereModel.acquis"
-					[placeholder]="'Acquis'"
-					(ngModelChange)="filtreByCritere()">
+		            [(ngModel)]="preferenceService.timbreCritereModel.acquis"
+		            [placeholder]="'Acquis'"
+		            (ngModelChange)="filtreByCritere()">
 			<mat-option class="selectMin" [value]="'OUI'"> Oui</mat-option>
 			<mat-option class="selectMin" [value]="'NON'"> Non</mat-option>
+			<mat-option class="selectMin" [value]="'EN_COURS'"> En cours</mat-option>
 			<mat-option class="selectMin" [value]="'TOUS'"> Tous</mat-option>
 		</mat-select>
 	</div>
 
 	<div class="form-input select" style="width: 100px">
+		<label>Doublon</label>
 		<mat-select name="doublon"
 					class="scrollBarAccent"
 					[(ngModel)]="preferenceService.timbreCritereModel.doublon"
@@ -41,6 +44,7 @@
 	</div>
 
 	<div class="form-input select" style="width: 100px">
+		<label>Année</label>
 		<mat-select name="anneeSelect"
 					multiple
 					[(ngModel)]="preferenceService.timbreCritereModel.annees"
