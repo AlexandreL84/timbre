@@ -17,7 +17,7 @@
 					<div class="actionTimbre">
 						<ng-container *ngIf="{ value: timbreBloc.isAcquis(userSelect) } as isAcquis">
 							<lib-icon
-								*ngIf="(authService.user$ | async)?.getDroit() >= DroitEnum.PARTIEL"
+								*ngIf="(authService.userSelect$ | async)?.getDroit() >= DroitEnum.PARTIEL && (!timbreBloc.isEnCoursAcquis(userSelect) || isAcquis.value)"
 								class="click"
 								[classIcone]="isAcquis.value ? 'accent' : 'primary'"
 								[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
@@ -30,19 +30,22 @@
 
 						<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
 							<ng-container *ngIf="{ value: timbreBloc.isDoublon(userSelect) } as isDoublon">
-								<lib-icon
-									class="click"
-									[classIcone]="isDoublon.value ? 'accent900' : 'primary'"
-									[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-									[icone]="isDoublon.value? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
-									[info]="isDoublon.value ? 'pas en double' : 'en double'"
-									(click)="timbreActionsService.doublonBloc(timbreBloc, !timbreBloc.isDoublon(userSelect))"
-								>
-								</lib-icon>
+								<ng-container *ngIf="!timbreBloc.isEnCoursAcquis(userSelect) || isDoublon.value">
+									<lib-icon
+										class="click"
+										[classIcone]="isDoublon.value ? 'accent900' : 'primary'"
+										[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+										[icone]="isDoublon.value? FontAwesomeEnum.CIRCLE_MINUS : FontAwesomeEnum.CIRCLE_PLUS"
+										[info]="isDoublon.value ? 'pas en double' : 'en double'"
+										(click)="timbreActionsService.doublonBloc(timbreBloc, !timbreBloc.isDoublon(userSelect))"
+									>
+									</lib-icon>
+								</ng-container>
 							</ng-container>
 
 							<ng-container *ngIf="{ value: timbreBloc.isEnCoursAcquis(userSelect) } as isEnCoursAcquis">
 								<lib-icon
+									*ngIf="(authService.userSelect$ | async)?.getDroit() >= DroitEnum.PARTIEL && ((!timbreBloc.isAcquis(userSelect) && !timbreBloc.isDoublon(userSelect) && preferenceService.timbreCritereBlocModel.annees?.includes(timbreUtilsService.anneeEnCours)) || isEnCoursAcquis.value)"
 									class="click"
 									[classIcone]="isEnCoursAcquis.value ? 'accent950' : 'primary'"
 									[type]="FontAwesomeTypeEnum.TYPE_LIGHT"

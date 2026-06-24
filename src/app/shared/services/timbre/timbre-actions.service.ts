@@ -831,7 +831,7 @@ export class TimbreActionsService {
 					timbreBlocModel.removeUserAcquis(user);
 					timbreBlocModel.removeUserDoublon(user);
 				}
-				this.modifierBloc(timbreBlocModel, true);
+				this.modifierBloc(timbreBlocModel, false);
 				if (timbreBlocModel?.getNbTimbres() > 0) {
 					this.acquisCarnetDialog(timbreBlocModel, false);
 				}
@@ -852,7 +852,7 @@ export class TimbreActionsService {
 				} else {
 					timbreBlocModel.removeUserDoublon(user);
 				}
-				this.modifierBloc(timbreBlocModel, true);
+				this.modifierBloc(timbreBlocModel, false);
 				if (timbreBlocModel?.getNbTimbres() > 0) {
 					this.acquisCarnetDialog(timbreBlocModel, true);
 				}
@@ -871,7 +871,7 @@ export class TimbreActionsService {
 				} else {
 					timbreBlocModel.removeUserEnCoursAcquis(user);
 				}
-				this.modifierBloc(timbreBlocModel, true);
+				this.modifierBloc(timbreBlocModel, false);
 				this.timbreVarService.reinitResume$.next(true);
 			} else {
 				this.utilsService.droitInsuffisant();

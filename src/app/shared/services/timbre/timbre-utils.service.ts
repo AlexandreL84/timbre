@@ -20,6 +20,8 @@ import {UserModel} from "../../../model/user.model";
 
 @Injectable()
 export class TimbreUtilsService {
+	anneeEnCours: number = new Date().getFullYear();
+
 	constructor(private authService: AuthService, private angularFirestore: AngularFirestore) {
 	}
 

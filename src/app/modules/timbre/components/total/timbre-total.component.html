@@ -1,7 +1,7 @@
 <div class="timbreTotal">
 	<div *ngIf="(timbreVarService.totalTimbres$ | async)" class="nbTimbre">
 		<span>Nombre de timbres : </span>
-		<span class="bold">{{ (timbreVarService.totalTimbres$ | async) }}</span>
+		<span class="bold">{{ (timbreVarService.totalTimbresByCritere$ | async) }} / {{ (timbreVarService.totalTimbres$ | async) }}</span>
 	</div>
 
 	<lib-icon [icone]="FontAwesomeEnum.CHART_LINE_UP"

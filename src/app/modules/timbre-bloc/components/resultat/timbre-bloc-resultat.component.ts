@@ -11,6 +11,7 @@ import {DroitEnum} from "../../../../shared/enum/droit.enum";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
 import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
+import {PreferenceService} from "../../../../shared/services/preference.service";
 
 @Component({
 	selector: "app-timbre-bloc-resultat",
@@ -26,7 +27,13 @@ export class TimbreBlocResultatComponent implements OnInit {
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 	readonly TypeTimbreEnum = TypeTimbreEnum;
 
-	constructor(public authService: AuthService, public timbreActionsService: TimbreActionsService, public timbreVarService: TimbreVarService, public timbreUtilsService: TimbreUtilsService, public utilsService: UtilsService) {
+	constructor(
+		public authService: AuthService,
+		public timbreActionsService: TimbreActionsService,
+		public timbreVarService: TimbreVarService,
+		public timbreUtilsService: TimbreUtilsService,
+		public utilsService: UtilsService,
+		public preferenceService: PreferenceService) {
 	}
 
 	ngOnInit(): void {
@@ -34,5 +41,5 @@ export class TimbreBlocResultatComponent implements OnInit {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
 	}
 
-    protected readonly DroitEnum = DroitEnum;
+	protected readonly DroitEnum = DroitEnum;
 }
