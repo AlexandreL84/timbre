@@ -43,7 +43,7 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 	ngOnInit(): void {
 		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
 
-		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "type", "yt", "acquis"];
+		this.displayedColumns = ["image", "id", "annee", "idBloc", "monnaie", "yt", "acquis"];
 		if (this.modif) {
 			this.authService.user$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 				if (user?.getDroit() >= DroitEnum.PARTIEL) {

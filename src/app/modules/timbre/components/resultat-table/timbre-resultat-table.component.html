@@ -1,10 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 80px">
 	<app-timbre-total></app-timbre-total>
 
 	<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
 		<app-timbre-recherche [modif]="modif"></app-timbre-recherche>
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
-			 style="width: 200px; min-height:55px; height: 55px">
+		<div fxLayout="column" class="form-input" style="width: 200px;">
+			<label>&nbsp;</label>
 			<input
 				placeholder="Filtrer les données"
 				type="text"
@@ -12,8 +12,8 @@
 			/>
 		</div>
 		<lib-icon
-			class="primary click"
-			style="font-size: 1.7em"
+			class="exportTable primary click"
+			style="padding-top: 20px;"
 			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
 			[info]="'Exporter tableau'"
 			(click)="exportTable()"
@@ -98,14 +98,6 @@
 					</ng-template>
 				</td>
 			</ng-container>
-			<ng-container matColumnDef="type">
-				<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
-					<lib-libelle-model [object]="timbre" [key]="'type'"></lib-libelle-model>
-				</th>
-				<td mat-cell *matCellDef="let element; let i = index" class="hide-on-mobile">
-					{{ element?.getType() }}
-				</td>
-			</ng-container>
 			<ng-container matColumnDef="yt">
 				<th mat-header-cell *matHeaderCellDef mat-sort-header class="hide-on-mobile">
 					<lib-libelle-model [object]="timbre" [key]="'yt'"></lib-libelle-model>
@@ -116,11 +108,7 @@
 			</ng-container>
 			<ng-container matColumnDef="acquis">
 				<th mat-header-cell *matHeaderCellDef>
-					<lib-libelle-model
-						[object]="timbre"
-						[key]="'usersAcquis'"
-						[align]="'center center'">
-					</lib-libelle-model>
+					Acquis
 				</th>
 				<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 					<ng-container *ngIf="{ value: element.isAcquis(userSelect) } as isAcquis">
@@ -138,11 +126,7 @@
 			</ng-container>
 			<ng-container matColumnDef="doublon">
 				<th mat-header-cell *matHeaderCellDef>
-					<lib-libelle-model
-						[object]="timbre"
-						[key]="'usersDoublon'"
-						[align]="'center center'">
-					</lib-libelle-model>
+					Doublon
 				</th>
 				<td mat-cell *matCellDef="let element; let i = index" class="alignCenter">
 					<ng-container *ngIf="{ value: element.isDoublon(userSelect) } as isDoublon">

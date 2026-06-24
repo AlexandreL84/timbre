@@ -1,11 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 50px">
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px" style="height: 80px">
 	<app-timbre-bloc-total></app-timbre-bloc-total>
 
 	<div *ngIf="modif" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px"
-		 style="height: 50px">
+		 style="height: 80px">
 		<app-timbre-bloc-recherche [modif]="modif"></app-timbre-bloc-recherche>
-		<div fxLayout="row" fxLayoutAlign="end center" class="form-input"
-			 style="width: 200px; min-height:55px; height: 55px">
+		<div fxLayout="column" class="form-input" style="width: 200px;">
+			<label>&nbsp;</label>
 			<input
 				placeholder="Filtrer les données"
 				type="text"
@@ -14,6 +14,7 @@
 		</div>
 		<lib-icon
 			class="exportTable primary click"
+			style="padding-top: 20px;"
 			[type]="FontAwesomeTypeEnum.TYPE_LIGHT" [icone]="FontAwesomeEnum.FILE_EXEL"
 			[info]="'Exporter tableau'"
 			(click)="exportTable()"
