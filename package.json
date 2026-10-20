@@ -6,7 +6,8 @@
 		"start": "ng serve",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
-		"lint": "npx eslint 'src/**/*.{js,jsx,ts,tsx,html,css,scss}' --quiet --fix",
+		"lint": "eslint src",
+		"lint:fix": "eslint src --fix",
 		"test": "ng test"
 	},
 	"private": true,
@@ -25,7 +26,7 @@
 		"@angular/pwa": "^22.0.3",
 		"@angular/router": "^22.0.2",
 		"@angular/service-worker": "^22.0.2",
-		"@ngrx/component": "^21.1.1",
+		"@ngrx/component": "^22.0.1",
 		"angular-svg-icon": "^19.1.1",
 		"angular2-notifications": "^16.0.1",
 		"class-transformer": "^0.5.1",
@@ -53,6 +54,20 @@
 		"karma-jasmine-html-reporter": "~2.2.0",
 		"typescript": "~6.0.3",
 		"sass": "^1.101.0",
-		"eslint": "^10.5.0"
+		"eslint": "^10.5.0",
+		"@eslint/js": "^10.0.1",
+		"typescript-eslint": "^8.72.0",
+		"angular-eslint": "^22.6.0",
+		"prettier": "^3.9.10",
+		"eslint-plugin-prettier": "^5.5.7",
+		"eslint-config-prettier": "^10.1.8"
+	},
+	"overrides": {
+		"@angular/fire": {
+			"@angular/common": "$@angular/common",
+			"@angular/core": "$@angular/core",
+			"@angular/platform-browser": "$@angular/platform-browser",
+			"@angular/platform-browser-dynamic": "$@angular/platform-browser-dynamic"
+		}
 	}
 }

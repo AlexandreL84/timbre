@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, DestroyRef, inject, Input, OnInit, ViewChild} from "@angular/core";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {TimbrePaysModel} from "../../../../model/timbre-pays.model";
 import {TimbrePaysService} from "../../services/timbre-pays.service";
 import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
@@ -34,6 +35,8 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 	displayedColumns: string[];
 	public timbre: TimbrePaysModel = new TimbrePaysModel();
 
+	private destroyRef = inject(DestroyRef);
+
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
@@ -48,12 +51,11 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		}
 
 		this.load$.next(false);
-		this.timbres$.pipe(first()).subscribe(timbres => {
-			//console.log(timbres);
-			this.dataSource.data = timbres;
+
+		this.timbres$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(timbres => {
+			this.dataSource.data = timbres ?? [];
 			this.load$.next(true);
 		});
-		//.pipe(first())
 	}
 
 	ngAfterViewInit() {

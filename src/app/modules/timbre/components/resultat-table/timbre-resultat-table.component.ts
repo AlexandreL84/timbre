@@ -1,4 +1,5 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, DestroyRef, inject, Input, OnInit, ViewChild} from "@angular/core";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {TimbreModel} from "../../../../model/timbre.model";
 import {isNotNullOrUndefined} from "../../../../shared/utils/utils";
 import {FontAwesomeEnum} from "../../../../shared/enum/font-awesome";
@@ -33,6 +34,8 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 	public timbre: TimbreModel = new TimbreModel();
 	annees$: Observable<number[]>
 
+	private destroyRef = inject(DestroyRef);
+
 	readonly FontAwesomeEnum = FontAwesomeEnum;
 	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
@@ -55,8 +58,8 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 			});
 		}
 
-		this.timbreVarService.timbres$.pipe(first()).subscribe(timbres => {
-			this.dataSource.data = timbres;
+		this.timbreVarService.timbres$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(timbres => {
+			this.dataSource.data = timbres ?? [];
 		});
 	}
 
