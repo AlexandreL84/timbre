@@ -55,7 +55,7 @@ export class TimbreResultatTableComponent implements OnInit, AfterViewInit {
 			});
 		}
 
-		this.timbreVarService.timbres$.subscribe(timbres => {
+		this.timbreVarService.timbres$.pipe(first()).subscribe(timbres => {
 			this.dataSource.data = timbres;
 		});
 	}

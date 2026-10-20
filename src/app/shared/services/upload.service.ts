@@ -91,7 +91,6 @@ export class UploadService {
 	): Observable<string> {
 		return new Observable((observer) => {
 			if (isNotNullOrUndefined(file) && !isString(file)) {
-				const img = new Image();
 				const reader: FileReader = new FileReader();
 				reader.readAsDataURL(file);
 
@@ -123,6 +122,7 @@ export class UploadService {
 				};
 			} else {
 				observer.next('nok');
+				observer.complete();
 			}
 		});
 	}

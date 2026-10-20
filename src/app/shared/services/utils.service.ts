@@ -33,7 +33,7 @@ export class UtilsService {
 		});
 		refDialog.componentInstance.url = url;
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}

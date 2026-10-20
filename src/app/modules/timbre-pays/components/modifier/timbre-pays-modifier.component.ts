@@ -37,12 +37,12 @@ export class TimbrePaysModifierComponent implements OnInit {
 	ngOnInit(): void {
 		this.load$.next(false);
 		if (isNotNullOrUndefined(this.code)) {
-			this.timbrePaysService.getByCodeAsync(this.code).subscribe(timbrePaysModel => {
+			this.timbrePaysService.getByCodeAsync(this.code).pipe(first()).subscribe(timbrePaysModel => {
 				this.timbrePaysModel = timbrePaysModel;
 				this.load$.next(true);
 			});
 		} else if (isNotNullOrUndefined(this.id)) {
-			this.timbrePaysService.getTimbreByIdAsync(this.id).subscribe(timbrePaysModel => {
+			this.timbrePaysService.getTimbreByIdAsync(this.id).pipe(first()).subscribe(timbrePaysModel => {
 				this.timbrePaysModel = timbrePaysModel;
 				this.load$.next(true);
 			});
@@ -95,7 +95,7 @@ export class TimbrePaysModifierComponent implements OnInit {
 				isNotNullOrUndefined(map) &&
 				isNotNullOrUndefined(drapeauZoom) &&
 				isNotNullOrUndefined(langueZoom) &&
-				isNotNullOrUndefined(mapZoom))).subscribe(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => {
+				isNotNullOrUndefined(mapZoom))).pipe(first()).subscribe(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => {
 				if (isNotNullOrUndefined(drapeau) && drapeau != "nok") {
 					this.timbrePaysModel.setDrapeau(drapeau);
 				}

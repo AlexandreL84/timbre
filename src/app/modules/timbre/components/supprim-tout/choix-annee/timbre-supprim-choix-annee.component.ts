@@ -30,7 +30,7 @@ export class TimbreSupprimChoixAnneeComponent {
 				},
 			});
 
-			dialogModal.afterClosed().subscribe(() => {
+			dialogModal.afterClosed().pipe(first()).subscribe(() => {
 				if (dialogModal.componentInstance.data.resultat === "valider") {
 					this.timbreSupprimService.loadGlob$.next(false);
 

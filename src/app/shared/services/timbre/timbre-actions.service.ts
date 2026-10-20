@@ -67,7 +67,7 @@ export class TimbreActionsService {
 				tap(() => {
 					if (retryCount > 0) {
 						this.httpResponseHandlerService.showNotificationAlert(
-							NotificationTypeEnum.RETRY, "Tentative " + retryCount + 1 + "/" + this.timbreVarService.retryMax + "...");
+							NotificationTypeEnum.RETRY, "Tentative " + (retryCount + 1) + "/" + this.timbreVarService.retryMax + "...");
 					}
 					retryCount++;
 				}),
@@ -376,7 +376,7 @@ export class TimbreActionsService {
 		});
 		refDialog.componentInstance.id = timbreModel.getId();
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}
@@ -392,7 +392,7 @@ export class TimbreActionsService {
 			},
 		});
 
-		dialogModal.afterClosed().subscribe(() => {
+		dialogModal.afterClosed().pipe(first()).subscribe(() => {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
 				this.supprimer(timbreModel)
 			}
@@ -416,7 +416,7 @@ export class TimbreActionsService {
 				tap(() => {
 					if (retryCount > 0) {
 						this.httpResponseHandlerService.showNotificationAlert(
-							NotificationTypeEnum.RETRY, "Tentative " + retryCount + 1 + "/" + this.timbreVarService.retryMax + "...");
+							NotificationTypeEnum.RETRY, "Tentative " + (retryCount + 1) + "/" + this.timbreVarService.retryMax + "...");
 					}
 					retryCount++;
 				}),
@@ -691,7 +691,7 @@ export class TimbreActionsService {
 				},
 			});
 
-			dialogModal.afterClosed().subscribe(() => {
+			dialogModal.afterClosed().pipe(first()).subscribe(() => {
 				if (dialogModal.componentInstance.data.resultat === "valider") {
 					this.authService.userSelect$.pipe(first(user => isNotNullOrUndefined(user))).subscribe(user => {
 						this.timbreBlocService.getTimbresByBlocAsync(timbreBlocModel.getId()).pipe(first()).subscribe(timbres => {
@@ -767,7 +767,7 @@ export class TimbreActionsService {
 		});
 		refDialog.componentInstance.id = timbreBlocModel.getId();
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}
@@ -796,7 +796,7 @@ export class TimbreActionsService {
 				},
 			});
 
-			dialogModal.afterClosed().subscribe(() => {
+			dialogModal.afterClosed().pipe(first()).subscribe(() => {
 				if (dialogModal.componentInstance.data.resultat === "valider") {
 					this.supprimerBloc(timbreBlocModel)
 				}

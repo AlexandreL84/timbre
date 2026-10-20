@@ -9,6 +9,7 @@ import {DroitEnum} from "../../../shared/enum/droit.enum";
 import {PreferenceService} from "../../../shared/services/preference.service";
 import {LibModalComponent} from "../../../shared/components/lib-modal/lib-modal.component";
 import {MatDialog} from "@angular/material/dialog";
+import {first} from "rxjs";
 
 @Component({
 	selector: 'app-header',
@@ -41,7 +42,7 @@ export class HeaderComponent {
 			},
 		});
 
-		dialogModal.afterClosed().subscribe(() => {
+		dialogModal.afterClosed().pipe(first()).subscribe(() => {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
 				this.preferenceService.supprimerTout();
 			}

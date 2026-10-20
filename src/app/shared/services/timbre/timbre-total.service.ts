@@ -31,7 +31,7 @@ export class TimbreTotalService {
 		this.timbreVarService.totalTimbres$.pipe(first()).subscribe(total => {
 			if (isNullOrUndefined(total)) {
 				this.timbreVarService.totalTimbres$.next(null);
-				this.getCountTimbres().subscribe(nbTotal => {
+				this.getCountTimbres().pipe(first()).subscribe(nbTotal => {
 					this.timbreVarService.totalTimbres$.next(nbTotal);
 				});
 			}
@@ -40,7 +40,7 @@ export class TimbreTotalService {
 
 	getTotalByCritere(timbreCritereModel?: TimbreCritereModel) {
 		this.timbreVarService.totalTimbresByCritere$.next(null);
-		this.getCountTimbres(timbreCritereModel).subscribe(nbTotal => {
+		this.getCountTimbres(timbreCritereModel).pipe(first()).subscribe(nbTotal => {
 			this.timbreVarService.totalTimbresByCritere$.next(nbTotal);
 		});
 	}
@@ -100,7 +100,7 @@ export class TimbreTotalService {
 
 				Object.values(TypeTimbreEnum).forEach((type: TypeTimbreEnum) => {
 					if (type != TypeTimbreEnum.TIMBRE) {
-						this.getCountBlocs(null, type).subscribe(nbTotal => {
+						this.getCountBlocs(null, type).pipe(first()).subscribe(nbTotal => {
 							this.timbreVarService.totalBloc$.pipe(first()).subscribe(total => {
 								if (isNotNullOrUndefined(total)) {
 									const findTotal: TotalModel = total.find(total => total.getType() == type);
@@ -126,7 +126,7 @@ export class TimbreTotalService {
 
 		Object.values(TypeTimbreEnum).forEach((type: TypeTimbreEnum) => {
 			if (type != TypeTimbreEnum.TIMBRE) {
-				this.getCountBlocs(timbreCritereModel, type).subscribe(nbTotal => {
+				this.getCountBlocs(timbreCritereModel, type).pipe(first()).subscribe(nbTotal => {
 					this.timbreVarService.totalBlocByCritere$.pipe(first()).subscribe(total => {
 						if (isNotNullOrUndefined(total)) {
 							const findTotal: TotalModel = total.find(total => total.getType() == type);

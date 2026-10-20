@@ -62,7 +62,7 @@ export class MenuComponent {
 			minWidth: "300px"
 		});
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}
@@ -74,7 +74,7 @@ export class MenuComponent {
 			minWidth: "300px"
 		});
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}

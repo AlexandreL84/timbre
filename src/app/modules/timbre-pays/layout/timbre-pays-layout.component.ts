@@ -35,7 +35,7 @@ export class TimbrePaysLayoutComponent implements OnInit {
 			minWidth: "300px"
 		});
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close()
 		});
 	}
@@ -57,7 +57,7 @@ export class TimbrePaysLayoutComponent implements OnInit {
 			minWidth: "300px"
 		});
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close()
 		});
 	}

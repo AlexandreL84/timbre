@@ -56,7 +56,7 @@ export class TimbreBlocResultatTableComponent implements OnInit, AfterViewInit {
 			});
 		}
 
-		this.timbreVarService.timbresBlocModel$.subscribe(timbres => {
+		this.timbreVarService.timbresBlocModel$.pipe(first()).subscribe(timbres => {
 			this.dataSource.data = timbres;
 		});
 	}

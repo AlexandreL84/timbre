@@ -58,7 +58,7 @@ export class TimbreModifierComponent implements OnInit {
 		this.fileUploadModel = this.timbreUploadService.initUpload();
 		this.timbreVarService.loadModifTimbre$.next(false);
 		if (isNotNullOrUndefined(this.id)) {
-			this.timbreService.getTimbreByIdAsync(this.id).subscribe(timbreModel => {
+			this.timbreService.getTimbreByIdAsync(this.id).pipe(first()).subscribe(timbreModel => {
 				this.timbreModel = timbreModel;
 				if (isNotNullOrUndefined(timbreModel.getTimbreBlocModel())) {
 					this.timbreModel.setAnnee(timbreModel.getTimbreBlocModel().getAnnee());

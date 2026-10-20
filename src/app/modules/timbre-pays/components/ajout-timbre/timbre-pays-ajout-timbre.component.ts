@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {TimbrePaysModel} from "../../../../model/timbre-pays.model";
 import {TimbrePaysService} from "../../services/timbre-pays.service";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, first} from "rxjs";
 import {NgForm} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {HttpResponseHandlerService} from "../../../../shared/services/httpResponseHandler.service";
@@ -31,7 +31,7 @@ export class TimbrePaysAjoutTimbreComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.load$.next(false);
-		this.timbrePaysService.getTimbreByIdAsync(this.id).subscribe(timbrePaysModel => {
+		this.timbrePaysService.getTimbreByIdAsync(this.id).pipe(first()).subscribe(timbrePaysModel => {
 			this.timbrePaysModel = timbrePaysModel;
 			this.totalOrigine = this.timbrePaysModel.getTotal();
 			this.load$.next(true);

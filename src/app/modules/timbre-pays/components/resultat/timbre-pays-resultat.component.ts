@@ -8,7 +8,7 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {TimbrePaysModifierComponent} from "../modifier/timbre-pays-modifier.component";
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, first, Observable} from "rxjs";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import {UtilsService} from "../../../../shared/services/utils.service";
@@ -48,7 +48,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		}
 
 		this.load$.next(false);
-		this.timbres$.subscribe(timbres => {
+		this.timbres$.pipe(first()).subscribe(timbres => {
 			//console.log(timbres);
 			this.dataSource.data = timbres;
 			this.load$.next(true);
@@ -81,7 +81,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		});
 		refDialog.componentInstance.id = timbrePaysModel.id;
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}
@@ -96,7 +96,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 		refDialog.componentInstance.id = timbrePaysModel.id;
 		//refDialog.componentInstance.code = timbrePaysModel.code;
 
-		refDialog.afterClosed().subscribe(() => {
+		refDialog.afterClosed().pipe(first()).subscribe(() => {
 			refDialog.close();
 		});
 	}
@@ -112,7 +112,7 @@ export class TimbrePaysResultatComponent implements OnInit, AfterViewInit  {
 			},
 		});
 
-		dialogModal.afterClosed().subscribe(() => {
+		dialogModal.afterClosed().pipe(first()).subscribe(() => {
 			if (dialogModal.componentInstance.data.resultat === "valider") {
 				this.timbrePaysService.supprimer(timbrePaysModel)
 			}
