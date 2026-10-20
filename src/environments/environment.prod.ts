@@ -9,4 +9,3 @@ export const environment = {
     messagingSenderId: '476658436575'
   }
 };
-//firebase.auth().signInWithEmailAndPassword("alexandrelefaix@hotmail.com", "151984")
