@@ -29,11 +29,11 @@
 		{
 			"name": "firebase-images",
 			"urls": [
-				"https://firebasestorage.googleapis.com/v0/b/book-f941b.appspot.com/o/images/**"
+				"https://firebasestorage.googleapis.com/v0/b/book-f941b.appspot.com/o/**"
 			],
 			"cacheConfig": {
 				"strategy": "performance",
-				"maxSize": 100,
+				"maxSize": 3000,
 				"maxAge": "365d",
 				"timeout": "0u"
 			}

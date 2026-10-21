@@ -2,6 +2,7 @@ import {Pipe, PipeTransform} from "@angular/core";
 import {isNotNullOrUndefined, isNumber, isString} from "../utils/utils";
 
 @Pipe({
+    standalone: false,
     name: "boolean",
 })
 export class BooleanPipe implements PipeTransform {

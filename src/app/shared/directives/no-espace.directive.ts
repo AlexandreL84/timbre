@@ -1,6 +1,7 @@
 import {Directive, ElementRef, HostListener, Input} from "@angular/core";
 
 @Directive({
+    standalone: false,
     selector: "[noEspace]",
     exportAs: "noEspace",
 })
@@ -19,7 +20,7 @@ export class NoEspaceDirective {
 
     @HostListener("input", ["$event"])
     @HostListener("paste", ["$event"])
-    keyEvent(event: KeyboardEvent) {
+    keyEvent(event: Event) {
         if (this._noEspace) {
             const initialValue = this._el.nativeElement.value;
             this._el.nativeElement.value = initialValue.replace(/ /g, "");

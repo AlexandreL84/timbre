@@ -1,7 +1,7 @@
-import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
-import {provideRouter} from '@angular/router';
-import {   getFirestore, provideFirestore } from '@angular/fire/firestore';
-import {routes} from './app.routes';
+import {ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from "@angular/core";
+import {provideRouter} from "@angular/router";
+import {getFirestore, provideFirestore} from "@angular/fire/firestore";
+import {routes} from "./app.routes";
 import {environment} from "../environments/environment";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {AngularFireStorageModule} from "@angular/fire/compat/storage";
@@ -14,34 +14,32 @@ import {HeaderService} from "./shared/services/header.service";
 import {provideServiceWorker} from "@angular/service-worker";
 import {provideHttpClient} from "@angular/common/http";
 import {PreferenceService} from "./shared/services/preference.service";
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
 import {SimpleNotificationsModule} from "angular2-notifications";
 import {TimbreVarService} from "./shared/services/timbre/timbre-var.service";
-
+import {provideAngularFireCompatInjection} from "./shared/firebase/angular-fire-compat-injection";
 
 export const appConfig: ApplicationConfig = {
-	providers: [
-		provideRouter(routes),
-		provideAuth(() => getAuth()),
-		provideAnimations(),
-		provideFirestore(() => getFirestore()),
-		provideZoneChangeDetection({eventCoalescing: true}),
-		AngularFireStorageModule,
-		AngularFireAuthModule,
-		{provide: FIREBASE_OPTIONS, useValue: environment.firebase},
-		{provide: MatPaginatorIntl, useClass: PaginatorIntlService},
-		HeaderService,
-		PreferenceService,
-		provideHttpClient(),
-		provideFirebaseApp(() => initializeApp(environment.firebase)),
-		provideFirestore(() => getFirestore()),
-		provideServiceWorker('ngsw-worker.js', {
-			enabled: environment.production,
-			registrationStrategy: 'registerWhenStable:30000'
-		}),
-		importProvidersFrom(
-			SimpleNotificationsModule.forRoot()
-		),
-		TimbreVarService
-	]
+    providers: [
+        provideAngularFireCompatInjection(),
+        provideRouter(routes),
+        provideAuth(() => getAuth()),
+        provideAnimations(),
+        provideZoneChangeDetection({eventCoalescing: true}),
+        AngularFireStorageModule,
+        AngularFireAuthModule,
+        {provide: FIREBASE_OPTIONS, useValue: environment.firebase},
+        {provide: MatPaginatorIntl, useClass: PaginatorIntlService},
+        HeaderService,
+        PreferenceService,
+        provideHttpClient(),
+        provideFirebaseApp(() => initializeApp(environment.firebase)),
+        provideFirestore(() => getFirestore()),
+        provideServiceWorker("ngsw-worker.js", {
+            enabled: environment.production,
+            registrationStrategy: "registerWhenStable:30000",
+        }),
+        importProvidersFrom(SimpleNotificationsModule.forRoot()),
+        TimbreVarService,
+    ],
 };

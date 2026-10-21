@@ -5,8 +5,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {CommonModule} from "@angular/common";
 
 @NgModule({
-    declarations: [LibModalComponent],
-    imports: [CommonModule, FlexLayoutModule, MaterialModule],
+    imports: [LibModalComponent, CommonModule, FlexLayoutModule, MaterialModule],
     exports: [LibModalComponent],
 })
 export class LibModalModule {}

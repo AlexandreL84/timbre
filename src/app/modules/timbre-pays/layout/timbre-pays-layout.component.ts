@@ -14,56 +14,70 @@ import {FontAwesomeEnum} from "../../../shared/enum/font-awesome";
 import {FontAwesomeTypeEnum} from "../../../shared/enum/font-awesome/font-awesome-type.enum";
 
 @Component({
-	selector: "app-timbre-pays-layout",
-	templateUrl: "./timbre-pays-layout.component.html",
-	styleUrls: ["./timbre-pays-layout.component.scss"],
+    standalone: false,
+    selector: "app-timbre-pays-layout",
+    templateUrl: "./timbre-pays-layout.component.html",
+    styleUrls: ["./timbre-pays-layout.component.scss"],
 })
 export class TimbrePaysLayoutComponent implements OnInit {
-	constructor(public timbrePaysService: TimbrePaysService, private dialog: MatDialog, private utilsService: UtilsService, public authService: AuthService) {
-	}
+    constructor(
+        public timbrePaysService: TimbrePaysService,
+        private dialog: MatDialog,
+        private utilsService: UtilsService,
+        public authService: AuthService
+    ) {}
 
-	ngOnInit(): void {
-		//this.timbrePaysResultatService.timbres$ = this.timbrePaysService.getTimbres2();
-		//this.timbrePaysService.getTimbres2();
-		//this.timbrePaysService.supprimerbyCode("FR")
-	}
+    ngOnInit(): void {
+        //this.timbrePaysResultatService.timbres$ = this.timbrePaysService.getTimbres2();
+        //this.timbrePaysService.getTimbres2();
+        //this.timbrePaysService.supprimerbyCode("FR")
+    }
 
-	ajouter() {
-		const refDialog = this.dialog.open(TimbrePaysModifierComponent, {
-			maxHeight: "95vh",
-			width: "30%",
-			minWidth: "300px"
-		});
+    ajouter() {
+        const refDialog = this.dialog.open(TimbrePaysModifierComponent, {
+            maxHeight: "95vh",
+            width: "30%",
+            minWidth: "300px",
+        });
 
-		refDialog.afterClosed().pipe(first()).subscribe(() => {
-			refDialog.close()
-		});
-	}
+        refDialog
+            .afterClosed()
+            .pipe(first())
+            .subscribe(() => {
+                refDialog.close();
+            });
+    }
 
-	ajouterBouchon() {
-		this.utilsService.getMaxIdentAsync(BaseEnum.PAYS).pipe(first()).subscribe(id => {
-			const timbrePaysModel: TimbrePaysModel = this.timbrePaysService.getBouchon();
-			timbrePaysModel.setId(id);
-			this.timbrePaysService.ajouter(timbrePaysModel);
-		});
-	}
+    ajouterBouchon() {
+        this.utilsService
+            .getMaxIdentAsync(BaseEnum.PAYS)
+            .pipe(first())
+            .subscribe(id => {
+                const timbrePaysModel: TimbrePaysModel = this.timbrePaysService.getBouchon();
+                timbrePaysModel.setId(id);
+                this.timbrePaysService.ajouter(timbrePaysModel);
+            });
+    }
 
-	importer() {
-		const refDialog = this.dialog.open(TimbrePaysImporterComponent, {
-			//height: "25vh",
-			//width: "20%",
-			height: "90vh",
-			width: "70%",
-			minWidth: "300px"
-		});
+    importer() {
+        const refDialog = this.dialog.open(TimbrePaysImporterComponent, {
+            //height: "25vh",
+            //width: "20%",
+            height: "90vh",
+            width: "70%",
+            minWidth: "300px",
+        });
 
-		refDialog.afterClosed().pipe(first()).subscribe(() => {
-			refDialog.close()
-		});
-	}
+        refDialog
+            .afterClosed()
+            .pipe(first())
+            .subscribe(() => {
+                refDialog.close();
+            });
+    }
 
-	protected readonly DroitEnum = DroitEnum;
-	protected readonly RouteEnum = RouteEnum;
-	protected readonly FontAwesomeEnum = FontAwesomeEnum;
-	protected readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+    protected readonly DroitEnum = DroitEnum;
+    protected readonly RouteEnum = RouteEnum;
+    protected readonly FontAwesomeEnum = FontAwesomeEnum;
+    protected readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 }

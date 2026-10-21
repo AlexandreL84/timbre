@@ -18,8 +18,16 @@ import {AuthService} from "../../../../shared/services/auth.service";
 import {TypeTimbreEnum} from "../../../../shared/enum/type-timbre.enum";
 import {TimbreResumeAcquisModel} from "../../../../model/timbre-resume-acquis.model";
 import {UserModel} from "../../../../model/user.model";
+import {CommonModule} from "@angular/common";
+import {MaterialModule} from "../../../../shared/modules/material.module";
+import {FlexModule, FlexLayoutModule} from "@angular/flex-layout";
+import {LibIconModule} from "../../../../shared/components/lib-icon";
+import {LibSpinnerModule} from "../../../../shared/components/lib-spinner";
 
 @Component({
+	// Standalone : ce composant est ouvert en modale depuis d'autres modules (menu, services partagés),
+	// il doit donc déclarer lui-même ses dépendances de template.
+	imports: [CommonModule, MaterialModule, FlexModule, FlexLayoutModule, LibIconModule, LibSpinnerModule],
 	selector: "app-timbre-resume",
 	templateUrl: "./timbre-resume.component.html",
 	styleUrls: ["./timbre-resume.component.scss"],

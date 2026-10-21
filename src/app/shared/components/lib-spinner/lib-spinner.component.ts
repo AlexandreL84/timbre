@@ -2,6 +2,7 @@ import {Component, Input} from "@angular/core";
 import {isNotNullOrUndefined} from "../../utils/utils";
 
 @Component({
+    standalone: false,
     selector: "lib-spinner",
     templateUrl: "./lib-spinner.component.html",
     styleUrls: ["./lib-spinner.component.scss"],

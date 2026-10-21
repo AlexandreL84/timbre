@@ -37,7 +37,7 @@ import {TimbrePdfService} from "../../shared/services/timbre/timbre-pdf.service"
 
 @NgModule({
 	declarations: [
-		TimbreLayoutComponent, TimbreModifierComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreResumeComponent, TimbreRechercheComponent, TimbreTotalComponent
+		TimbreLayoutComponent, TimbreResultatTableComponent, TimbreResultatComponent, TimbreRechercheComponent, TimbreTotalComponent
 	],
 	imports: [
 		MaterialModule,

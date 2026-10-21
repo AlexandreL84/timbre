@@ -1,83 +1,85 @@
 <div class="menu">
-	<div class="sousMenu sousMenuBouton">
-		<ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
-			<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white"
-					mat-raised-button color="primary" (click)="ajouter()">
-				Ajouter
-			</button>
+    <div class="sousMenu sousMenuBouton">
+        <ng-container *ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL">
+            <button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="primary" (click)="ajouter()">Ajouter</button>
 
-			<button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
-				Ajouter
-				<ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
-			</button>
-		</ng-container>
-	</div>
+            <button class="rounded large color-white" mat-raised-button color="primary" (click)="ajouterBloc()">
+                Ajouter
+                <ng-container *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE">&nbsp;Bloc</ng-container>
+            </button>
+        </ng-container>
+    </div>
 
-	<div class="sousMenu">
-		<ng-container *ngIf="(headerService.choixRoutesTimbre$ |async)?.length > 0">
-			<ng-container *ngFor="let choixRoute of (headerService.choixRoutesTimbre$ |async)">
-				<lib-icon [icone]="choixRoute?.getIcone()"
-						  [type]="choixRoute?.getType()"
-						  class="primary click"
-						  style="font-size: 2em"
-						  [info]="choixRoute?.getInfo()"
-						  (click)="headerService.setRoute(choixRoute.getRoute())">
-				</lib-icon>
-			</ng-container>
-		</ng-container>
+    <div class="sousMenu">
+        <ng-container *ngIf="(headerService.choixRoutesTimbre$ | async)?.length > 0">
+            <ng-container *ngFor="let choixRoute of headerService.choixRoutesTimbre$ | async">
+                <lib-icon
+                    [icone]="choixRoute?.getIcone()"
+                    [type]="choixRoute?.getType()"
+                    class="primary click"
+                    style="font-size: 2em"
+                    [info]="choixRoute?.getInfo()"
+                    (click)="headerService.setRoute(choixRoute.getRoute())">
+                </lib-icon>
+            </ng-container>
+        </ng-container>
 
-		<ng-container *ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && ((headerService.route$ | async) == RouteEnum.TIMBRE || (headerService.route$ | async) == RouteEnum.BLOC)">
-			<ng-template [ngIf]="headerService.mode == ModeEnum.GRAPH" [ngIfElse]="modeTable">
-				<lib-icon
-					[icone]="FontAwesomeEnum.TABLE"
-					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
-					class="primary click hide-on-mobile"
-					style="font-size: 2em"
-					[info]="'Mode tableau'"
-					(click)="headerService.mode = ModeEnum.TABLE">
-				</lib-icon>
-			</ng-template>
-			<ng-template #modeTable>
-				<lib-icon
-					[icone]="FontAwesomeEnum.MEMO"
-					[type]="FontAwesomeTypeEnum.TYPE_SOLID"
-					class="primary click hide-on-mobile"
-					style="font-size: 2em"
-					[info]="'Mode tableau'"
-					(click)="headerService.mode = ModeEnum.GRAPH">
-				</lib-icon>
-			</ng-template>
-		</ng-container>
+        <ng-container
+            *ngIf="
+                ((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) &&
+                ((headerService.route$ | async) == RouteEnum.TIMBRE || (headerService.route$ | async) == RouteEnum.BLOC)
+            ">
+            <ng-template [ngIf]="headerService.mode == ModeEnum.GRAPH" [ngIfElse]="modeTable">
+                <lib-icon
+                    [icone]="FontAwesomeEnum.TABLE"
+                    [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+                    class="primary click hide-on-mobile"
+                    style="font-size: 2em"
+                    [info]="'Mode tableau'"
+                    (click)="headerService.mode = ModeEnum.TABLE">
+                </lib-icon>
+            </ng-template>
+            <ng-template #modeTable>
+                <lib-icon
+                    [icone]="FontAwesomeEnum.MEMO"
+                    [type]="FontAwesomeTypeEnum.TYPE_SOLID"
+                    class="primary click hide-on-mobile"
+                    style="font-size: 2em"
+                    [info]="'Mode tableau'"
+                    (click)="headerService.mode = ModeEnum.GRAPH">
+                </lib-icon>
+            </ng-template>
+        </ng-container>
 
-		<ng-template [ngIf]="(timbreVarService.loadPdf$ |async) == false" [ngIfElse]="noLoadPdf">
-			<lib-icon
-				[icone]="FontAwesomeEnum.CIRCLE_NOTCH"
-				[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-				[attribs]="[FontAwesomeAttributEnum.SPIN]"
-				class="primary click hide-on-mobile"
-				style="font-size: 2em"
-				[info]="'Génération du pdf en cours'">
-			</lib-icon>
-		</ng-template>
-		<ng-template #noLoadPdf>
-			<lib-icon
-				[icone]="FontAwesomeEnum.FILE_PDF"
-				[type]="FontAwesomeTypeEnum.TYPE_LIGHT"
-				class="primary click hide-on-mobile"
-				style="font-size: 2em"
-				[info]="'Exporter en PDF'"
-				(click)="exportPdf()">
-			</lib-icon>
-		</ng-template>
+        <ng-template [ngIf]="(timbreVarService.loadPdf$ | async) == false" [ngIfElse]="noLoadPdf">
+            <lib-icon
+                [icone]="FontAwesomeEnum.CIRCLE_NOTCH"
+                [type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+                [attribs]="[FontAwesomeAttributEnum.SPIN]"
+                class="primary click hide-on-mobile"
+                style="font-size: 2em"
+                [info]="'Génération du pdf en cours'">
+            </lib-icon>
+        </ng-template>
+        <ng-template #noLoadPdf>
+            <lib-icon
+                [icone]="FontAwesomeEnum.FILE_PDF"
+                [type]="FontAwesomeTypeEnum.TYPE_LIGHT"
+                class="primary click hide-on-mobile"
+                style="font-size: 2em"
+                [info]="'Exporter en PDF'"
+                (click)="exportPdf()">
+            </lib-icon>
+        </ng-template>
 
-		<!--
+        <!--
 		<button *ngIf="(headerService.route$ | async) == RouteEnum.TIMBRE" class="rounded large color-white" mat-raised-button color="accent"
 				(click)="ajouterBouchon()">
 			Bouchon
 		</button>
 		-->
 
-		<!--
+        <!--
 		<lib-icon
 			*ngIf="(authService.user$ | async)?.getDroit() == DroitEnum.TOTAL && (headerService.route$ | async) == RouteEnum.TIMBRE"
 			[icone]="FontAwesomeEnum.UPLOAD"
@@ -93,19 +95,17 @@
 			class="hide-on-mobile"></app-timbre-supprim>
 		-->
 
-		<div
-			*ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"
-			fxLayout="row" fxLayoutAlign="end center"
-			class="form-input select" style="width: 120px">
-			<mat-select name="user"
-						class="scrollBarAccent"
-						[ngModel]="authService.userSelect$ | async"
-						[placeholder]="'Utilisateur'"
-						(ngModelChange)="setUser($event)">
-				<mat-option class="selectMin" *ngFor="let user of (authService.users$ | async)" [value]="user">
-					{{ user?.getPrenom() }}
-				</mat-option>
-			</mat-select>
-		</div>
-	</div>
+        <div
+            *ngIf="((authService.user$ | async)?.getDroit() == DroitEnum.TOTAL || (authService.user$ | async)?.getDroit() == DroitEnum.CONSULT_TOTAL) && (authService.users$ | async)?.length > 0"
+            fxLayout="row"
+            fxLayoutAlign="end center"
+            class="form-input select"
+            style="width: 120px">
+            <mat-select name="user" class="scrollBarAccent" [ngModel]="authService.userSelect$ | async" [placeholder]="'Utilisateur'" (ngModelChange)="setUser($event)">
+                <mat-option class="selectMin" *ngFor="let user of authService.users$ | async" [value]="user">
+                    {{ user?.getPrenom() }}
+                </mat-option>
+            </mat-select>
+        </div>
+    </div>
 </div>

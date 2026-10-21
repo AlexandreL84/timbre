@@ -3,6 +3,7 @@ import {Directive, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {isNotNullOrUndefined, isUndefined} from "../../utils/utils";
 
 @Directive({
+    standalone: false,
     selector: "[zMax][formControlName],[zMax][formControl],[zMax][ngModel]",
     providers: [{provide: NG_VALIDATORS, useExisting: MaxDirective, multi: true}],
 })

@@ -11,8 +11,10 @@
 @include cdk.overlay();
 @include cdk.text-field-autosize();
 @include cdk.text-field-autofill();
-@include mat.private-strong-focus-indicators-structural-styling('mat');
-@include mat.private-strong-focus-indicators-structural-styling('mat-mdc');
+@include mat.strong-focus-indicators((
+	border-style: none,
+));
+//@include mat.strong-focus-indicators-color(#ff9800);
 
 @include mat.all-component-themes(light.$my-app-light-theme);
 @include components.theme(light.$my-app-light-theme);

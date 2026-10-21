@@ -6,8 +6,7 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {LibIconModule} from "../lib-icon";
 
 @NgModule({
-    declarations: [LibDialogImageComponent],
-	imports: [CommonModule, MaterialModule, FlexLayoutModule, LibIconModule],
+    imports: [LibDialogImageComponent, CommonModule, MaterialModule, FlexLayoutModule, LibIconModule],
     exports: [LibDialogImageComponent],
 })
 export class LibDialogImageModule {}

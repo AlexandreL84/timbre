@@ -8,11 +8,11 @@
 @use "../components" as components;
 
 @function mat-set-background($theme, $backgroundColor) {
-	$palette-color: map-get($theme, color);
-	$background: map-get($palette-color, background);
-	$background: map_merge($background, (background: $backgroundColor));
-	$palette-color: map_merge($palette-color, (background: $background));
-	@return map_merge($theme, (color: $palette-color));
+	$palette-color: map.get($theme, color);
+	$background: map.get($palette-color, background);
+	$background: map.merge($background, (background: $backgroundColor));
+	$palette-color: map.merge($palette-color, (background: $background));
+	@return map.merge($theme, (color: $palette-color));
 }
 
 
@@ -47,8 +47,8 @@ $my-app-dark-variants: (
 }
 
 /*$color-config: mat.m2-get-color-config($theme);
-$primary-palette: map-get($color-config, 'primary');
-$accent-palette: map-get($color-config, 'accent');
+$primary-palette: map.get($color-config, 'primary');
+$accent-palette: map.get($color-config, 'accent');
 $primary: mat.m2-get-color-from-palette($primary-palette, 500);
 $accent: mat.m2-get-color-from-palette($accent-palette, 500);*/
 

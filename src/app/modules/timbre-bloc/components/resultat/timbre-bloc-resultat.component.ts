@@ -14,32 +14,33 @@ import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-ac
 import {PreferenceService} from "../../../../shared/services/preference.service";
 
 @Component({
-	selector: "app-timbre-bloc-resultat",
-	templateUrl: "./timbre-bloc-resultat.component.html",
-	styleUrls: ["./../../../styles/timbre-resultat.scss"],
+    standalone: false,
+    selector: "app-timbre-bloc-resultat",
+    templateUrl: "./timbre-bloc-resultat.component.html",
+    styleUrls: ["./../../../styles/timbre-resultat.scss"],
 })
 export class TimbreBlocResultatComponent implements OnInit {
-	public timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
-	annees$: Observable<number[]>;
-	modif: boolean = true;
+    public timbreBlocModel: TimbreBlocModel = new TimbreBlocModel();
+    annees$: Observable<number[]>;
+    modif: boolean = true;
 
-	readonly FontAwesomeEnum = FontAwesomeEnum;
-	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
-	readonly TypeTimbreEnum = TypeTimbreEnum;
+    readonly FontAwesomeEnum = FontAwesomeEnum;
+    readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+    readonly TypeTimbreEnum = TypeTimbreEnum;
 
-	constructor(
-		public authService: AuthService,
-		public timbreActionsService: TimbreActionsService,
-		public timbreVarService: TimbreVarService,
-		public timbreUtilsService: TimbreUtilsService,
-		public utilsService: UtilsService,
-		public preferenceService: PreferenceService) {
-	}
+    constructor(
+        public authService: AuthService,
+        public timbreActionsService: TimbreActionsService,
+        public timbreVarService: TimbreVarService,
+        public timbreUtilsService: TimbreUtilsService,
+        public utilsService: UtilsService,
+        public preferenceService: PreferenceService
+    ) {}
 
-	ngOnInit(): void {
-		//this.timbreBlocService.modifAll()
-		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
-	}
+    ngOnInit(): void {
+        //this.timbreBlocService.modifAll()
+        this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC);
+    }
 
-	protected readonly DroitEnum = DroitEnum;
+    protected readonly DroitEnum = DroitEnum;
 }

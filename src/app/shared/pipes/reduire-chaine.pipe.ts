@@ -3,6 +3,7 @@ import {DomSanitizer} from "@angular/platform-browser";
 import {isNotNullOrUndefined} from "../utils/utils";
 
 @Pipe({
+    standalone: false,
     name: "reduireChaine",
 })
 export class ReduireChainePipe implements PipeTransform {

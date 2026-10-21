@@ -13,31 +13,31 @@ import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.se
 import {PreferenceService} from "../../../../shared/services/preference.service";
 
 @Component({
-	selector: "app-timbre-resultat",
-	templateUrl: "./timbre-resultat.component.html",
-	styleUrls: ["./../../../styles/timbre-resultat.scss"],
+    standalone: false,
+    selector: "app-timbre-resultat",
+    templateUrl: "./timbre-resultat.component.html",
+    styleUrls: ["./../../../styles/timbre-resultat.scss"],
 })
 export class TimbreResultatComponent implements OnInit {
-	@Input() modif: boolean = true;
+    @Input() modif: boolean = true;
 
-	public timbre: TimbreModel = new TimbreModel();
-	annees$: Observable<number[]>
+    public timbre: TimbreModel = new TimbreModel();
+    annees$: Observable<number[]>;
 
-	readonly DroitEnum = DroitEnum;
-	readonly FontAwesomeEnum = FontAwesomeEnum;
-	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+    readonly DroitEnum = DroitEnum;
+    readonly FontAwesomeEnum = FontAwesomeEnum;
+    readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
 
-	constructor(
-		public authService: AuthService,
-		public timbreVarService: TimbreVarService,
-		public timbreActionsService: TimbreActionsService,
-		public timbreUtilsService: TimbreUtilsService,
-		public utilsService: UtilsService,
-		public preferenceService: PreferenceService
-	) {
-	}
+    constructor(
+        public authService: AuthService,
+        public timbreVarService: TimbreVarService,
+        public timbreActionsService: TimbreActionsService,
+        public timbreUtilsService: TimbreUtilsService,
+        public utilsService: UtilsService,
+        public preferenceService: PreferenceService
+    ) {}
 
-	ngOnInit(): void {
-		this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
-	}
+    ngOnInit(): void {
+        this.annees$ = this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE);
+    }
 }

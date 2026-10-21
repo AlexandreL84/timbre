@@ -3,16 +3,16 @@ import {Directive, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {isNotNullOrUndefined, isUndefined} from "../../utils/utils";
 
 @Directive({
+    standalone: false,
     selector: "[zMin][formControlName],[zMin][formControl],[zMin][ngModel]",
     providers: [{provide: NG_VALIDATORS, useExisting: MinDirective, multi: true}],
 })
 export class MinDirective implements Validator, OnChanges {
     @Input() labelError: string;
-	@Input() set zMin(min: number | string) {
-		this.min = min;
-	}
-c
-	min: number | string;
+    @Input() set zMin(min: number | string) {
+        this.min = min;
+    }
+    min: number | string;
 
     validate(c: UntypedFormControl): ValidationErrors {
         if (!isUndefined(c.value)) {

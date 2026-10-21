@@ -2,6 +2,9 @@ import {Component, Inject, Input } from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Router} from "@angular/router";
 import {isNotNullOrUndefined, isNullOrUndefined} from "../../utils/utils";
+import {CommonModule} from "@angular/common";
+import {FlexLayoutModule} from "@angular/flex-layout";
+import {MaterialModule} from "../../modules/material.module";
 
 export interface DialogData {
     classTitre: string;
@@ -17,6 +20,9 @@ export interface DialogData {
 }
 
 @Component({
+    // Standalone : ce composant est ouvert en modale depuis d'autres modules (menu, services partagés),
+    // il doit donc déclarer lui-même ses dépendances de template.
+    imports: [CommonModule, FlexLayoutModule, MaterialModule],
     selector: "lib-modal",
     templateUrl: "./lib-modal.component.html",
 	styleUrls: ["./lib-modal.component.scss"],

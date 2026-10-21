@@ -1,19 +1,20 @@
-import {Component,} from "@angular/core";
+import {Component} from "@angular/core";
 import {Options} from "angular2-notifications";
 
 @Component({
-	selector: "app-simple-notification",
-	templateUrl: "./simple-notification.component.html",
-	styleUrls: ["./simple-notification.component.scss"],
+    standalone: false,
+    selector: "app-simple-notification",
+    templateUrl: "./simple-notification.component.html",
+    styleUrls: ["./simple-notification.component.scss"],
 })
 export class SimpleNotificationComponent {
-	public notificationOptions: Options = {
-		position: ['top', 'right'],
-		timeOut: 2000,
-		maxStack: 5,
-		lastOnBottom: true,
-		showProgressBar: false,
-		pauseOnHover: true,
-		theClass: "sy-notification"
-	};
+    public notificationOptions: Options = {
+        position: ["top", "right"],
+        timeOut: 2000,
+        maxStack: 5,
+        lastOnBottom: true,
+        showProgressBar: false,
+        pauseOnHover: true,
+        theClass: "sy-notification",
+    };
 }

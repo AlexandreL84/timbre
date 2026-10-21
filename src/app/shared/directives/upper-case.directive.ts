@@ -2,6 +2,7 @@ import {Directive, HostListener, Input} from "@angular/core";
 import {NgControl} from "@angular/forms";
 
 @Directive({
+    standalone: false,
     selector: "[upperCase]",
     exportAs: "upperCase",
 })
@@ -26,13 +27,18 @@ export class UpperCaseDirective {
     @HostListener("blur", ["$event"])
     @HostListener("keyup", ["$event"])
     //@HostListener("input", ["$event"])
-    keyEvent(event: KeyboardEvent) {
+    keyEvent(event: Event) {
         if (this._upperCase) {
-            if (this.control.value && event.code != this.KEY_CODE_ARROW_UP && event.code != this.KEY_CODE_ARROW_DOWN) {
+            if (this.control.value && !this.isFlecheHautBas(event)) {
                 try {
                     this.control.control.setValue(this.control.value.toUpperCase());
                 } catch (event) {}
             }
         }
+    }
+
+    // Seuls les événements clavier ont un code de touche : paste, focus et blur ne sont jamais des flèches.
+    private isFlecheHautBas(event: Event): boolean {
+        return event instanceof KeyboardEvent && (event.code == this.KEY_CODE_ARROW_UP || event.code == this.KEY_CODE_ARROW_DOWN);
     }
 }

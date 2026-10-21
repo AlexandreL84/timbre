@@ -6,16 +6,18 @@ import {ModeEnum} from "../../../shared/enum/mode.enum";
 import {TimbreVarService} from "../../../shared/services/timbre/timbre-var.service";
 
 @Component({
-	selector: "app-timbre-layout",
-	templateUrl: "./timbre-layout.component.html",
-	styleUrls: ["./../../styles/timbre-layout.component.scss"],
+    standalone: false,
+    selector: "app-timbre-layout",
+    templateUrl: "./timbre-layout.component.html",
+    styleUrls: ["./../../styles/timbre-layout.component.scss"],
 })
 export class TimbreLayoutComponent {
-	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
-	readonly FontAwesomeEnum = FontAwesomeEnum;
-	readonly ModeEnum = ModeEnum;
+    readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+    readonly FontAwesomeEnum = FontAwesomeEnum;
+    readonly ModeEnum = ModeEnum;
 
-	constructor(
-		public headerService: HeaderService, public timbreVarService: TimbreVarService) {
-	}
+    constructor(
+        public headerService: HeaderService,
+        public timbreVarService: TimbreVarService
+    ) {}
 }

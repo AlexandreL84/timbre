@@ -6,11 +6,11 @@
 @use "../components";
 
 @function mat-set-background($theme, $backgroundColor) {
-	$palette-color: map-get($theme, color);
-	$background: map-get($palette-color, background);
-	$background: map_merge($background, (background: $backgroundColor));
-	$palette-color: map_merge($palette-color, (background: $background));
-	@return map_merge($theme, (color: $palette-color));
+	$palette-color: map.get($theme, color);
+	$background: map.get($palette-color, background);
+	$background: map.merge($background, (background: $backgroundColor));
+	$palette-color: map.merge($palette-color, (background: $background));
+	@return map.merge($theme, (color: $palette-color));
 }
 
 $my-app-light-primary: mat.m2-define-palette(blue-palette.$blue-theme);

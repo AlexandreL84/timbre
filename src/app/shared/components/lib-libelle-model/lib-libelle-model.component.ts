@@ -2,6 +2,7 @@ import {Component, Input} from "@angular/core";
 import {FontAwesomeEnum} from "../../enum/font-awesome";
 
 @Component({
+    standalone: false,
     selector: "lib-libelle-model",
     templateUrl: "./lib-libelle-model.component.html",
 })

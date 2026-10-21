@@ -1,28 +1,29 @@
 <div class="dialog-modal" fxFlexFill fxLayout="column" fxLayoutAlign="space-between stretch">
-	<div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
-		<span>{{ timbreModel?.getId() ? 'MODIFICATION' : 'AJOUT' }} </span>
-		<span *ngIf="timbreModel?.getId()" class="accent"><b>N°{{ timbreModel?.getId() }}</b></span>
-	</div>
+    <div fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="start center" class="titre-modal bg-primary color-white">
+        <span>{{ timbreModel?.getId() ? "MODIFICATION" : "AJOUT" }} </span>
+        <span *ngIf="timbreModel?.getId()" class="accent"
+            ><b>N°{{ timbreModel?.getId() }}</b></span
+        >
+    </div>
 
-	<ng-template [ngIf]="(timbreVarService.loadModifTimbre$ | async) == false" [ngIfElse]="load">
-		<lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
-	</ng-template>
-	<ng-template #load>
-		<form
-			#formModif="ngForm"
-			ngForm="formModif"
-			(ngSubmit)="valider(formModif)"
-			class="formulaire-box-elevation"
-			[ngClass]="formModif?.submitted  ?'red-color' : 'blue-color'"
-			fxLayoutGap="20px"
-			fxFlex="100"
-			fxLayout="column"
-			fxLayoutAlign="space-between stretch"
-		>
-			<div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
-				<mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
+    <ng-template [ngIf]="(timbreVarService.loadModifTimbre$ | async) == false" [ngIfElse]="load">
+        <lib-spinner fxFlexFill [textSpec]="'Chargement en cours ...'"></lib-spinner>
+    </ng-template>
+    <ng-template #load>
+        <form
+            #formModif="ngForm"
+            ngForm="formModif"
+            (ngSubmit)="valider(formModif)"
+            class="formulaire-box-elevation"
+            [ngClass]="formModif?.submitted ? 'red-color' : 'blue-color'"
+            fxLayoutGap="20px"
+            fxFlex="100"
+            fxLayout="column"
+            fxLayoutAlign="space-between stretch">
+            <div fxLayout="column" class="bloc-modal" fxLayoutGap="20px">
+                <mat-error *ngIf="messageError$ | async" [innerHTML]="messageError$ | async"></mat-error>
 
-				<!--
+                <!--
 				<div *ngIf="timbreModel?.getId()" fxLayout="column" class="form-input">
 					<label>
 						<lib-libelle-model [object]="timbreModel" [key]="'id'"></lib-libelle-model>
@@ -41,75 +42,68 @@
 				</div>
 				-->
 
-				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
-					<div fxLayout="column" class="form-input">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'annee'"></lib-libelle-model>
-						</label>
-						<input
-							name="page"
-							[(ngModel)]="timbreModel.annee"
-							(ngModelChange)="changeAnnee($event)"
-							type="number"
-							style="width: 60px !important;"
-							class="annee"
-							minlength="4"
-							maxlength="4"
-							min="1900"
-							zMin="1900"
-							[max]="maxAnnee"
-							[zMax]="maxAnnee"
-							[disabled]="!!timbreModel?.getId()"
-							required
-							zControl
-						/>
-					</div>
+                <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
+                    <div fxLayout="column" class="form-input">
+                        <label>
+                            <lib-libelle-model [object]="timbreModel" [key]="'annee'"></lib-libelle-model>
+                        </label>
+                        <input
+                            name="page"
+                            [(ngModel)]="timbreModel.annee"
+                            (ngModelChange)="changeAnnee($event)"
+                            type="number"
+                            style="width: 60px !important"
+                            class="annee"
+                            minlength="4"
+                            maxlength="4"
+                            min="1900"
+                            zMin="1900"
+                            [max]="maxAnnee"
+                            [zMax]="maxAnnee"
+                            [disabled]="!!timbreModel?.getId()"
+                            required
+                            zControl />
+                    </div>
 
-					<div fxLayout="column" class="form-input select">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'timbreBlocModel'"></lib-libelle-model>
-						</label>
-						<div fxLayout="row" fxLayoutGap="15px">
-							<mat-select name="bloc"
-										style="width: 180px !important;"
-										[ngModel]="timbreModel.getTimbreBlocModel()"
-										[placeholder]="'Choix bloc'"
-										[disabled]="!!timbreModel?.getId() || (timbreVarService.timbresBlocModel$ | async)?.length <= 0"
-										(ngModelChange)="changeBloc($event)">
-								<mat-option class="selectMin" [value]="null"></mat-option>
+                    <div fxLayout="column" class="form-input select">
+                        <label>
+                            <lib-libelle-model [object]="timbreModel" [key]="'timbreBlocModel'"></lib-libelle-model>
+                        </label>
+                        <div fxLayout="row" fxLayoutGap="15px">
+                            <mat-select
+                                name="bloc"
+                                style="width: 180px !important"
+                                [ngModel]="timbreModel.getTimbreBlocModel()"
+                                [placeholder]="'Choix bloc'"
+                                [disabled]="!!timbreModel?.getId() || (timbreVarService.timbresBlocModel$ | async)?.length <= 0"
+                                (ngModelChange)="changeBloc($event)">
+                                <mat-option class="selectMin" [value]="null"></mat-option>
 
-								<mat-option class="selectMin"
-											*ngFor="let bloc of timbreVarService.timbresBlocModel$ | async"
-											[value]="bloc">
-									{{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc?.getType() == TypeTimbreEnum.CARNET ? " (carnet)" : "" }}
-								</mat-option>
-							</mat-select>
+                                <mat-option class="selectMin" *ngFor="let bloc of timbreVarService.timbresBlocModel$ | async" [value]="bloc">
+                                    {{ bloc.getAnnee() }} - {{ bloc.getId() }} {{ bloc?.getType() == TypeTimbreEnum.CARNET ? " (carnet)" : "" }}
+                                </mat-option>
+                            </mat-select>
 
-							<img *ngIf="timbreModel?.getTimbreBlocModel()?.getImage()"
-								 [src]="timbreModel?.getTimbreBlocModel()?.getImage()"
-								 style="max-height: 40px"
-								 class="click"
-								 (click)="utilsService.zoom(timbreModel?.getTimbreBlocModel()?.getImageZoom())"
-							/>
-						</div>
-					</div>
-				</div>
+                            <img
+                                crossorigin="anonymous"
+                                *ngIf="timbreModel?.getTimbreBlocModel()?.getImage()"
+                                [src]="timbreModel?.getTimbreBlocModel()?.getImage()"
+                                style="max-height: 40px"
+                                class="click"
+                                (click)="utilsService.zoom(timbreModel?.getTimbreBlocModel()?.getImageZoom())" />
+                        </div>
+                    </div>
+                </div>
 
-				<div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
-					<div fxLayout="column" class="form-input">
-						<label>
-							<lib-libelle-model [object]="timbreModel" [key]="'yt'"></lib-libelle-model>
-						</label>
-						<input
-							name="yt"
-							[(ngModel)]="timbreModel.yt"
-							type="text"
-							trim
-							zControl
-						/>
-					</div>
+                <div fxLayout="row" fxLayout.lt-lg="column" fxLayoutGap="30px" fxLayoutGap.lt-lg="5px">
+                    <div fxLayout="column" class="form-input">
+                        <label>
+                            <lib-libelle-model [object]="timbreModel" [key]="'yt'"></lib-libelle-model>
+                        </label>
+                        <input name="yt" [(ngModel)]="timbreModel.yt" type="text" trim zControl />
+                    </div>
 
-					<!--
+                    <!--
 					<div fxLayout="column" class="form-input">
 						<label>
 							<lib-libelle-model [object]="timbreModel" [key]="'monnaie'"></lib-libelle-model>
@@ -129,28 +123,22 @@
 						/>
 					</div>
 					-->
-				</div>
+                </div>
 
-				<lib-upload
-					[object]="timbreModel"
-					[key]="'image'"
-					[zoom]="timbreModel.getImageZoom()"
-					[maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
-					[maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
-					(outPutObject)="timbreModel = $event">
-				</lib-upload>
-			</div>
+                <lib-upload
+                    [object]="timbreModel"
+                    [key]="'image'"
+                    [zoom]="timbreModel.getImageZoom()"
+                    [maxWidth]="DimensionImageEnum.WIDTH_TIMBRE"
+                    [maxHeight]="DimensionImageEnum.HEIGTH_TIMBRE"
+                    (outPutObject)="timbreModel = $event">
+                </lib-upload>
+            </div>
 
-			<div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
-				<button
-					type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">
-					Annuler
-				</button>
-				<button
-					type="submit" class="rounded large color-white" mat-raised-button color="accent">
-					Enregistrer
-				</button>
-			</div>
-		</form>
-	</ng-template>
+            <div class="bloc-bouton-modal" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end end">
+                <button type="button" class="rounded large color-white" mat-raised-button color="primary" (click)="close()">Annuler</button>
+                <button type="submit" class="rounded large color-white" mat-raised-button color="accent">Enregistrer</button>
+            </div>
+        </form>
+    </ng-template>
 </div>

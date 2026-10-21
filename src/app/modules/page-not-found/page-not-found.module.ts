@@ -11,6 +11,6 @@ const route = [{path: "", component: PageNotFoundComponent}];
 
 @NgModule({
     declarations: [PageNotFoundComponent],
-	imports: [RouterModule.forChild(route), FlexLayoutModule, MatButtonModule, DirectiveModule, LibIconModule, ReactiveFormsModule],
+    imports: [RouterModule.forChild(route), FlexLayoutModule, MatButtonModule, DirectiveModule, LibIconModule, ReactiveFormsModule],
 })
 export class PageNotFoundModule {}

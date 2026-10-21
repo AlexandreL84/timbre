@@ -36,8 +36,7 @@ import {TimbrePdfService} from "../../shared/services/timbre/timbre-pdf.service"
 		TimbreBlocRechercheComponent,
 		TimbreBlocResultatComponent,
 		TimbreBlocResultatTableComponent,
-		TimbreBlocTotalComponent,
-		TimbreModifierBlocComponent
+		TimbreBlocTotalComponent
 	],
 	imports: [
 		TimbreBlocRoutingModule,

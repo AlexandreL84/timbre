@@ -6,6 +6,7 @@ import {FontAwesomeAttributEnum, FontAwesomeEnum} from "../../enum/font-awesome"
 import {FontAwesomeTypeEnum} from "../../enum/font-awesome/font-awesome-type.enum";
 
 @Component({
+    standalone: false,
     selector: "lib-icon",
     templateUrl: "./lib-icon.component.html",
     styleUrls: ["./lib-icon.component.scss"],
@@ -23,7 +24,10 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
     classToolTip: string;
     selectedIconHtml: string = null;
 
-    constructor(private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
+    constructor(
+        private sanitizer: DomSanitizer,
+        private cdr: ChangeDetectorRef
+    ) {
         this.classToolTip = Utils.getRandom(10000).toString();
     }
 
@@ -62,11 +66,11 @@ export class LibIconComponent implements OnInit, AfterViewChecked, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-		if (changes["icone"] && isNotNullOrUndefined(this.icone)) {
-			this.initIcone();
-		}
-		if (changes["type"] && isNotNullOrUndefined(this.type)) {
-			this.initIcone();
-		}
+        if (changes["icone"] && isNotNullOrUndefined(this.icone)) {
+            this.initIcone();
+        }
+        if (changes["type"] && isNotNullOrUndefined(this.type)) {
+            this.initIcone();
+        }
     }
 }

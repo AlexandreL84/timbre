@@ -4,6 +4,7 @@ import {fromEvent, Observable, Subject} from "rxjs";
 import {ErrorControlComponent} from "../../../modules/error";
 
 @Directive({
+    standalone: false,
     selector: "[zControl]",
 })
 export class ControlErrorsDirective implements OnInit, OnDestroy {
@@ -14,7 +15,10 @@ export class ControlErrorsDirective implements OnInit, OnDestroy {
 
     @Input("zControl") attribut: string;
 
-    public constructor(private viewContainerRef: ViewContainerRef, private directiveControl: NgControl) {}
+    public constructor(
+        private viewContainerRef: ViewContainerRef,
+        private directiveControl: NgControl
+    ) {}
 
     public ngOnInit() {
         this.setupEvents();

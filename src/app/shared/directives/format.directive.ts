@@ -3,6 +3,7 @@ import {Directive, Input, OnChanges, SimpleChanges} from "@angular/core";
 import {isNullOrUndefined, Utils} from "../utils/utils";
 
 @Directive({
+    standalone: false,
     selector: "[format][formControlName],[format][formControl],[format][ngModel]",
     providers: [{provide: NG_VALIDATORS, useExisting: FormatDirective, multi: true}],
 })

@@ -13,124 +13,143 @@ import {UtilsService} from "../../../../shared/services/utils.service";
 import {BaseEnum} from "../../../../shared/enum/base.enum";
 
 @Component({
-	selector: "app-timbre-pays-modifier",
-	templateUrl: "./timbre-pays-modifier.component.html",
+    standalone: false,
+    selector: "app-timbre-pays-modifier",
+    templateUrl: "./timbre-pays-modifier.component.html",
 })
 export class TimbrePaysModifierComponent implements OnInit {
-	@ViewChild('canvas', {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
-	@ViewChild("formModif") formModif: NgForm;
+    @ViewChild("canvas", {static: false}) canvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild("formModif") formModif: NgForm;
 
-	messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-	load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
-	id: number;
-	code: string;
-	timbrePaysModel: TimbrePaysModel = new TimbrePaysModel();
-	maxClasseur: number = 10;
-	maxPage: number = 64;
+    messageError$: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+    load$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
+    id: number;
+    code: string;
+    timbrePaysModel: TimbrePaysModel = new TimbrePaysModel();
+    maxClasseur: number = 10;
+    maxPage: number = 64;
 
-	constructor(
-		private httpResponseHandlerService: HttpResponseHandlerService,
-		public dialogRef: MatDialogRef<TimbrePaysModifierComponent>, public timbrePaysService: TimbrePaysService,
-		private utilsService: UtilsService) {
-	}
+    constructor(
+        private httpResponseHandlerService: HttpResponseHandlerService,
+        public dialogRef: MatDialogRef<TimbrePaysModifierComponent>,
+        public timbrePaysService: TimbrePaysService,
+        private utilsService: UtilsService
+    ) {}
 
-	ngOnInit(): void {
-		this.load$.next(false);
-		if (isNotNullOrUndefined(this.code)) {
-			this.timbrePaysService.getByCodeAsync(this.code).pipe(first()).subscribe(timbrePaysModel => {
-				this.timbrePaysModel = timbrePaysModel;
-				this.load$.next(true);
-			});
-		} else if (isNotNullOrUndefined(this.id)) {
-			this.timbrePaysService.getTimbreByIdAsync(this.id).pipe(first()).subscribe(timbrePaysModel => {
-				this.timbrePaysModel = timbrePaysModel;
-				this.load$.next(true);
-			});
-		} else {
-			this.timbrePaysModel = this.timbrePaysService.getBouchon();
-			this.load$.next(true);
-		}
-	}
+    ngOnInit(): void {
+        this.load$.next(false);
+        if (isNotNullOrUndefined(this.code)) {
+            this.timbrePaysService
+                .getByCodeAsync(this.code)
+                .pipe(first())
+                .subscribe(timbrePaysModel => {
+                    this.timbrePaysModel = timbrePaysModel;
+                    this.load$.next(true);
+                });
+        } else if (isNotNullOrUndefined(this.id)) {
+            this.timbrePaysService
+                .getTimbreByIdAsync(this.id)
+                .pipe(first())
+                .subscribe(timbrePaysModel => {
+                    this.timbrePaysModel = timbrePaysModel;
+                    this.load$.next(true);
+                });
+        } else {
+            this.timbrePaysModel = this.timbrePaysService.getBouchon();
+            this.load$.next(true);
+        }
+    }
 
-	valider( ) {
-		this.messageError$.next(null)
-		if (this.formModif?.valid) {
-			if (isNotNullOrUndefined(this.timbrePaysModel.getDrapeau())) {
-				this.saveData();
-			} else {
-				this.messageError$.next("Veuillez sélectionner une image")
-				return;
-			}
-		}
-	}
+    valider() {
+        this.messageError$.next(null);
+        if (this.formModif?.valid) {
+            if (isNotNullOrUndefined(this.timbrePaysModel.getDrapeau())) {
+                this.saveData();
+            } else {
+                this.messageError$.next("Veuillez sélectionner une image");
+                return;
+            }
+        }
+    }
 
-	saveData() {
-		this.load$.next(false);
-		if (isNotNullOrUndefined(this.timbrePaysModel.getId())) {
-			this.save(false);
-		} else {
-			this.ajouterPays();
-		}
-	}
+    saveData() {
+        this.load$.next(false);
+        if (isNotNullOrUndefined(this.timbrePaysModel.getId())) {
+            this.save(false);
+        } else {
+            this.ajouterPays();
+        }
+    }
 
-	ajouterPays() {
-		this.utilsService.getMaxIdentAsync(BaseEnum.PAYS).pipe(first()).subscribe(id => {
-			this.timbrePaysModel.setId(id)
-			this.save(true);
-		})
-	}
+    ajouterPays() {
+        this.utilsService
+            .getMaxIdentAsync(BaseEnum.PAYS)
+            .pipe(first())
+            .subscribe(id => {
+                this.timbrePaysModel.setId(id);
+                this.save(true);
+            });
+    }
 
-	save(ajout?: boolean) {
-		try {
-			combineLatest([
-				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.DRAPEAU, false),
-				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.LANGUE, false),
-				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.MAP, false),
-				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.DRAPEAU, true),
-				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.LANGUE, true),
-				this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.MAP, true)
-			]).pipe(first(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => isNotNullOrUndefined(drapeau)
-				&& isNotNullOrUndefined(drapeau) &&
-				isNotNullOrUndefined(langue) &&
-				isNotNullOrUndefined(map) &&
-				isNotNullOrUndefined(drapeauZoom) &&
-				isNotNullOrUndefined(langueZoom) &&
-				isNotNullOrUndefined(mapZoom))).pipe(first()).subscribe(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => {
-				if (isNotNullOrUndefined(drapeau) && drapeau != "nok") {
-					this.timbrePaysModel.setDrapeau(drapeau);
-				}
-				if (isNotNullOrUndefined(langue) && langue != "nok") {
-					this.timbrePaysModel.setImageLangue(langue);
-				}
-				if (isNotNullOrUndefined(map) && map != "nok") {
-					this.timbrePaysModel.setMap(map);
-				}
-				if (isNotNullOrUndefined(drapeauZoom) && drapeauZoom != "nok") {
-					this.timbrePaysModel.setDrapeauZoom(drapeauZoom);
-				}
-				if (isNotNullOrUndefined(langueZoom) && langueZoom != "nok") {
-					this.timbrePaysModel.setImageLangueZoom(langueZoom);
-				}
-				if (isNotNullOrUndefined(mapZoom) && mapZoom != "nok") {
-					this.timbrePaysModel.setMapZoom(mapZoom);
-				}
+    save(ajout?: boolean) {
+        try {
+            combineLatest([
+                this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.DRAPEAU, false),
+                this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.LANGUE, false),
+                this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.MAP, false),
+                this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.DRAPEAU, true),
+                this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.LANGUE, true),
+                this.timbrePaysService.upload(this.timbrePaysModel, DossierEnum.MAP, true),
+            ])
+                .pipe(
+                    first(
+                        ([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) =>
+                            isNotNullOrUndefined(drapeau) &&
+                            isNotNullOrUndefined(drapeau) &&
+                            isNotNullOrUndefined(langue) &&
+                            isNotNullOrUndefined(map) &&
+                            isNotNullOrUndefined(drapeauZoom) &&
+                            isNotNullOrUndefined(langueZoom) &&
+                            isNotNullOrUndefined(mapZoom)
+                    )
+                )
+                .pipe(first())
+                .subscribe(([drapeau, langue, map, drapeauZoom, langueZoom, mapZoom]) => {
+                    if (isNotNullOrUndefined(drapeau) && drapeau != "nok") {
+                        this.timbrePaysModel.setDrapeau(drapeau);
+                    }
+                    if (isNotNullOrUndefined(langue) && langue != "nok") {
+                        this.timbrePaysModel.setImageLangue(langue);
+                    }
+                    if (isNotNullOrUndefined(map) && map != "nok") {
+                        this.timbrePaysModel.setMap(map);
+                    }
+                    if (isNotNullOrUndefined(drapeauZoom) && drapeauZoom != "nok") {
+                        this.timbrePaysModel.setDrapeauZoom(drapeauZoom);
+                    }
+                    if (isNotNullOrUndefined(langueZoom) && langueZoom != "nok") {
+                        this.timbrePaysModel.setImageLangueZoom(langueZoom);
+                    }
+                    if (isNotNullOrUndefined(mapZoom) && mapZoom != "nok") {
+                        this.timbrePaysModel.setMapZoom(mapZoom);
+                    }
 
-				if (!ajout) {
-					this.timbrePaysService.modifier(this.timbrePaysModel);
-				} else {
-					this.timbrePaysService.ajouter(this.timbrePaysModel);
-				}
-				this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
-				this.load$.next(true);
-				this.dialogRef.close();
-			});
-		} catch (error) {
-			this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, NotificationMessageEnum.TIMBRE_MODIF_NOK);
-			this.load$.next(true);
-		}
-	}
+                    if (!ajout) {
+                        this.timbrePaysService.modifier(this.timbrePaysModel);
+                    } else {
+                        this.timbrePaysService.ajouter(this.timbrePaysModel);
+                    }
+                    this.httpResponseHandlerService.showNotificationSuccess(NotificationTypeEnum.TRANSACTION_OK, NotificationMessageEnum.TIMBRE_MODIF);
+                    this.load$.next(true);
+                    this.dialogRef.close();
+                });
+        } catch (error) {
+            this.httpResponseHandlerService.showNotificationError(NotificationTypeEnum.TRANSACTION_NOK, NotificationMessageEnum.TIMBRE_MODIF_NOK);
+            this.load$.next(true);
+        }
+    }
 
-	close() {
-		this.dialogRef.close();
-	}
+    close() {
+        this.dialogRef.close();
+    }
 }

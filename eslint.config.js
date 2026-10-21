@@ -31,6 +31,11 @@ module.exports = defineConfig([
 			"no-case-declarations": "off",
 			"no-console": ["error", {allow: ["warn", "error"]}],
 			"@typescript-eslint/no-inferrable-types": "off",
+			// Injection par constructeur autorisée : pas besoin de migrer vers inject() ni de commentaires eslint-disable
+			"@angular-eslint/prefer-inject": "off",
+			// Composants déclarés dans des NgModules (standalone: false) : autorisés tant que la migration standalone n'est pas faite
+			"@angular-eslint/prefer-standalone": "off",
+			"@typescript-eslint/no-explicit-any": "warn",
 			eqeqeq: ["warn", "smart"],
 			"max-len": [
 				"error",
@@ -43,8 +48,10 @@ module.exports = defineConfig([
 					ignorePattern: "^import .*",
 				},
 			],
-			"@angular-eslint/component-selector": ["error", {style: "kebab-case", type: "element"}],
-			"@angular-eslint/directive-selector": ["error", {style: "camelCase", type: "attribute"}],
+			// Préfixes utilisés dans le projet : app- pour l'application, lib- pour les composants partagés
+			"@angular-eslint/component-selector": ["error", {style: "kebab-case", type: "element", prefix: ["app", "lib"]}],
+			// Directives sans préfixe imposé (trim, upperCase, noEspace...)
+			"@angular-eslint/directive-selector": ["error", {style: "camelCase", type: "attribute", prefix: []}],
 			"linebreak-style": "off",
 			"prettier/prettier": ["error", prettierOptions],
 		},

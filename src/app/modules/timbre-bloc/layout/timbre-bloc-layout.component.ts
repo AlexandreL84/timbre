@@ -6,25 +6,28 @@ import {HeaderService} from "../../../shared/services/header.service";
 import {ModeEnum} from "../../../shared/enum/mode.enum";
 
 @Component({
-	selector: "app-timbre-bloc-layout",
-	templateUrl: "./timbre-bloc-layout.component.html",
-	styleUrls: ["./../../styles/timbre-layout.component.scss"],
+    standalone: false,
+    selector: "app-timbre-bloc-layout",
+    templateUrl: "./timbre-bloc-layout.component.html",
+    styleUrls: ["./../../styles/timbre-layout.component.scss"],
 })
 export class TimbreBlocLayoutComponent implements OnInit {
-	readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
-	readonly FontAwesomeEnum = FontAwesomeEnum;
-	readonly ModeEnum = ModeEnum;
+    readonly FontAwesomeTypeEnum = FontAwesomeTypeEnum;
+    readonly FontAwesomeEnum = FontAwesomeEnum;
+    readonly ModeEnum = ModeEnum;
 
-	constructor(public headerService: HeaderService, public timbreBlocService: TimbreBlocService) {
-	}
+    constructor(
+        public headerService: HeaderService,
+        public timbreBlocService: TimbreBlocService
+    ) {}
 
-	ngOnInit(): void {
-		//this.timbreBlocService.getBlocs();
-		/*this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect => {
+    ngOnInit(): void {
+        //this.timbreBlocService.getBlocs();
+        /*this.authService.userSelect$.pipe(first(userSelect => isNotNullOrUndefined(userSelect))).subscribe(userSelect => {
 			this.timbreUtilsService.getAnneesAsync(BaseEnum.TIMBRE_BLOC).pipe(first(annees => isNotNullOrUndefined(annees) && annees?.length > 0)).subscribe(annees => {
 				this.timbreUtilsService.timbreCritereModel.setAnnees([annees[0]]);
 				this.timbreBlocService.getBlocs(this.timbreUtilsService.timbreCritereModel);
 			});
 		});*/
-	}
+    }
 }

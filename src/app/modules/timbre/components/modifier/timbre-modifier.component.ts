@@ -23,8 +23,20 @@ import {take, tap} from "rxjs/operators";
 import {TimbreVarService} from "../../../../shared/services/timbre/timbre-var.service";
 import {TimbreActionsService} from "../../../../shared/services/timbre/timbre-actions.service";
 import {TimbreUploadService} from "../../../../shared/services/timbre/timbre-upload.service";
+import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
+import {MaterialModule} from "../../../../shared/modules/material.module";
+import {FlexModule, FlexLayoutModule} from "@angular/flex-layout";
+import {LibLibelleModelModule} from "../../../../shared/components/lib-libelle-model";
+import {LibSpinnerModule} from "../../../../shared/components/lib-spinner";
+import {LibUploadModule} from "../../../../shared/components/lib-upload/lib-upload.module";
+import {DirectiveModule} from "../../../../shared/directives/directive.module";
+import {PipeModule} from "../../../../shared/pipes/pipe.module";
 
 @Component({
+	// Standalone : ce composant est ouvert en modale depuis d'autres modules (menu, services partagés),
+	// il doit donc déclarer lui-même ses dépendances de template.
+	imports: [CommonModule, FormsModule, MaterialModule, FlexModule, FlexLayoutModule, LibLibelleModelModule, LibSpinnerModule, LibUploadModule, DirectiveModule, PipeModule],
 	selector: 'app-timbre-modifier',
 	templateUrl: './timbre-modifier.component.html',
 })
