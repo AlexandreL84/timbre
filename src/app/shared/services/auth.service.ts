@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
-import {BehaviorSubject, combineLatest, first, map, Observable} from "rxjs";
+import {BehaviorSubject, combineLatest, first, map, Observable, of, switchMap} from "rxjs";
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {isNotNullOrUndefined, isNullOrUndefined} from "../utils/utils";
 import {UserModel} from "../../model/user.model";
@@ -45,36 +45,50 @@ export class AuthService {
 
     // Méthode pour obtenir l'utilisateur actuellement connecté
     getUser(): Observable<UserModel> {
-        const collectionUser = this.angularFirestore.collection(BaseEnum.USER).valueChanges();
-        return combineLatest([this.afAuth.authState, collectionUser, this.user$]).pipe(
-            map(([user, users, userConnect]) => {
+        return combineLatest([this.afAuth.authState, this.user$]).pipe(
+            switchMap(([user, userConnect]) => {
                 if (isNotNullOrUndefined(userConnect)) {
-                    return userConnect;
-                } else {
-                    const findUser = users.find(userFind => userFind["id"] == user?.uid);
-                    if (isNotNullOrUndefined(findUser)) {
-                        const userModel: UserModel = plainToInstance(UserModel, findUser);
-                        this.user$.next(userModel);
-                        if (userModel?.getDroit() == DroitEnum.TOTAL || userModel?.getDroit() == DroitEnum.CONSULT_TOTAL) {
-                            this.getUsers(DroitEnum.PARTIEL)
-                                .pipe(first(users => isNotNullOrUndefined(users)))
-                                .subscribe(users => {
-                                    const findUser = users.find(user => user.getId() == userModel.getId());
-                                    if (findUser) {
-                                        this.userSelect$.next(findUser);
-                                    } else {
-                                        this.userSelect$.next(users.find(user => user.getNom() == "LEFAIX"));
-                                    }
-                                });
-                        } else {
-                            this.userSelect$.next(userModel);
-                        }
-                        return userModel;
-                    }
-                    return null;
+                    return of(userConnect);
                 }
+                if (isNullOrUndefined(user)) {
+                    return of(null);
+                }
+                // Lecture du seul document de l'utilisateur connecté (1 lecture Firestore au lieu de toute la collection)
+                return this.angularFirestore
+                    .collection(BaseEnum.USER, ref => ref.where("id", "==", user.uid).limit(1))
+                    .valueChanges()
+                    .pipe(
+                        map(users => {
+                            const findUser = users?.[0];
+                            if (isNullOrUndefined(findUser)) {
+                                return null;
+                            }
+                            const userModel: UserModel = plainToInstance(UserModel, findUser);
+                            this.user$.next(userModel);
+                            this.initUserSelect(userModel);
+                            return userModel;
+                        })
+                    );
             })
         );
+    }
+
+    // Utilisateur dont on consulte la collection : soi-même, ou un utilisateur au choix pour les droits étendus
+    private initUserSelect(userModel: UserModel) {
+        if (userModel?.getDroit() == DroitEnum.TOTAL || userModel?.getDroit() == DroitEnum.CONSULT_TOTAL) {
+            this.getUsers(DroitEnum.PARTIEL)
+                .pipe(first(users => isNotNullOrUndefined(users)))
+                .subscribe(users => {
+                    const findUser = users.find(user => user.getId() == userModel.getId());
+                    if (findUser) {
+                        this.userSelect$.next(findUser);
+                    } else {
+                        this.userSelect$.next(users.find(user => user.getNom() == "LEFAIX"));
+                    }
+                });
+        } else {
+            this.userSelect$.next(userModel);
+        }
     }
 
     getUsers(droit?: DroitEnum) {

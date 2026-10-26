@@ -18,10 +18,12 @@ import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
 import {SimpleNotificationsModule} from "angular2-notifications";
 import {TimbreVarService} from "./shared/services/timbre/timbre-var.service";
 import {provideAngularFireCompatInjection} from "./shared/firebase/angular-fire-compat-injection";
+import {provideFirestorePersistentCache} from "./shared/firebase/firestore-cache";
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideAngularFireCompatInjection(),
+        provideFirestorePersistentCache(),
         provideRouter(routes),
         provideAuth(() => getAuth()),
         provideAnimations(),

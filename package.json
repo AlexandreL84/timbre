@@ -31,7 +31,7 @@
 		"angular2-notifications": "^16.0.1",
 		"class-transformer": "^0.5.1",
 		"file-saver": "^2.0.5",
-		"firebase": "^12.15.0",
+		"firebase": "^11.10.0",
 		"jspdf": "^4.2.1",
 		"papaparse": "^5.5.4",
 		"reflect-metadata": "^0.2.2",
